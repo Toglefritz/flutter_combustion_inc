@@ -1,6 +1,7 @@
 import Flutter
 import CombustionBLE
 import UIKit
+import Combine
 
 /// The FlutterCombustionIncPlugin serves as the entry point for native iOS
 /// functionality in the flutter_combustion_inc plugin. It bridges method
@@ -23,6 +24,12 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
     /// Most recent snapshot of probe identifiers.
     private var lastProbeIdentifiers: Set<String> = []
 
+    /// Event sink used to stream virtual temperatures.
+    private var virtualTempEventSink: FlutterEventSink?
+
+    /// Combine subscription to virtual temperature updates.
+    private var virtualTempCancellable: AnyCancellable?
+
     /// Registers the plugin with the Flutter engine and sets up method and event channels.
     ///
     /// - Parameters:
@@ -44,6 +51,12 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
         )
         probeListChannel.setStreamHandler(instance)
         
+        let virtualTempChannel = FlutterEventChannel(
+          name: "flutter_combustion_inc_virtual_temps",
+          binaryMessenger: registrar.messenger()
+        )
+        virtualTempChannel.setStreamHandler(instance)
+        
         // Register the method and event channel handlers
         registrar.addMethodCallDelegate(instance, channel: methodChannel)
     }
@@ -55,10 +68,12 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
     ///   - result: Callback for sending a result or error back to Dart.
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
+        // Initializes Bluetooth resources and begins scanning for nearby temperature probes.
         case "initBluetooth":
             DeviceManager.shared.initBluetooth()
             result(nil)
        
+        // Returns a list of probes known to the DeviceManager.
         case "getProbes":
             let probes = DeviceManager.shared.getProbes().map { probe in
                 return [
@@ -72,6 +87,46 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
                 ]
             }
             result(probes)
+            
+        // Obtains "virtual temperatures" from a probe. Virtual temperatures represent the temperatures from different areas of the food.
+        case "getVirtualTemperatures":
+            guard
+                let args = call.arguments as? [String: Any],
+                let identifier = args["identifier"] as? String,
+                let probe = DeviceManager.shared.getProbes().first(where: { $0.uniqueIdentifier == identifier })
+            else {
+                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid probe identifier", details: nil))
+                return
+            }
+
+            let temps = probe.virtualTemperatures
+            result([
+                "core": temps?.coreTemperature,
+                "surface": temps?.surfaceTemperature,
+                "ambient": temps?.ambientTemperature,
+            ])
+            
+        // Allows Flutter apps to listen to a stream of virtual temperatures.
+        case "startVirtualTemperatureStream":
+            guard
+                let args = call.arguments as? [String: Any],
+                let identifier = args["identifier"] as? String,
+                let probe = DeviceManager.shared.getProbes().first(where: { $0.uniqueIdentifier == identifier })
+            else {
+                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid probe identifier", details: nil))
+                return
+            }
+
+            virtualTempCancellable = probe.$virtualTemperatures
+                .sink { [weak self] temps in
+                    guard let sink = self?.virtualTempEventSink, let temps = temps else { return }
+                    sink([
+                        "core": temps.coreTemperature,
+                        "surface": temps.surfaceTemperature,
+                        "ambient": temps.ambientTemperature,
+                    ])
+                }
+            result(nil)
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -80,13 +135,24 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
 
 extension FlutterCombustionIncPlugin: FlutterStreamHandler {
     public func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
-        // Assume probe list stream only (since only one EventChannel is registered)
+        if let args = arguments as? [String: Any], args["type"] as? String == "virtualTemps" {
+            self.virtualTempEventSink = events
+            return nil
+        }
+
         self.probeListEventSink = events
         startProbeListStream()
         return nil
     }
 
     public func onCancel(withArguments arguments: Any?) -> FlutterError? {
+        if let args = arguments as? [String: Any], args["type"] as? String == "virtualTemps" {
+            self.virtualTempEventSink = nil
+            self.virtualTempCancellable?.cancel()
+            self.virtualTempCancellable = nil
+            return nil
+        }
+
         stopProbeListStream()
         self.probeListEventSink = nil
         return nil

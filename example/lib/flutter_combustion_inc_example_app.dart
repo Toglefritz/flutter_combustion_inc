@@ -32,12 +32,24 @@ class FlutterCombustionIncExampleApp extends StatelessWidget {
           primary: Colors.amber,
           secondary: Colors.amberAccent,
         ),
+        cardTheme: CardThemeData(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.0),
+            side: const BorderSide(color: Colors.amber),
+          ),
+        ),
       ),
       darkTheme: ThemeData(
         brightness: Brightness.dark,
         colorScheme: const ColorScheme.dark(
           primary: Colors.amber,
           secondary: Colors.amberAccent,
+        ),
+        cardTheme: CardThemeData(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.0),
+            side: const BorderSide(color: Colors.white),
+          ),
         ),
       ),
       supportedLocales: const [

@@ -33,6 +33,7 @@ abstract class FlutterCombustionIncPlatform extends PlatformInterface {
     PlatformInterface.verifyToken(instance, _token);
     _instance = instance;
   }
+
   /// Initializes Bluetooth and begins scanning for probes.
   Future<void> initBluetooth();
 
@@ -48,6 +49,15 @@ abstract class FlutterCombustionIncPlatform extends PlatformInterface {
 
   /// Disconnects from the probe with the given identifier.
   Future<void> disconnectFromProbe(String identifier);
+
+  /// Retrieves a set of "virtual" temperatures for the specified probe. The virtual temperatures are calculated based
+  /// on evaluations of all eight physical temperature sensors (T1–T8). The virtual temperatures are for the food's
+  /// core, surface, and ambient conditions.
+  Future<Map<String, double>> getVirtualTemperatures(String identifier);
+
+  /// Provides a stream of virtual temperature readings (core, surface, ambient) for a specified probe. This stream
+  /// emits updates whenever the probe's virtual temperatures change.
+  Stream<Map<String, double>> virtualTemperatureStream(String identifier);
 
   /// Retrieves the battery status for the specified probe.
   Future<String> getBatteryStatus(String identifier);

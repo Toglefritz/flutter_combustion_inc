@@ -1,7 +1,22 @@
 {
+  "ambientTemperature": "Ambient",
+  "@ambientTemperature": {
+    "description": "Label for the ambient temperature of a probe.",
+    "placeholders": {}
+  },
+  "coreTemperature": "Core",
+  "@coreTemperature": {
+    "description": "Label for the core temperature of a probe.",
+    "placeholders": {}
+  },
   "searchingForProbes": "Searching for probes...",
   "@searchingForProbes": {
     "description": "Message displayed when the app is searching for nearby probes."
+  },
+  "surfaceTemperature": "Surface",
+  "@surfaceTemperature": {
+    "description": "Label for the surface temperature of a probe.",
+    "placeholders": {}
   },
   "thermometers": "Thermometers ({number})",
   "@thermometers": {

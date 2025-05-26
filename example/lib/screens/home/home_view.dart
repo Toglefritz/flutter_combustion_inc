@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_combustion_inc/models/probe.dart';
+import 'package:flutter_combustion_inc/models/virtual_temperatures.dart';
 
 import '../../l10n/app_localizations.dart';
+import '../../values/inset.dart';
 import 'home_controller.dart';
 import 'home_route.dart';
 
@@ -34,9 +36,81 @@ class HomeView extends StatelessWidget {
               final Probe probe = state.probes[index];
 
               return Card(
-                child: ListTile(
-                  title: Text(probe.name),
-                  onTap: state.onProbeSelected,
+                margin: const EdgeInsets.all(Inset.medium),
+                child: Padding(
+                  padding: const EdgeInsets.all(Inset.medium),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        probe.name,
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const Divider(),
+                      StreamBuilder(
+                        stream: probe.virtualTemperatureStream,
+                        builder: (BuildContext context, AsyncSnapshot<VirtualTemperatures> snapshot) {
+                          if (!snapshot.hasData) {
+                            return const Text('Loading...');
+                          }
+
+                          // Extract the virtual temperatures from the snapshot
+                          final VirtualTemperatures temps = snapshot.data!;
+
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    temps.core.toInt().toString(),
+                                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    AppLocalizations.of(context)!.coreTemperature,
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    temps.surface.toInt().toString(),
+                                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    AppLocalizations.of(context)!.surfaceTemperature,
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    temps.ambient.toInt().toString(),
+                                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    AppLocalizations.of(context)!.ambientTemperature,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               );
             }),

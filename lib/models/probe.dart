@@ -1,4 +1,5 @@
 import '../flutter_combustion_inc_platform_interface.dart';
+import 'virtual_temperatures.dart';
 
 /// Represents a temperature probe discovered via the Combustion Inc. SDK.
 ///
@@ -69,6 +70,23 @@ class Probe {
   /// Throws a `PlatformException` if the disconnection fails.
   Future<void> disconnect() async {
     await FlutterCombustionIncPlatform.instance.disconnectFromProbe(identifier);
+  }
+
+  /// Gets the virtual temperature readings from the probe.
+  ///
+  /// Returns a [VirtualTemperatures] instance.
+  /// Throws a `PlatformException` if retrieval fails.
+  Future<VirtualTemperatures> get virtualTemperatures async {
+    final result = await FlutterCombustionIncPlatform.instance.getVirtualTemperatures(identifier);
+    return VirtualTemperatures.fromMap(result);
+  }
+
+  /// Provides a stream of virtual temperature readings from the probe.
+  ///
+  /// The stream emits a new [VirtualTemperatures] instance whenever a change occurs.
+  /// Throws a `PlatformException` if the stream cannot be established.
+  Stream<VirtualTemperatures> get virtualTemperatureStream {
+    return FlutterCombustionIncPlatform.instance.virtualTemperatureStream(identifier).map(VirtualTemperatures.fromMap);
   }
 
   /// Gets the battery status of the probe ("OK" or "Low").

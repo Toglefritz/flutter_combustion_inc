@@ -93,11 +93,29 @@ abstract class AppLocalizations {
     Locale('en')
   ];
 
+  /// Label for the ambient temperature of a probe.
+  ///
+  /// In en, this message translates to:
+  /// **'Ambient'**
+  String get ambientTemperature;
+
+  /// Label for the core temperature of a probe.
+  ///
+  /// In en, this message translates to:
+  /// **'Core'**
+  String get coreTemperature;
+
   /// Message displayed when the app is searching for nearby probes.
   ///
   /// In en, this message translates to:
   /// **'Searching for probes...'**
   String get searchingForProbes;
+
+  /// Label for the surface temperature of a probe.
+  ///
+  /// In en, this message translates to:
+  /// **'Surface'**
+  String get surfaceTemperature;
 
   /// Label for the list of thermometers, where {number} is the count of available thermometers.
   ///

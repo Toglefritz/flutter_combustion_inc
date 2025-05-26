@@ -9,7 +9,16 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get ambientTemperature => 'Ambient';
+
+  @override
+  String get coreTemperature => 'Core';
+
+  @override
   String get searchingForProbes => 'Searching for probes...';
+
+  @override
+  String get surfaceTemperature => 'Surface';
 
   @override
   String thermometers(int number) {

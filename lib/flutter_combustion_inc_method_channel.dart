@@ -13,7 +13,13 @@ class MethodChannelFlutterCombustionInc extends FlutterCombustionIncPlatform {
   @visibleForTesting
   final EventChannel probeListEventChannel = const EventChannel('flutter_combustion_inc_probe_list');
 
+  /// The event channel used to stream virtual temperature updates.
+  @visibleForTesting
+  final EventChannel virtualTempEventChannel = const EventChannel('flutter_combustion_inc_virtual_temps');
+
   Stream<List<Map<String, dynamic>>>? _probeListStream;
+
+  final Map<String, Stream<Map<String, double>>> _virtualTempStreams = {};
 
   @override
   Future<void> initBluetooth() async {
@@ -46,6 +52,13 @@ class MethodChannelFlutterCombustionInc extends FlutterCombustionIncPlatform {
   }
 
   @override
+  Future<Map<String, double>> getVirtualTemperatures(String identifier) async {
+    final result = await methodChannel.invokeMethod('getVirtualTemperatures', {'identifier': identifier});
+
+    return Map<String, double>.from(result as Map);
+  }
+
+  @override
   Future<String> getBatteryStatus(String identifier) async {
     final result = await methodChannel.invokeMethod('getBatteryStatus', {'identifier': identifier});
     return result as String;
@@ -55,5 +68,20 @@ class MethodChannelFlutterCombustionInc extends FlutterCombustionIncPlatform {
   Future<List<double>> getCurrentTemperatures(String identifier) async {
     final result = await methodChannel.invokeMethod('getCurrentTemperatures', {'identifier': identifier});
     return List<double>.from(result as Iterable);
+  }
+
+  @override
+  Stream<Map<String, double>> virtualTemperatureStream(String identifier) {
+    return _virtualTempStreams.putIfAbsent(identifier, () {
+      // Start the native stream
+      methodChannel.invokeMethod('startVirtualTemperatureStream', {
+        'identifier': identifier,
+      });
+
+      return virtualTempEventChannel.receiveBroadcastStream({'type': 'virtualTemps'}).map((event) {
+        final data = Map<String, dynamic>.from(event as Map);
+        return data.map((key, value) => MapEntry(key, (value as num).toDouble()));
+      });
+    });
   }
 }
