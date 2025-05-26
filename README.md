@@ -1,5 +1,7 @@
 # flutter_combustion_inc
 
+![Plugin logo](assets/plugin_logo_200w.png)
+
 A Flutter plugin that enables communication between Flutter mobile applications and Combustion Inc. wireless temperature probes via Bluetooth Low Energy (BLE). This plugin provides a strongly-typed, cross-platform API for discovering, connecting to, and retrieving real-time data from Combustion Inc. probes on both Android and iOS.
 
 ## Features
