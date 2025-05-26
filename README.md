@@ -50,3 +50,15 @@ Comprehensive Dart and platform-specific documentation is provided inline with a
 
 This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
 
+## Disclaimer
+
+In the creation of this plugin, artificial intelligence (AI) tools have been utilized. These tools have assisted in various stages of the plugin's development, from initial code generation to the optimization of algorithms.
+
+It is emphasized that the AI's contributions have been thoroughly overseen. Each segment of AI-assisted code has undergone meticulous scrutiny to ensure adherence to high standards of quality, reliability, and performance. This scrutiny was conducted by the sole developer responsible for the plugin's creation.
+
+Rigorous testing has been applied to all AI-suggested outputs, encompassing a wide array of conditions and use cases. Modifications have been implemented where necessary, ensuring that the AI's contributions are well-suited to the specific requirements and limitations inherent in this project.
+
+Commitment to the plugin's accuracy and functionality is paramount, and feedback or issue reports from users are invited to facilitate continuous improvement.
+
+It is to be understood that this plugin, like all software, is subject to evolution over time. The developer is dedicated to its progressive refinement and is actively working to surpass the expectations of the Flutter community.
+

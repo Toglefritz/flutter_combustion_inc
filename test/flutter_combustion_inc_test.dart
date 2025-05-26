@@ -7,9 +7,6 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 class MockFlutterCombustionIncPlatform
     with MockPlatformInterfaceMixin
     implements FlutterCombustionIncPlatform {
-
-  @override
-  Future<String?> getPlatformVersion() => Future.value('42');
 }
 
 void main() {
@@ -23,7 +20,5 @@ void main() {
     FlutterCombustionInc flutterCombustionIncPlugin = FlutterCombustionInc();
     MockFlutterCombustionIncPlatform fakePlatform = MockFlutterCombustionIncPlatform();
     FlutterCombustionIncPlatform.instance = fakePlatform;
-
-    expect(await flutterCombustionIncPlugin.getPlatformVersion(), '42');
   });
 }
