@@ -1,3 +1,6 @@
 {
-
+  "searchingForProbes": "Searching for probes...",
+  "@searchingForProbes": {
+    "description": "Message displayed when the app is searching for nearby probes."
+  }
 }

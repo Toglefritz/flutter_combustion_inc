@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_combustion_inc/models/probe.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'home_controller.dart';
 import 'home_route.dart';
 
@@ -12,8 +15,27 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Placeholder(),
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            // If no probes are discovered, show a message.
+            if (state.probes.isEmpty) ...[
+              const CircularProgressIndicator(),
+              Text(AppLocalizations.of(context)!.searchingForProbes),
+            ] else
+              ...List.generate(state.probes.length, (int index) {
+                final Probe probe = state.probes[index];
+
+                return ListTile(
+                  title: Text(probe.name),
+                  subtitle: Text(probe.identifier),
+                  onTap: state.onProbeSelected,
+                );
+              }),
+          ],
+        ),
+      ),
     );
   }
 }

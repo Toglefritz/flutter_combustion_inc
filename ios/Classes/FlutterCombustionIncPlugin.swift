@@ -1,4 +1,5 @@
 import Flutter
+import CombustionBLE
 import UIKit
 
 /// The FlutterCombustionIncPlugin serves as the entry point for native iOS
@@ -13,6 +14,15 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
     /// Event sink used to stream discovered probes back to Flutter.
     private var scanEventSink: FlutterEventSink?
     
+    /// Event sink used to stream the full list of discovered probes back to Flutter.
+    private var probeListEventSink: FlutterEventSink?
+    
+    /// Timer to periodically check for updates to the probe list.
+    private var probeListUpdateTimer: Timer?
+    
+    /// Most recent snapshot of probe identifiers.
+    private var lastProbeIdentifiers: Set<String> = []
+
     /// Registers the plugin with the Flutter engine and sets up method and event channels.
     ///
     /// - Parameters:
@@ -28,17 +38,17 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
         )
         
         // Event channel for continuous scan results.
-        let eventChannel = FlutterEventChannel(
-            name: "flutter_combustion_inc_scan",
-            binaryMessenger: registrar.messenger()
+        let probeListChannel = FlutterEventChannel(
+          name: "flutter_combustion_inc_probe_list",
+          binaryMessenger: registrar.messenger()
         )
+        probeListChannel.setStreamHandler(instance)
         
         // Register the method and event channel handlers
         registrar.addMethodCallDelegate(instance, channel: methodChannel)
-        eventChannel.setStreamHandler(instance)
     }
     
-    /// Handles method channel calls from Flutter. Currently unimplemented.
+    /// Handles method channel calls from Flutter.
     ///
     /// - Parameters:
     ///   - call: The method call from Dart.
@@ -46,15 +56,15 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
         case "initBluetooth":
-            DeviceManager.shared.startScanning()
+            DeviceManager.shared.initBluetooth()
             result(nil)
-            
+       
         case "getProbes":
             let probes = DeviceManager.shared.getProbes().map { probe in
                 return [
-                    "identifier": probe.identifier.uuidString,
-                    "serialNumber": probe.serialNumber,
-                    "name": probe.deviceName,
+                    "identifier": probe.uniqueIdentifier,
+                    "serialNumber": probe.serialNumberString,
+                    "name": probe.name,
                     "macAddress": probe.macAddressString,
                     "id": probe.id,
                     "color": probe.color,
@@ -69,46 +79,46 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
 }
 
 extension FlutterCombustionIncPlugin: FlutterStreamHandler {
-    /// Called when Flutter starts listening to the scan EventChannel.
-    ///
-    /// - Parameters:
-    ///   - arguments: Optional arguments passed from Flutter (unused).
-    ///   - events: The sink to send discovered probes back to Flutter.
     public func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
-        self.scanEventSink = events
-        startScanning()
+        // Assume probe list stream only (since only one EventChannel is registered)
+        self.probeListEventSink = events
+        startProbeListStream()
         return nil
     }
-    
-    /// Called when Flutter cancels listening to the scan EventChannel.
-    ///
-    /// - Parameters:
-    ///   - arguments: Optional arguments passed from Flutter (unused).
+
     public func onCancel(withArguments arguments: Any?) -> FlutterError? {
-        stopScanning()
-        self.scanEventSink = nil
+        stopProbeListStream()
+        self.probeListEventSink = nil
         return nil
     }
-    
-    /// Starts scanning for nearby Combustion Inc. probes using DeviceManager.
-    /// Discovered probes are serialized and emitted through the scanEventSink.
-    private func startScanning() {
-        DeviceManager.shared.onProbeDiscovered = { [weak self] probe in
-            guard let self = self, let sink = self.scanEventSink else { return }
-            let data: [String: Any] = [
-                "id": probe.serialNumber,
-                "name": probe.deviceName,
-                "rssi": probe.rssi
-            ]
-            sink(data)
+
+    private func startProbeListStream() {
+        self.probeListUpdateTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+            guard let self = self, let sink = self.probeListEventSink else { return }
+            let probes = DeviceManager.shared.getProbes()
+            let newIdentifiers = Set(probes.map { $0.uniqueIdentifier })
+
+            if newIdentifiers != self.lastProbeIdentifiers {
+                self.lastProbeIdentifiers = newIdentifiers
+                let result = probes.map { probe in
+                    return [
+                        "identifier": probe.uniqueIdentifier,
+                        "serialNumber": probe.serialNumberString,
+                        "name": probe.name,
+                        "macAddress": probe.macAddressString,
+                        "id": probe.id,
+                        "color": probe.color,
+                        "rssi": probe.rssi
+                    ]
+                }
+                sink(result)
+            }
         }
-        
-        DeviceManager.shared.startScanning()
     }
-    
-    /// Stops scanning for probes and removes the onProbeDiscovered callback.
-    private func stopScanning() {
-        DeviceManager.shared.stopScanning()
-        DeviceManager.shared.onProbeDiscovered = nil
+
+    private func stopProbeListStream() {
+        self.probeListUpdateTimer?.invalidate()
+        self.probeListUpdateTimer = nil
+        self.lastProbeIdentifiers.removeAll()
     }
 }

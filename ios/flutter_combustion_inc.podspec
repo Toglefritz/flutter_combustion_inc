@@ -21,7 +21,7 @@ A Flutter plugin that enables communication between Flutter mobile applications 
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }
   s.swift_version = '5.0'
 
-  s.source_files = 'Classes/**/*.{h,m,swift}', 'CombustionBLE/Sources/**/*.swift'
+  s.dependency 'CombustionBLE'
 
   # If your plugin requires a privacy manifest, for example if it uses any
   # required reason APIs, update the PrivacyInfo.xcprivacy file to describe your

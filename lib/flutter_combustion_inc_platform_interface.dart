@@ -36,6 +36,10 @@ abstract class FlutterCombustionIncPlatform extends PlatformInterface {
   /// Initializes Bluetooth and begins scanning for probes.
   Future<void> initBluetooth();
 
+  /// Provides a stream of the list of discovered probes. This stream emits a list of maps, where each map contains
+  /// information about a discovered probe, such as its identifier, name, and other relevant details.
+  Stream<List<Map<String, dynamic>>> probeListStream();
+
   /// Retrieves a list of known probes from the native SDK.
   Future<List<Map<String, dynamic>>> getProbes();
 

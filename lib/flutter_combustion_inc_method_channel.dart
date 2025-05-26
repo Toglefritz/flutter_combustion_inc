@@ -9,9 +9,24 @@ class MethodChannelFlutterCombustionInc extends FlutterCombustionIncPlatform {
   @visibleForTesting
   final methodChannel = const MethodChannel('flutter_combustion_inc');
 
+  /// The event channel used to stream the list of discovered probes.
+  @visibleForTesting
+  final EventChannel probeListEventChannel = const EventChannel('flutter_combustion_inc_probe_list');
+
+  Stream<List<Map<String, dynamic>>>? _probeListStream;
+
   @override
   Future<void> initBluetooth() async {
     await methodChannel.invokeMethod('initBluetooth');
+  }
+
+  @override
+  Stream<List<Map<String, dynamic>>> probeListStream() {
+    _probeListStream ??= probeListEventChannel.receiveBroadcastStream().map((event) {
+      final List<dynamic> list = event as List<dynamic>;
+      return list.map((e) => Map<String, dynamic>.from(e as Map)).toList();
+    });
+    return _probeListStream!;
   }
 
   @override
@@ -22,31 +37,23 @@ class MethodChannelFlutterCombustionInc extends FlutterCombustionIncPlatform {
 
   @override
   Future<void> connectToProbe(String identifier) async {
-    await methodChannel.invokeMethod('connectToProbe', {
-      'identifier': identifier,
-    });
+    await methodChannel.invokeMethod('connectToProbe', {'identifier': identifier});
   }
 
   @override
   Future<void> disconnectFromProbe(String identifier) async {
-    await methodChannel.invokeMethod('disconnectFromProbe', {
-      'identifier': identifier,
-    });
+    await methodChannel.invokeMethod('disconnectFromProbe', {'identifier': identifier});
   }
 
   @override
   Future<String> getBatteryStatus(String identifier) async {
-    final result = await methodChannel.invokeMethod('getBatteryStatus', {
-      'identifier': identifier,
-    });
+    final result = await methodChannel.invokeMethod('getBatteryStatus', {'identifier': identifier});
     return result as String;
   }
 
   @override
   Future<List<double>> getCurrentTemperatures(String identifier) async {
-    final result = await methodChannel.invokeMethod('getCurrentTemperatures', {
-      'identifier': identifier,
-    });
+    final result = await methodChannel.invokeMethod('getCurrentTemperatures', {'identifier': identifier});
     return List<double>.from(result as Iterable);
   }
 }
