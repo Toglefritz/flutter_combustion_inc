@@ -2,7 +2,16 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'flutter_combustion_inc_method_channel.dart';
 
-/// The interface that implementations of _flutter_combustion_inc_ must implement.
+/// The platform interface that defines the contract for all communication between Dart and the native platforms in the
+/// _flutter_combustion_inc_ plugin.
+///
+/// This class is responsible for making all `MethodChannel` calls to the native iOS and Android SDKs. It provides a
+/// clean, testable interface through which higher-level classes such as `DeviceManager` and `Probe` interact with
+/// native code. These higher-level classes delegate their platform-specific method invocations to this interface,
+/// rather than using `MethodChannels` directly.
+///
+/// Platform-specific implementations should extend this class and override its methods using their respective native
+/// communication logic (e.g., [MethodChannelFlutterCombustionInc] for mobile platforms).
 abstract class FlutterCombustionIncPlatform extends PlatformInterface {
   /// Constructs a [FlutterCombustionIncPlatform].
   FlutterCombustionIncPlatform() : super(token: _token);
@@ -24,4 +33,21 @@ abstract class FlutterCombustionIncPlatform extends PlatformInterface {
     PlatformInterface.verifyToken(instance, _token);
     _instance = instance;
   }
+  /// Initializes Bluetooth and begins scanning for probes.
+  Future<void> initBluetooth();
+
+  /// Retrieves a list of known probes from the native SDK.
+  Future<List<Map<String, dynamic>>> getProbes();
+
+  /// Attempts to connect to a probe with the given identifier.
+  Future<void> connectToProbe(String identifier);
+
+  /// Disconnects from the probe with the given identifier.
+  Future<void> disconnectFromProbe(String identifier);
+
+  /// Retrieves the battery status for the specified probe.
+  Future<String> getBatteryStatus(String identifier);
+
+  /// Retrieves the current temperatures from the specified probe.
+  Future<List<double>> getCurrentTemperatures(String identifier);
 }
