@@ -2,5 +2,15 @@
   "searchingForProbes": "Searching for probes...",
   "@searchingForProbes": {
     "description": "Message displayed when the app is searching for nearby probes."
+  },
+  "thermometers": "Thermometers ({number})",
+  "@thermometers": {
+    "description": "Label for the list of thermometers, where {number} is the count of available thermometers.",
+    "placeholders": {
+      "number": {
+        "type": "int",
+        "description": "The number of thermometers found."
+      }
+    }
   }
 }

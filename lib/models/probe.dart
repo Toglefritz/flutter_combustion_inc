@@ -21,7 +21,7 @@ class Probe {
   final int id;
 
   /// The color of the probe’s silicone ring.
-  final String color;
+  final int color;
 
   /// The received signal strength indicator (RSSI).
   final int rssi;
@@ -50,7 +50,7 @@ class Probe {
       name: map['name'] as String,
       macAddress: map['macAddress'] as String,
       id: map['id'] as int,
-      color: map['color'] as String,
+      color: map['color'] as int,
       rssi: map['rssi'] as int,
     );
   }

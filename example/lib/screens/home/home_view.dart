@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_combustion_inc/models/probe.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../l10n/app_localizations.dart';
 import 'home_controller.dart';
 import 'home_route.dart';
 
 /// View for the [HomeRoute]. The view is dumb, and purely declarative. References values on the controller and widget.
+///
+/// This view is displayed when at least one probe has been discovered.
 class HomeView extends StatelessWidget {
   /// A reference to the controller for the [HomeRoute].
   final HomeController state;
@@ -16,23 +18,28 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
+      appBar: AppBar(
+        title: Text(
+          AppLocalizations.of(context)!.thermometers(state.probes.length),
+          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: false,
+      ),
+      body: Center(
         child: Column(
           children: [
-            // If no probes are discovered, show a message.
-            if (state.probes.isEmpty) ...[
-              const CircularProgressIndicator(),
-              Text(AppLocalizations.of(context)!.searchingForProbes),
-            ] else
-              ...List.generate(state.probes.length, (int index) {
-                final Probe probe = state.probes[index];
+            ...List.generate(state.probes.length, (int index) {
+              final Probe probe = state.probes[index];
 
-                return ListTile(
+              return Card(
+                child: ListTile(
                   title: Text(probe.name),
-                  subtitle: Text(probe.identifier),
                   onTap: state.onProbeSelected,
-                );
-              }),
+                ),
+              );
+            }),
           ],
         ),
       ),

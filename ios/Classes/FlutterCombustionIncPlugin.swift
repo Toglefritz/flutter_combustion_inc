@@ -39,7 +39,7 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
         
         // Event channel for continuous scan results.
         let probeListChannel = FlutterEventChannel(
-          name: "flutter_combustion_inc_probe_list",
+          name: "flutter_combustion_inc_scan",
           binaryMessenger: registrar.messenger()
         )
         probeListChannel.setStreamHandler(instance)
@@ -66,8 +66,8 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
                     "serialNumber": probe.serialNumberString,
                     "name": probe.name,
                     "macAddress": probe.macAddressString,
-                    "id": probe.id,
-                    "color": probe.color,
+                    "id": probe.id.rawValue,
+                    "color": probe.color.rawValue,
                     "rssi": probe.rssi
                 ]
             }
@@ -92,6 +92,7 @@ extension FlutterCombustionIncPlugin: FlutterStreamHandler {
         return nil
     }
 
+    
     private func startProbeListStream() {
         self.probeListUpdateTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
             guard let self = self, let sink = self.probeListEventSink else { return }
@@ -100,18 +101,18 @@ extension FlutterCombustionIncPlugin: FlutterStreamHandler {
 
             if newIdentifiers != self.lastProbeIdentifiers {
                 self.lastProbeIdentifiers = newIdentifiers
-                let result = probes.map { probe in
-                    return [
+                for probe in probes {
+                    let probeDict: [String: Any] = [
                         "identifier": probe.uniqueIdentifier,
                         "serialNumber": probe.serialNumberString,
                         "name": probe.name,
                         "macAddress": probe.macAddressString,
-                        "id": probe.id,
-                        "color": probe.color,
+                        "id": probe.id.rawValue,
+                        "color": probe.color.rawValue,
                         "rssi": probe.rssi
                     ]
+                    sink(probeDict)
                 }
-                sink(result)
             }
         }
     }

@@ -3,6 +3,7 @@ import 'package:flutter_combustion_inc/models/device_manager.dart';
 import 'package:flutter_combustion_inc/models/probe.dart';
 import 'home_route.dart';
 import 'home_view.dart';
+import 'home_view_searching.dart';
 
 /// A controller for the [HomeRoute] that manages the state and owns all business logic.
 class HomeController extends State<HomeRoute> {
@@ -38,5 +39,8 @@ class HomeController extends State<HomeRoute> {
   }
 
   @override
-  Widget build(BuildContext context) => HomeView(this);
+  Widget build(BuildContext context) => AnimatedSwitcher(
+    duration: const Duration(microseconds: 250),
+    child: probes.isEmpty ? const HomeViewSearching() : HomeView(this),
+  );
 }
