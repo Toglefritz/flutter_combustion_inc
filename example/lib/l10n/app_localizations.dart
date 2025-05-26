@@ -105,6 +105,12 @@ abstract class AppLocalizations {
   /// **'Core'**
   String get coreTemperature;
 
+  /// A generic label for a probe.
+  ///
+  /// In en, this message translates to:
+  /// **'Probe'**
+  String get probe;
+
   /// Message displayed when the app is searching for nearby probes.
   ///
   /// In en, this message translates to:

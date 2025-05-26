@@ -9,6 +9,11 @@
     "description": "Label for the core temperature of a probe.",
     "placeholders": {}
   },
+  "probe": "Probe",
+  "@probe": {
+    "description": "A generic label for a probe.",
+    "placeholders": {}
+  },
   "searchingForProbes": "Searching for probes...",
   "@searchingForProbes": {
     "description": "Message displayed when the app is searching for nearby probes."

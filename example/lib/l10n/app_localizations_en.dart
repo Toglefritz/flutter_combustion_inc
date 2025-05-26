@@ -15,6 +15,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get coreTemperature => 'Core';
 
   @override
+  String get probe => 'Probe';
+
+  @override
   String get searchingForProbes => 'Searching for probes...';
 
   @override

@@ -77,7 +77,7 @@ class Probe {
   /// Returns a [VirtualTemperatures] instance.
   /// Throws a `PlatformException` if retrieval fails.
   Future<VirtualTemperatures> get virtualTemperatures async {
-    final result = await FlutterCombustionIncPlatform.instance.getVirtualTemperatures(identifier);
+    final Map<String, double> result = await FlutterCombustionIncPlatform.instance.getVirtualTemperatures(identifier);
     return VirtualTemperatures.fromMap(result);
   }
 

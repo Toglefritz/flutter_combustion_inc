@@ -30,6 +30,9 @@ class HomeController extends State<HomeRoute> {
       setState(() {
         probes.add(probe);
       });
+
+      // Connect to the probe and attempt to maintain a connection.
+      probe.connect();
     }
   }
 

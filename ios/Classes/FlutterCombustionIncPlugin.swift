@@ -127,6 +127,20 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
                     ])
                 }
             result(nil)
+            
+        case "connectToProbe":
+            guard
+                let args = call.arguments as? [String: Any],
+                let identifier = args["identifier"] as? String,
+                let probe = DeviceManager.shared.getProbes().first(where: { $0.uniqueIdentifier == identifier })
+            else {
+                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid probe identifier", details: nil))
+                return
+            }
+
+            probe.connect()
+            result(nil)
+            
         default:
             result(FlutterMethodNotImplemented)
         }
