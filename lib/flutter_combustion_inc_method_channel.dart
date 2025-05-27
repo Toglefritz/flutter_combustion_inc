@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import 'flutter_combustion_inc_platform_interface.dart';
+import 'models/battery_status.dart';
 
 /// An implementation of [FlutterCombustionIncPlatform] that uses method channels.
 class MethodChannelFlutterCombustionInc extends FlutterCombustionIncPlatform {
@@ -16,6 +17,10 @@ class MethodChannelFlutterCombustionInc extends FlutterCombustionIncPlatform {
   /// The event channel used to stream virtual temperature updates.
   @visibleForTesting
   final EventChannel virtualTempEventChannel = const EventChannel('flutter_combustion_inc_virtual_temps');
+
+  /// The event channel used to stream battery status updates.
+  @visibleForTesting
+  final EventChannel batteryStatusEventChannel = const EventChannel('flutter_combustion_inc_battery_status');
 
   Stream<List<Map<String, dynamic>>>? _probeListStream;
 
@@ -62,6 +67,18 @@ class MethodChannelFlutterCombustionInc extends FlutterCombustionIncPlatform {
   Future<String> getBatteryStatus(String identifier) async {
     final result = await methodChannel.invokeMethod('getBatteryStatus', {'identifier': identifier});
     return result as String;
+  }
+
+  @override
+  Stream<BatteryStatus> batteryStatusStream(String identifier) {
+    // Start the native stream
+    methodChannel.invokeMethod('startBatteryStatusStream', {
+      'identifier': identifier,
+    });
+
+    return batteryStatusEventChannel
+        .receiveBroadcastStream({'type': 'batteryStatus'})
+        .map((event) => BatteryStatus.fromInt(event as int));
   }
 
   @override

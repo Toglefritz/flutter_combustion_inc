@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_combustion_inc/models/battery_status.dart';
 import 'package:flutter_combustion_inc/models/probe.dart';
 import 'package:flutter_combustion_inc/models/virtual_temperatures.dart';
 
@@ -43,13 +44,44 @@ class HomeView extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        probe.name,
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                      // Device information
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          // Probe name
+                          Text(
+                            '${AppLocalizations.of(context)!.probe}: ${probe.name}',
+                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+
+                          // Low battery warning
+                          StreamBuilder(
+                            stream: probe.batteryStatusStream,
+                            builder: (BuildContext context, AsyncSnapshot<BatteryStatus> snapshot) {
+                              // If battery information is not available, return an empty widget
+                              if (!snapshot.hasData) {
+                                return const SizedBox.shrink();
+                              }
+
+                              // Otherwise, extract the battery status from the snapshot
+                              final BatteryStatus status = snapshot.data!;
+                              return Transform.rotate(
+                                angle: 1.5708, // Rotate the icon by 90 degrees
+                                child: Icon(
+                                  status == BatteryStatus.low ? Icons.battery_0_bar_outlined : Icons.battery_full,
+                                  color: status == BatteryStatus.low ? Colors.red[900] : Colors.green[900],
+                                ),
+                              );
+                            },
+                          ),
+                        ],
                       ),
+
                       const Divider(),
+
+                      // Temperature readings
                       StreamBuilder(
                         stream: probe.virtualTemperatureStream,
                         builder: (BuildContext context, AsyncSnapshot<VirtualTemperatures> snapshot) {

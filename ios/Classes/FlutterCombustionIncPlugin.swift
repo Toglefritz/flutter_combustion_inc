@@ -29,6 +29,12 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
 
     /// Combine subscription to virtual temperature updates.
     private var virtualTempCancellable: AnyCancellable?
+    
+    /// Event sink used to stream battery status.
+    private var batteryStatusSink: FlutterEventSink?
+
+    /// Combine subscription to battery status updates.
+    private var batteryStatusCancellable: AnyCancellable?
 
     /// Registers the plugin with the Flutter engine and sets up method and event channels.
     ///
@@ -56,6 +62,12 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
           binaryMessenger: registrar.messenger()
         )
         virtualTempChannel.setStreamHandler(instance)
+        
+        let batteryStatusChannel = FlutterEventChannel(
+          name: "flutter_combustion_inc_battery_status",
+          binaryMessenger: registrar.messenger()
+        )
+        batteryStatusChannel.setStreamHandler(instance)
         
         // Register the method and event channel handlers
         registrar.addMethodCallDelegate(instance, channel: methodChannel)
@@ -128,6 +140,23 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
                 }
             result(nil)
             
+        case "startBatteryStatusStream":
+            guard
+                let args = call.arguments as? [String: Any],
+                let identifier = args["identifier"] as? String,
+                let probe = DeviceManager.shared.getProbes().first(where: { $0.uniqueIdentifier == identifier })
+            else {
+                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid probe identifier", details: nil))
+                return
+            }
+
+            batteryStatusCancellable = probe.$batteryStatus
+                .sink { [weak self] status in
+                    self?.batteryStatusSink?(status.rawValue)
+                }
+
+            result(nil)
+            
         case "connectToProbe":
             guard
                 let args = call.arguments as? [String: Any],
@@ -149,9 +178,17 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
 
 extension FlutterCombustionIncPlugin: FlutterStreamHandler {
     public func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
-        if let args = arguments as? [String: Any], args["type"] as? String == "virtualTemps" {
-            self.virtualTempEventSink = events
-            return nil
+        if let args = arguments as? [String: Any] {
+            switch args["type"] as? String {
+            case "virtualTemps":
+                self.virtualTempEventSink = events
+                return nil
+            case "batteryStatus":
+                self.batteryStatusSink = events
+                return nil
+            default:
+                break
+            }
         }
 
         self.probeListEventSink = events
@@ -160,11 +197,21 @@ extension FlutterCombustionIncPlugin: FlutterStreamHandler {
     }
 
     public func onCancel(withArguments arguments: Any?) -> FlutterError? {
-        if let args = arguments as? [String: Any], args["type"] as? String == "virtualTemps" {
-            self.virtualTempEventSink = nil
-            self.virtualTempCancellable?.cancel()
-            self.virtualTempCancellable = nil
-            return nil
+        if let args = arguments as? [String: Any] {
+            switch args["type"] as? String {
+            case "virtualTemps":
+                self.virtualTempEventSink = nil
+                self.virtualTempCancellable?.cancel()
+                self.virtualTempCancellable = nil
+                return nil
+            case "batteryStatus":
+                self.batteryStatusSink = nil
+                self.batteryStatusCancellable?.cancel()
+                self.batteryStatusCancellable = nil
+                return nil
+            default:
+                break
+            }
         }
 
         stopProbeListStream()

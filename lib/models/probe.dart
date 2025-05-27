@@ -1,4 +1,5 @@
 import '../flutter_combustion_inc_platform_interface.dart';
+import 'battery_status.dart';
 import 'virtual_temperatures.dart';
 
 /// Represents a temperature probe discovered via the Combustion Inc. SDK.
@@ -95,6 +96,14 @@ class Probe {
   /// Throws a `PlatformException` if retrieval fails.
   Future<String> get batteryStatus async {
     return FlutterCombustionIncPlatform.instance.getBatteryStatus(identifier);
+  }
+
+  /// Provides a stream of battery status updates from the probe.
+  ///
+  /// The stream emits a new [BatteryStatus] whenever a change occurs.
+  /// Throws a `PlatformException` if the stream cannot be established.
+  Stream<BatteryStatus> get batteryStatusStream {
+    return FlutterCombustionIncPlatform.instance.batteryStatusStream(identifier);
   }
 
   /// Gets the most recent temperature readings from the probe.
