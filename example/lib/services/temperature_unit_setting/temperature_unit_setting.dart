@@ -4,6 +4,7 @@ import 'models/temperature_unit.dart';
 ///
 /// This class provides global access to the user's current temperature unit preference
 /// across the app, without passing values explicitly between screens.
+// Note: In a real-world application, consider saving the user's preference with something like SharedPreferences.
 class TemperatureUnitSetting {
   // Prevent instantiation
   TemperatureUnitSetting._();
