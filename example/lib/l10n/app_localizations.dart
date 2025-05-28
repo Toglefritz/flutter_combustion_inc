@@ -99,11 +99,35 @@ abstract class AppLocalizations {
   /// **'Ambient'**
   String get ambientTemperature;
 
+  /// Message indicating that the battery status of a probe is okay.
+  ///
+  /// In en, this message translates to:
+  /// **'Battery OK'**
+  String get batteryStatusOk;
+
+  /// Abbreviation for Celsius temperature.
+  ///
+  /// In en, this message translates to:
+  /// **'C'**
+  String get celsiusAbbreviation;
+
   /// Label for the core temperature of a probe.
   ///
   /// In en, this message translates to:
   /// **'Core'**
   String get coreTemperature;
+
+  /// Abbreviation for Fahrenheit temperature.
+  ///
+  /// In en, this message translates to:
+  /// **'F'**
+  String get fahrenheitAbbreviation;
+
+  /// Warning message displayed when a probe's battery is low.
+  ///
+  /// In en, this message translates to:
+  /// **'Battery low'**
+  String get lowBatteryWarning;
 
   /// A generic label for a probe.
   ///

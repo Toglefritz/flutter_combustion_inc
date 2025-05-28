@@ -4,9 +4,29 @@
     "description": "Label for the ambient temperature of a probe.",
     "placeholders": {}
   },
+  "batteryStatusOk": "Battery OK",
+  "@batteryStatusOk": {
+    "description": "Message indicating that the battery status of a probe is okay.",
+    "placeholders": {}
+  },
+  "celsiusAbbreviation": "C",
+  "@celsiusAbbreviation": {
+    "description": "Abbreviation for Celsius temperature.",
+    "placeholders": {}
+  },
   "coreTemperature": "Core",
   "@coreTemperature": {
     "description": "Label for the core temperature of a probe.",
+    "placeholders": {}
+  },
+  "fahrenheitAbbreviation": "F",
+  "@fahrenheitAbbreviation": {
+    "description": "Abbreviation for Fahrenheit temperature.",
+    "placeholders": {}
+  },
+  "lowBatteryWarning": "Battery low",
+  "@lowBatteryWarning": {
+    "description": "Warning message displayed when a probe's battery is low.",
     "placeholders": {}
   },
   "probe": "Probe",

@@ -45,6 +45,7 @@ class FlutterCombustionIncExampleApp extends StatelessWidget {
           primary: Colors.amber,
           secondary: Colors.amberAccent,
         ),
+        primaryColorDark: Colors.white,
         cardTheme: CardThemeData(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12.0),

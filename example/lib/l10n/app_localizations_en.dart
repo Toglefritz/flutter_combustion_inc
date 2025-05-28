@@ -12,7 +12,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ambientTemperature => 'Ambient';
 
   @override
+  String get batteryStatusOk => 'Battery OK';
+
+  @override
+  String get celsiusAbbreviation => 'C';
+
+  @override
   String get coreTemperature => 'Core';
+
+  @override
+  String get fahrenheitAbbreviation => 'F';
+
+  @override
+  String get lowBatteryWarning => 'Battery low';
 
   @override
   String get probe => 'Probe';
