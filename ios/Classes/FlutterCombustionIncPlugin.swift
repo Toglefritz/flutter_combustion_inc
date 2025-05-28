@@ -3,19 +3,25 @@ import CombustionBLE
 import UIKit
 import Combine
 
-/// The FlutterCombustionIncPlugin serves as the entry point for native iOS
-/// functionality in the flutter_combustion_inc plugin. It bridges method
-/// and event channels between Flutter and the native Combustion Inc. SDK.
+/// `FlutterCombustionIncPlugin` is the iOS-side implementation of the
+/// flutter_combustion_inc plugin. It uses Flutter method and event channels
+/// to connect Flutter apps to Combustion Inc. temperature probes.
 ///
-/// This class currently supports scanning for nearby Combustion Inc. probes
-/// using the DeviceManager from the combustion-ios-ble SDK. Discovered probes
-/// are streamed to Dart via an EventChannel.
+/// This class acts as a communication bridge, relaying probe information such as:
+/// - Probe discovery and connection status
+/// - Virtual temperature data (core, surface, ambient)
+/// - Battery status updates
+///
+/// The plugin listens to probe events using Combine publishers and streams
+/// real-time updates to the Dart layer through `FlutterEventSink`s.
 public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
     
-    /// Event sink used to stream discovered probes back to Flutter.
+    /// Stream for probe scan results triggered via EventChannel.
+    /// Sends discovered probes to Dart during active scanning.
     private var scanEventSink: FlutterEventSink?
     
-    /// Event sink used to stream the full list of discovered probes back to Flutter.
+    /// Stream for the complete list of nearby discovered probes.
+    /// Used for regularly emitting full probe snapshots.
     private var probeListEventSink: FlutterEventSink?
     
     /// Timer to periodically check for updates to the probe list.
@@ -24,13 +30,14 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
     /// Most recent snapshot of probe identifiers.
     private var lastProbeIdentifiers: Set<String> = []
 
-    /// Event sink used to stream virtual temperatures.
+    /// Used to emit real-time virtual temperature readings (core, surface, ambient)
+    /// from a connected probe to Flutter.
     private var virtualTempEventSink: FlutterEventSink?
 
     /// Combine subscription to virtual temperature updates.
     private var virtualTempCancellable: AnyCancellable?
     
-    /// Event sink used to stream battery status.
+    /// Used to emit battery status changes from a probe ("ok" or "low") to Flutter.
     private var batteryStatusSink: FlutterEventSink?
 
     /// Combine subscription to battery status updates.
@@ -80,12 +87,12 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
     ///   - result: Callback for sending a result or error back to Dart.
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
-        // Initializes Bluetooth resources and begins scanning for nearby temperature probes.
+        // Initializes the Bluetooth stack in the Combustion SDK and begins scanning.
         case "initBluetooth":
             DeviceManager.shared.initBluetooth()
             result(nil)
        
-        // Returns a list of probes known to the DeviceManager.
+        // Returns a snapshot list of all probes currently known to the DeviceManager.
         case "getProbes":
             let probes = DeviceManager.shared.getProbes().map { probe in
                 return [
@@ -100,7 +107,8 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
             }
             result(probes)
             
-        // Obtains "virtual temperatures" from a probe. Virtual temperatures represent the temperatures from different areas of the food.
+        // Retrieves a one-time reading of virtual temperatures for a specific probe.
+        // The result contains `core`, `surface`, and `ambient` temperature values.
         case "getVirtualTemperatures":
             guard
                 let args = call.arguments as? [String: Any],
@@ -118,7 +126,8 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
                 "ambient": temps?.ambientTemperature,
             ])
             
-        // Allows Flutter apps to listen to a stream of virtual temperatures.
+        // Starts streaming live virtual temperature updates for the specified probe.
+        // Uses Combine to observe the `virtualTemperatures` property.
         case "startVirtualTemperatureStream":
             guard
                 let args = call.arguments as? [String: Any],
@@ -140,6 +149,7 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
                 }
             result(nil)
             
+        // Starts streaming live battery status updates ("ok" or "low") for a probe.
         case "startBatteryStatusStream":
             guard
                 let args = call.arguments as? [String: Any],
@@ -157,6 +167,7 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
 
             result(nil)
             
+        // Initiates a connection to the specified probe and enables automatic reconnection.
         case "connectToProbe":
             guard
                 let args = call.arguments as? [String: Any],
@@ -177,6 +188,8 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
 }
 
 extension FlutterCombustionIncPlugin: FlutterStreamHandler {
+    /// Called when Flutter begins listening to an EventChannel.
+    /// Determines the channel type based on the `type` argument and sets the correct event sink.
     public func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
         if let args = arguments as? [String: Any] {
             switch args["type"] as? String {
@@ -196,6 +209,8 @@ extension FlutterCombustionIncPlugin: FlutterStreamHandler {
         return nil
     }
 
+    /// Called when Flutter cancels a listener subscription on an EventChannel.
+    /// Cleans up Combine subscriptions and disables any ongoing emissions.
     public func onCancel(withArguments arguments: Any?) -> FlutterError? {
         if let args = arguments as? [String: Any] {
             switch args["type"] as? String {
@@ -220,6 +235,9 @@ extension FlutterCombustionIncPlugin: FlutterStreamHandler {
     }
 
     
+    /// Periodically polls the DeviceManager for updated probe lists and emits each
+    /// discovered probe individually via `probeListEventSink`.
+    /// Only emits updates when the set of discovered probe identifiers changes.
     private func startProbeListStream() {
         self.probeListUpdateTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
             guard let self = self, let sink = self.probeListEventSink else { return }
@@ -244,6 +262,7 @@ extension FlutterCombustionIncPlugin: FlutterStreamHandler {
         }
     }
 
+    /// Stops the periodic timer for emitting the probe list and clears state.
     private func stopProbeListStream() {
         self.probeListUpdateTimer?.invalidate()
         self.probeListUpdateTimer = nil

@@ -43,8 +43,7 @@ class Probe {
 
   /// Creates a [Probe] instance from a map received via platform channels.
   ///
-  /// The map should contain keys: 'identifier', 'serialNumber', 'name',
-  /// 'macAddress', 'id', 'color', and 'rssi'.
+  /// The map should contain keys: 'identifier', 'serialNumber', 'name', 'macAddress', 'id', 'color', and 'rssi'.
   factory Probe.fromMap(Map<String, dynamic> map) {
     return Probe(
       identifier: map['identifier'] as String,
@@ -76,6 +75,7 @@ class Probe {
   /// Gets the virtual temperature readings from the probe.
   ///
   /// Returns a [VirtualTemperatures] instance.
+  ///
   /// Throws a `PlatformException` if retrieval fails.
   Future<VirtualTemperatures> get virtualTemperatures async {
     final Map<String, double> result = await FlutterCombustionIncPlatform.instance.getVirtualTemperatures(identifier);
@@ -85,6 +85,7 @@ class Probe {
   /// Provides a stream of virtual temperature readings from the probe.
   ///
   /// The stream emits a new [VirtualTemperatures] instance whenever a change occurs.
+  ///
   /// Throws a `PlatformException` if the stream cannot be established.
   Stream<VirtualTemperatures> get virtualTemperatureStream {
     return FlutterCombustionIncPlatform.instance.virtualTemperatureStream(identifier).map(VirtualTemperatures.fromMap);
@@ -93,6 +94,7 @@ class Probe {
   /// Gets the battery status of the probe ("OK" or "Low").
   ///
   /// Returns a [String] representing the battery status.
+  ///
   /// Throws a `PlatformException` if retrieval fails.
   Future<String> get batteryStatus async {
     return FlutterCombustionIncPlatform.instance.getBatteryStatus(identifier);
@@ -101,6 +103,7 @@ class Probe {
   /// Provides a stream of battery status updates from the probe.
   ///
   /// The stream emits a new [BatteryStatus] whenever a change occurs.
+  ///
   /// Throws a `PlatformException` if the stream cannot be established.
   Stream<BatteryStatus> get batteryStatusStream {
     return FlutterCombustionIncPlatform.instance.batteryStatusStream(identifier);
@@ -111,6 +114,7 @@ class Probe {
   /// The result is a list of 8 temperatures (T1–T8) in Celsius.
   ///
   /// Returns a [List<double>] of temperatures.
+  ///
   /// Throws a `PlatformException` if retrieval fails.
   Future<List<double>> get currentTemperatures async {
     return FlutterCombustionIncPlatform.instance.getCurrentTemperatures(identifier);

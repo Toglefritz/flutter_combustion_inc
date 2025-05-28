@@ -43,7 +43,8 @@ class DeviceManager {
   /// The native platform is expected to return a list of probe maps,
   /// each of which will be converted into a [Probe] instance.
   Future<List<Probe>> getProbes() async {
-    final result = await FlutterCombustionIncPlatform.instance.getProbes();
+    final List<Map<String, dynamic>> result = await FlutterCombustionIncPlatform.instance.getProbes();
+
     return result.map(Probe.fromMap).toList();
   }
 }
