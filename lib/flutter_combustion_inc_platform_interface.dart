@@ -46,6 +46,9 @@ abstract class FlutterCombustionIncPlatform extends PlatformInterface {
   /// Retrieves a list of known probes from the native SDK.
   Future<List<Map<String, dynamic>>> getProbes();
 
+  /// Retrieves the RSSI (Received Signal Strength Indicator) for the specified probe.
+  Future<int> getRssi(String identifier);
+
   /// Attempts to connect to a probe with the given identifier.
   Future<void> connectToProbe(String identifier);
 

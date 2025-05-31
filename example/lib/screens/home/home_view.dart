@@ -93,19 +93,59 @@ class HomeView extends StatelessWidget {
                             ),
                           ),
 
-                          // Low battery warning
-                          StreamBuilder(
-                            stream: probe.batteryStatusStream,
-                            builder: (BuildContext context, AsyncSnapshot<BatteryStatus> snapshot) {
-                              // If battery information is not available, return an empty widget
-                              if (!snapshot.hasData) {
-                                return const SizedBox.shrink();
-                              }
+                          Row(
+                            children: [
+                              // Battery indicator
+                              Padding(
+                                padding: const EdgeInsets.only(right: Inset.xSmall),
+                                child: StreamBuilder(
+                                  stream: probe.batteryStatusStream,
+                                  builder: (BuildContext context, AsyncSnapshot<BatteryStatus> snapshot) {
+                                    // If battery information is not available, return an empty widget
+                                    if (!snapshot.hasData) {
+                                      return const SizedBox.shrink();
+                                    }
 
-                              // Otherwise, extract the battery status from the snapshot
-                              final BatteryStatus status = snapshot.data!;
-                              return BatteryStatusIndicator(status: status);
-                            },
+                                    // Otherwise, extract the battery status from the snapshot
+                                    final BatteryStatus status = snapshot.data!;
+                                    return BatteryStatusIndicator(status: status);
+                                  },
+                                ),
+                              ),
+
+                              // RSSI
+                              Padding(
+                                padding: const EdgeInsets.only(left: Inset.xSmall),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    FutureBuilder(
+                                      future: probe.rssi,
+                                      builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+                                        // If RSSI information is not available, return a loading indicator
+                                        if (!snapshot.hasData) {
+                                          return const CircularProgressIndicator();
+                                        }
+
+                                        // Otherwise, extract the RSSI value from the snapshot
+                                        final int rssi = snapshot.data!;
+                                        return Text(
+                                          rssi.toString(),
+                                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        );
+                                      },
+                                    ),
+
+                                    Text(
+                                      AppLocalizations.of(context)!.rssi,
+                                      style: Theme.of(context).textTheme.labelSmall,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),

@@ -147,6 +147,12 @@ abstract class AppLocalizations {
   /// **'Probe'**
   String get probe;
 
+  /// Label for the Received Signal Strength Indicator (RSSI) of a probe.
+  ///
+  /// In en, this message translates to:
+  /// **'RSSI'**
+  String get rssi;
+
   /// Message displayed when the app is searching for nearby probes.
   ///
   /// In en, this message translates to:

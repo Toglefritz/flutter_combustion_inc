@@ -44,6 +44,11 @@
     "description": "A generic label for a probe.",
     "placeholders": {}
   },
+  "rssi": "RSSI",
+  "@rssi": {
+    "description": "Label for the Received Signal Strength Indicator (RSSI) of a probe.",
+    "placeholders": {}
+  },
   "searchingForProbes": "Searching for probes...",
   "@searchingForProbes": {
     "description": "Message displayed when the app is searching for nearby probes."

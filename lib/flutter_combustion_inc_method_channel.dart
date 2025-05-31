@@ -50,7 +50,22 @@ class MethodChannelFlutterCombustionInc extends FlutterCombustionIncPlatform {
   @override
   Future<List<Map<String, dynamic>>> getProbes() async {
     final List<dynamic> result = await methodChannel.invokeMethod('getProbes') as List<dynamic>;
+
     return result.map((e) => Map<String, dynamic>.from(e as Map)).toList();
+  }
+
+
+  @override
+  Future<int> getRssi(String identifier) async {
+    final result = await methodChannel.invokeMethod('getRssi', {
+      'identifier': identifier,
+    });
+
+    if (result == null) {
+      throw Exception('Failed to retrieve RSSI');
+    }
+
+    return result as int;
   }
 
   @override

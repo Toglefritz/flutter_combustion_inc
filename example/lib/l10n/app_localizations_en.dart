@@ -36,6 +36,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get probe => 'Probe';
 
   @override
+  String get rssi => 'RSSI';
+
+  @override
   String get searchingForProbes => 'Searching for probes...';
 
   @override

@@ -26,9 +26,6 @@ class Probe {
   /// The color of the probe’s silicone ring.
   final int color;
 
-  /// The received signal strength indicator (RSSI).
-  final int rssi;
-
   /// Constructs a new [Probe] instance.
   ///
   /// This constructor is typically used internally based on native data.
@@ -39,7 +36,6 @@ class Probe {
     required this.macAddress,
     required this.id,
     required this.color,
-    required this.rssi,
   });
 
   /// Creates a [Probe] instance from a map received via platform channels.
@@ -53,7 +49,6 @@ class Probe {
       macAddress: map['macAddress'] as String,
       id: map['id'] as int,
       color: map['color'] as int,
-      rssi: map['rssi'] as int,
     );
   }
 
@@ -64,6 +59,13 @@ class Probe {
   /// Throws a `PlatformException` if the connection fails.
   Future<void> connect() async {
     await FlutterCombustionIncPlatform.instance.connectToProbe(identifier);
+  }
+
+  /// Returns the RSSI (Received Signal Strength Indicator) for the probe.
+  Future<int> get rssi async {
+    final int result = await FlutterCombustionIncPlatform.instance.getRssi(identifier);
+
+    return result;
   }
 
   /// Disconnects from the probe and stops trying to maintain a connection.
@@ -92,13 +94,14 @@ class Probe {
     return FlutterCombustionIncPlatform.instance.virtualTemperatureStream(identifier).map(VirtualTemperatures.fromMap);
   }
 
-  /// Gets the battery status of the probe ("OK" or "Low").
+  /// Gets the battery status of the probe.
   ///
-  /// Returns a [String] representing the battery status.
+  /// Returns a [BatteryStatus] enum representing the battery status.
   ///
   /// Throws a `PlatformException` if retrieval fails.
-  Future<String> get batteryStatus async {
-    return FlutterCombustionIncPlatform.instance.getBatteryStatus(identifier);
+  Future<BatteryStatus> get batteryStatus async {
+    final String status = await FlutterCombustionIncPlatform.instance.getBatteryStatus(identifier);
+    return BatteryStatus.values.firstWhere((e) => e.name.toLowerCase() == status.toLowerCase());
   }
 
   /// Provides a stream of battery status updates from the probe.

@@ -29,26 +29,26 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
     
     /// Most recent snapshot of probe identifiers.
     private var lastProbeIdentifiers: Set<String> = []
-
+    
     /// Used to emit real-time virtual temperature readings (core, surface, ambient)
     /// from a connected probe to Flutter.
     private var virtualTempEventSink: FlutterEventSink?
-
+    
     /// Combine subscription to virtual temperature updates.
     private var virtualTempCancellable: AnyCancellable?
     
     /// Used to emit battery status changes from a probe ("ok" or "low") to Flutter.
     private var batteryStatusSink: FlutterEventSink?
-
+    
     /// Combine subscription to battery status updates.
     private var batteryStatusCancellable: AnyCancellable?
-
+    
     /// Used to emit updates for the raw sensor temperatures (8 probes) to Flutter.
     private var currentTempsSink: FlutterEventSink?
-
+    
     /// Combine subscription to current temperature updates.
     private var currentTempsCancellable: AnyCancellable?
-
+    
     /// Registers the plugin with the Flutter engine and sets up method and event channels.
     ///
     /// - Parameters:
@@ -65,26 +65,26 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
         
         // Event channel for continuous scan results.
         let probeListChannel = FlutterEventChannel(
-          name: "flutter_combustion_inc_scan",
-          binaryMessenger: registrar.messenger()
+            name: "flutter_combustion_inc_scan",
+            binaryMessenger: registrar.messenger()
         )
         probeListChannel.setStreamHandler(instance)
         
         let virtualTempChannel = FlutterEventChannel(
-          name: "flutter_combustion_inc_virtual_temps",
-          binaryMessenger: registrar.messenger()
+            name: "flutter_combustion_inc_virtual_temps",
+            binaryMessenger: registrar.messenger()
         )
         virtualTempChannel.setStreamHandler(instance)
         
         let currentTempsChannel = FlutterEventChannel(
-          name: "flutter_combustion_inc_current_temperatures",
-          binaryMessenger: registrar.messenger()
+            name: "flutter_combustion_inc_current_temperatures",
+            binaryMessenger: registrar.messenger()
         )
         currentTempsChannel.setStreamHandler(instance)
         
         let batteryStatusChannel = FlutterEventChannel(
-          name: "flutter_combustion_inc_battery_status",
-          binaryMessenger: registrar.messenger()
+            name: "flutter_combustion_inc_battery_status",
+            binaryMessenger: registrar.messenger()
         )
         batteryStatusChannel.setStreamHandler(instance)
         
@@ -99,12 +99,12 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
     ///   - result: Callback for sending a result or error back to Dart.
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
-        // Initializes the Bluetooth stack in the Combustion SDK and begins scanning.
+            // Initializes the Bluetooth stack in the Combustion SDK and begins scanning.
         case "initBluetooth":
             DeviceManager.shared.initBluetooth()
             result(nil)
-       
-        // Returns a snapshot list of all probes currently known to the DeviceManager.
+            
+            // Returns a snapshot list of all probes currently known to the DeviceManager.
         case "getProbes":
             let probes = DeviceManager.shared.getProbes().map { probe in
                 return [
@@ -119,8 +119,19 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
             }
             result(probes)
             
-        // Retrieves a one-time reading of virtual temperatures for a specific probe.
-        // The result contains `core`, `surface`, and `ambient` temperature values.
+            
+            // Returns the RSSI for the specified probe.
+        case "getRssi":
+            if let identifier = call.arguments as? [String: Any],
+               let id = identifier["identifier"] as? String,
+               let probe = DeviceManager.shared.getProbes().first(where: { $0.uniqueIdentifier == id }) {
+                result(probe.rssi)
+            } else {
+                result(FlutterError(code: "PROBE_NOT_FOUND", message: "Probe not found", details: nil))
+            }
+            
+            // Retrieves a one-time reading of virtual temperatures for a specific probe.
+            // The result contains `core`, `surface`, and `ambient` temperature values.
         case "getVirtualTemperatures":
             guard
                 let args = call.arguments as? [String: Any],
@@ -130,7 +141,7 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
                 result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid probe identifier", details: nil))
                 return
             }
-
+            
             let temps = probe.virtualTemperatures
             result([
                 "core": temps?.coreTemperature,
@@ -138,8 +149,8 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
                 "ambient": temps?.ambientTemperature,
             ])
             
-        // Retrieves all eight raw sensor temperatures from the specified probe.
-        // The values are returned in Celsius as a list of eight doubles.
+            // Retrieves all eight raw sensor temperatures from the specified probe.
+            // The values are returned in Celsius as a list of eight doubles.
         case "getCurrentTemperatures":
             guard
                 let args = call.arguments as? [String: Any],
@@ -153,8 +164,8 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
             // Return as a list of doubles for Dart to convert to ProbeTemperatures.
             result(temps)
             
-        // Starts streaming live virtual temperature updates for the specified probe.
-        // Uses Combine to observe the `virtualTemperatures` property.
+            // Starts streaming live virtual temperature updates for the specified probe.
+            // Uses Combine to observe the `virtualTemperatures` property.
         case "startVirtualTemperatureStream":
             guard
                 let args = call.arguments as? [String: Any],
@@ -164,7 +175,7 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
                 result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid probe identifier", details: nil))
                 return
             }
-
+            
             virtualTempCancellable = probe.$virtualTemperatures
                 .sink { [weak self] temps in
                     guard let sink = self?.virtualTempEventSink, let temps = temps else { return }
@@ -176,7 +187,7 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
                 }
             result(nil)
             
-        // Starts streaming live battery status updates ("ok" or "low") for a probe.
+            // Starts streaming live battery status updates ("ok" or "low") for a probe.
         case "startBatteryStatusStream":
             guard
                 let args = call.arguments as? [String: Any],
@@ -186,15 +197,15 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
                 result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid probe identifier", details: nil))
                 return
             }
-
+            
             batteryStatusCancellable = probe.$batteryStatus
                 .sink { [weak self] status in
                     self?.batteryStatusSink?(status.rawValue)
                 }
-
+            
             result(nil)
             
-        // Initiates a connection to the specified probe and enables automatic reconnection.
+            // Initiates a connection to the specified probe and enables automatic reconnection.
         case "connectToProbe":
             guard
                 let args = call.arguments as? [String: Any],
@@ -204,11 +215,11 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
                 result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid probe identifier", details: nil))
                 return
             }
-
+            
             probe.connect()
             result(nil)
             
-        // Starts streaming live current temperatures (8 sensors) for the specified probe.
+            // Starts streaming live current temperatures (8 sensors) for the specified probe.
         case "startCurrentTemperaturesStream":
             guard
                 let args = call.arguments as? [String: Any],
@@ -218,13 +229,13 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
                 result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid probe identifier", details: nil))
                 return
             }
-
+            
             currentTempsCancellable = probe.$currentTemperatures
                 .sink { [weak self] temperatures in
                     guard let sink = self?.currentTempsSink, let values = temperatures?.values else { return }
                     sink(values)
                 }
-
+            
             result(nil)
             
         default:
@@ -252,12 +263,12 @@ extension FlutterCombustionIncPlugin: FlutterStreamHandler {
                 break
             }
         }
-
+        
         self.probeListEventSink = events
         startProbeListStream()
         return nil
     }
-
+    
     /// Called when Flutter cancels a listener subscription on an EventChannel.
     /// Cleans up Combine subscriptions and disables any ongoing emissions.
     public func onCancel(withArguments arguments: Any?) -> FlutterError? {
@@ -282,12 +293,12 @@ extension FlutterCombustionIncPlugin: FlutterStreamHandler {
                 break
             }
         }
-
+        
         stopProbeListStream()
         self.probeListEventSink = nil
         return nil
     }
-
+    
     
     /// Periodically polls the DeviceManager for updated probe lists and emits each
     /// discovered probe individually via `probeListEventSink`.
@@ -297,7 +308,7 @@ extension FlutterCombustionIncPlugin: FlutterStreamHandler {
             guard let self = self, let sink = self.probeListEventSink else { return }
             let probes = DeviceManager.shared.getProbes()
             let newIdentifiers = Set(probes.map { $0.uniqueIdentifier })
-
+            
             if newIdentifiers != self.lastProbeIdentifiers {
                 self.lastProbeIdentifiers = newIdentifiers
                 for probe in probes {
@@ -315,7 +326,7 @@ extension FlutterCombustionIncPlugin: FlutterStreamHandler {
             }
         }
     }
-
+    
     /// Stops the periodic timer for emitting the probe list and clears state.
     private func stopProbeListStream() {
         self.probeListUpdateTimer?.invalidate()
