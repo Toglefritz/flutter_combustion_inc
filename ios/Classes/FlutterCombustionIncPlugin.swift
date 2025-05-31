@@ -49,6 +49,12 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
     /// Combine subscription to current temperature updates.
     private var currentTempsCancellable: AnyCancellable?
     
+    /// Used to emit updates about whether the probe data is considered stale.
+    private var statusStaleSink: FlutterEventSink?
+
+    /// Combine subscription to status notification staleness.
+    private var statusStaleCancellable: AnyCancellable?
+    
     /// Registers the plugin with the Flutter engine and sets up method and event channels.
     ///
     /// - Parameters:
@@ -87,6 +93,12 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
             binaryMessenger: registrar.messenger()
         )
         batteryStatusChannel.setStreamHandler(instance)
+        
+        let statusStaleChannel = FlutterEventChannel(
+            name: "flutter_combustion_inc_status_stale",
+            binaryMessenger: registrar.messenger()
+        )
+        statusStaleChannel.setStreamHandler(instance)
         
         // Register the method and event channel handlers
         registrar.addMethodCallDelegate(instance, channel: methodChannel)
@@ -238,6 +250,23 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
             
             result(nil)
             
+        case "startStatusStaleStream":
+            guard
+                let args = call.arguments as? [String: Any],
+                let identifier = args["identifier"] as? String,
+                let probe = DeviceManager.shared.getProbes().first(where: { $0.uniqueIdentifier == identifier })
+            else {
+                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid probe identifier", details: nil))
+                return
+            }
+            
+            statusStaleCancellable = probe.$statusNotificationsStale
+                .sink { [weak self] isStale in
+                    self?.statusStaleSink?(isStale)
+                }
+            
+            result(nil)
+            
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -258,6 +287,9 @@ extension FlutterCombustionIncPlugin: FlutterStreamHandler {
                 return nil
             case "currentTemperatures":
                 self.currentTempsSink = events
+                return nil
+            case "statusStale":
+                self.statusStaleSink = events
                 return nil
             default:
                 break
@@ -288,6 +320,11 @@ extension FlutterCombustionIncPlugin: FlutterStreamHandler {
                 self.currentTempsSink = nil
                 self.currentTempsCancellable?.cancel()
                 self.currentTempsCancellable = nil
+                return nil
+            case "statusStale":
+                self.statusStaleSink = nil
+                self.statusStaleCancellable?.cancel()
+                self.statusStaleCancellable = nil
                 return nil
             default:
                 break

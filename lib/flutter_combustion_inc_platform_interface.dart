@@ -49,6 +49,10 @@ abstract class FlutterCombustionIncPlatform extends PlatformInterface {
   /// Retrieves the RSSI (Received Signal Strength Indicator) for the specified probe.
   Future<int> getRssi(String identifier);
 
+  /// Checks if the status of the probe is stale. A stale status indicates that the probe has not sent an update in a
+  /// while, which may suggest a connection issue or that the probe is powered off.
+  Stream<bool> statusStaleStream(String identifier);
+
   /// Attempts to connect to a probe with the given identifier.
   Future<void> connectToProbe(String identifier);
 

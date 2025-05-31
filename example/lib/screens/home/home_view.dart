@@ -72,99 +72,109 @@ class HomeView extends StatelessWidget {
             ...List.generate(state.probes.length, (int index) {
               final Probe probe = state.probes[index];
 
-              return Card(
-                margin: const EdgeInsets.all(Inset.medium),
-                child: Padding(
-                  padding: const EdgeInsets.all(Inset.medium),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // Device information
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          // Probe name
-                          Text(
-                            '${AppLocalizations.of(context)!.probe}: ${probe.name}',
-                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
+              return StreamBuilder(
+                stream: probe.statusStaleStream,
+                builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                  return AnimatedOpacity(
+                    duration: const Duration(microseconds: 250),
+                    opacity: snapshot.hasData && snapshot.data! ? 0.3 : 1.0,
+                    child: Card(
+                      margin: const EdgeInsets.all(Inset.medium),
+                      child: Padding(
+                        padding: const EdgeInsets.all(Inset.medium),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            // Device information
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                // Probe name
+                                Text(
+                                  '${AppLocalizations.of(context)!.probe}: ${probe.name}',
+                                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+
+                                if (state.displayMode == DisplayMode.debugInfo)
+                                  Row(
+                                    children: [
+                                      // Battery indicator
+                                      Padding(
+                                        padding: const EdgeInsets.only(right: Inset.xSmall),
+                                        child: StreamBuilder(
+                                          stream: probe.batteryStatusStream,
+                                          builder: (BuildContext context, AsyncSnapshot<BatteryStatus> snapshot) {
+                                            // If battery information is not available, return an empty widget
+                                            if (!snapshot.hasData) {
+                                              return const SizedBox.shrink();
+                                            }
+
+                                            // Otherwise, extract the battery status from the snapshot
+                                            final BatteryStatus status = snapshot.data!;
+                                            return BatteryStatusIndicator(status: status);
+                                          },
+                                        ),
+                                      ),
+
+                                      // RSSI
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: Inset.xSmall),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            FutureBuilder(
+                                              future: probe.rssi,
+                                              builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+                                                // If RSSI information is not available, return a loading indicator
+                                                if (!snapshot.hasData) {
+                                                  return const CircularProgressIndicator();
+                                                }
+
+                                                // Otherwise, extract the RSSI value from the snapshot
+                                                final int rssi = snapshot.data!;
+                                                return Text(
+                                                  rssi.toString(),
+                                                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                );
+                                              },
+                                            ),
+
+                                            Text(
+                                              AppLocalizations.of(context)!.rssi,
+                                              style: Theme.of(context).textTheme.labelSmall,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                              ],
                             ),
-                          ),
 
-                          Row(
-                            children: [
-                              // Battery indicator
-                              Padding(
-                                padding: const EdgeInsets.only(right: Inset.xSmall),
-                                child: StreamBuilder(
-                                  stream: probe.batteryStatusStream,
-                                  builder: (BuildContext context, AsyncSnapshot<BatteryStatus> snapshot) {
-                                    // If battery information is not available, return an empty widget
-                                    if (!snapshot.hasData) {
-                                      return const SizedBox.shrink();
-                                    }
+                            // Divider for visual separation
+                            const Divider(
+                              height: Inset.medium,
+                            ),
 
-                                    // Otherwise, extract the battery status from the snapshot
-                                    final BatteryStatus status = snapshot.data!;
-                                    return BatteryStatusIndicator(status: status);
-                                  },
-                                ),
-                              ),
+                            // Virtual temperatures display
+                            if (state.displayMode == DisplayMode.virtualTemperatures)
+                              VirtualTemperaturesDisplay(probe: probe),
 
-                              // RSSI
-                              Padding(
-                                padding: const EdgeInsets.only(left: Inset.xSmall),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    FutureBuilder(
-                                      future: probe.rssi,
-                                      builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-                                        // If RSSI information is not available, return a loading indicator
-                                        if (!snapshot.hasData) {
-                                          return const CircularProgressIndicator();
-                                        }
-
-                                        // Otherwise, extract the RSSI value from the snapshot
-                                        final int rssi = snapshot.data!;
-                                        return Text(
-                                          rssi.toString(),
-                                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        );
-                                      },
-                                    ),
-
-                                    Text(
-                                      AppLocalizations.of(context)!.rssi,
-                                      style: Theme.of(context).textTheme.labelSmall,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
+                            // Physical temperatures display
+                            if (state.displayMode == DisplayMode.physicalTemperatures)
+                              PhysicalTemperaturesDisplay(probe: probe),
+                          ],
+                        ),
                       ),
-
-                      // Divider for visual separation
-                      const Divider(
-                        height: Inset.medium,
-                      ),
-
-                      // Virtual temperatures display
-                      if (state.displayMode == DisplayMode.virtualTemperatures)
-                        VirtualTemperaturesDisplay(probe: probe),
-
-                      // Physical temperatures display
-                      if (state.displayMode == DisplayMode.physicalTemperatures)
-                        PhysicalTemperaturesDisplay(probe: probe),
-                    ],
-                  ),
-                ),
+                    ),
+                  );
+                },
               );
             }),
           ],

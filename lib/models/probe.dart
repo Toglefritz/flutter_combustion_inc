@@ -75,6 +75,15 @@ class Probe {
     await FlutterCombustionIncPlatform.instance.disconnectFromProbe(identifier);
   }
 
+  /// Indicates whether the most recent data received from the probe is stale.
+  ///
+  /// Returns `true` if the status data has not been updated recently, or `false` if it is current.
+  ///
+  /// Throws a `PlatformException` if retrieval fails.
+  Stream<bool> get statusStaleStream {
+    return FlutterCombustionIncPlatform.instance.statusStaleStream(identifier);
+  }
+
   /// Gets the virtual temperature readings from the probe.
   ///
   /// Returns a [VirtualTemperatures] instance.

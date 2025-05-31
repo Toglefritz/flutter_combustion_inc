@@ -27,10 +27,17 @@ class MethodChannelFlutterCombustionInc extends FlutterCombustionIncPlatform {
   @visibleForTesting
   final EventChannel currentTempsEventChannel = const EventChannel('flutter_combustion_inc_current_temperatures');
 
+  /// The event channel used to stream status stale updates.
+  @visibleForTesting
+  final EventChannel statusStaleEventChannel = const EventChannel('flutter_combustion_inc_status_stale');
+
+  /// A stream that emits a list of discovered probes.
   Stream<List<Map<String, dynamic>>>? _probeListStream;
 
+  /// A map of streams for virtual temperature updates, keyed by probe identifier.
   final Map<String, Stream<Map<String, double>>> _virtualTempStreams = {};
 
+  /// A map of streams for current temperature updates, keyed by probe identifier.
   final Map<String, Stream<ProbeTemperatures>> _currentTempsStreams = {};
 
   @override
@@ -71,6 +78,19 @@ class MethodChannelFlutterCombustionInc extends FlutterCombustionIncPlatform {
   @override
   Future<void> connectToProbe(String identifier) async {
     await methodChannel.invokeMethod('connectToProbe', {'identifier': identifier});
+  }
+
+
+  @override
+  Stream<bool> statusStaleStream(String identifier) {
+    // Start the native stream
+    methodChannel.invokeMethod('startStatusStaleStream', {
+      'identifier': identifier,
+    });
+
+    return statusStaleEventChannel
+        .receiveBroadcastStream({'type': 'statusStale'})
+        .map((event) => event as bool);
   }
 
   @override
