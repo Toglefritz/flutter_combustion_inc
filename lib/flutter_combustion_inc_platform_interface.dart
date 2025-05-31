@@ -2,6 +2,7 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'flutter_combustion_inc_method_channel.dart';
 import 'models/battery_status.dart';
+import 'models/probe_temperatures.dart';
 
 /// The platform interface that defines the contract for all communication between Dart and the native platforms in the
 /// _flutter_combustion_inc_ plugin.
@@ -68,5 +69,9 @@ abstract class FlutterCombustionIncPlatform extends PlatformInterface {
   Stream<BatteryStatus> batteryStatusStream(String identifier);
 
   /// Retrieves the current temperatures from the specified probe.
-  Future<List<double>> getCurrentTemperatures(String identifier);
+  Future<ProbeTemperatures> getCurrentTemperatures(String identifier);
+
+  /// Provides a stream of the current temperatures from the specified probe. This stream emits updates whenever the
+  /// probe's temperatures change.
+  Stream<ProbeTemperatures> currentTemperaturesStream(String identifier);
 }

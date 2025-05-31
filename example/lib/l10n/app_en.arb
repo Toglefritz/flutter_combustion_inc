@@ -19,6 +19,11 @@
     "description": "Label for the core temperature of a probe.",
     "placeholders": {}
   },
+  "debugInfo": "Debug Info",
+  "@debugInfo": {
+    "description": "Label for the debug information display mode.",
+    "placeholders": {}
+  },
   "fahrenheitAbbreviation": "F",
   "@fahrenheitAbbreviation": {
     "description": "Abbreviation for Fahrenheit temperature.",
@@ -27,6 +32,11 @@
   "lowBatteryWarning": "Battery low",
   "@lowBatteryWarning": {
     "description": "Warning message displayed when a probe's battery is low.",
+    "placeholders": {}
+  },
+  "physicalTemperatures": "Physical Temperatures",
+  "@physicalTemperatures": {
+    "description": "Label for the physical temperatures display mode.",
     "placeholders": {}
   },
   "probe": "Probe",
@@ -43,6 +53,16 @@
     "description": "Label for the surface temperature of a probe.",
     "placeholders": {}
   },
+  "temperatureTn": "T{number}",
+  "@temperatureTn": {
+    "description": "Label for a temperature reading, where {number} is the probe number (e.g. T1-T8).",
+    "placeholders": {
+      "number": {
+        "type": "int",
+        "description": "The number of the probe."
+      }
+    }
+  },
   "thermometers": "Thermometers ({number})",
   "@thermometers": {
     "description": "Label for the list of thermometers, where {number} is the count of available thermometers.",
@@ -52,5 +72,10 @@
         "description": "The number of thermometers found."
       }
     }
+  },
+  "virtualTemperatures": "Virtual Temperatures",
+  "@virtualTemperatures": {
+    "description": "Label for the virtual temperatures display mode.",
+    "placeholders": {}
   }
 }

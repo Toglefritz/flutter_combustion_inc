@@ -1,5 +1,6 @@
 import '../flutter_combustion_inc_platform_interface.dart';
 import 'battery_status.dart';
+import 'probe_temperatures.dart';
 import 'virtual_temperatures.dart';
 
 /// Represents a temperature probe discovered via the Combustion Inc. SDK.
@@ -113,10 +114,19 @@ class Probe {
   ///
   /// The result is a list of 8 temperatures (T1–T8) in Celsius.
   ///
-  /// Returns a [List<double>] of temperatures.
+  /// Returns a [ProbeTemperatures] object representing the readings from all sensors.
   ///
   /// Throws a `PlatformException` if retrieval fails.
-  Future<List<double>> get currentTemperatures async {
+  Future<ProbeTemperatures> get currentTemperatures async {
     return FlutterCombustionIncPlatform.instance.getCurrentTemperatures(identifier);
+  }
+
+  /// Provides a stream of current temperature readings from the probe.
+  ///
+  /// The stream emits a new [ProbeTemperatures] instance whenever a change occurs.
+  ///
+  /// Throws a `PlatformException` if the stream cannot be established.
+  Stream<ProbeTemperatures> get currentTemperaturesStream {
+    return FlutterCombustionIncPlatform.instance.currentTemperaturesStream(identifier);
   }
 }

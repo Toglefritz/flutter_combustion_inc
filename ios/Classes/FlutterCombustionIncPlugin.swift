@@ -43,6 +43,12 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
     /// Combine subscription to battery status updates.
     private var batteryStatusCancellable: AnyCancellable?
 
+    /// Used to emit updates for the raw sensor temperatures (8 probes) to Flutter.
+    private var currentTempsSink: FlutterEventSink?
+
+    /// Combine subscription to current temperature updates.
+    private var currentTempsCancellable: AnyCancellable?
+
     /// Registers the plugin with the Flutter engine and sets up method and event channels.
     ///
     /// - Parameters:
@@ -69,6 +75,12 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
           binaryMessenger: registrar.messenger()
         )
         virtualTempChannel.setStreamHandler(instance)
+        
+        let currentTempsChannel = FlutterEventChannel(
+          name: "flutter_combustion_inc_current_temperatures",
+          binaryMessenger: registrar.messenger()
+        )
+        currentTempsChannel.setStreamHandler(instance)
         
         let batteryStatusChannel = FlutterEventChannel(
           name: "flutter_combustion_inc_battery_status",
@@ -126,6 +138,21 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
                 "ambient": temps?.ambientTemperature,
             ])
             
+        // Retrieves all eight raw sensor temperatures from the specified probe.
+        // The values are returned in Celsius as a list of eight doubles.
+        case "getCurrentTemperatures":
+            guard
+                let args = call.arguments as? [String: Any],
+                let identifier = args["identifier"] as? String,
+                let probe = DeviceManager.shared.getProbes().first(where: { $0.uniqueIdentifier == identifier }),
+                let temps = probe.currentTemperatures?.values
+            else {
+                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid probe identifier", details: nil))
+                return
+            }
+            // Return as a list of doubles for Dart to convert to ProbeTemperatures.
+            result(temps)
+            
         // Starts streaming live virtual temperature updates for the specified probe.
         // Uses Combine to observe the `virtualTemperatures` property.
         case "startVirtualTemperatureStream":
@@ -181,6 +208,25 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
             probe.connect()
             result(nil)
             
+        // Starts streaming live current temperatures (8 sensors) for the specified probe.
+        case "startCurrentTemperaturesStream":
+            guard
+                let args = call.arguments as? [String: Any],
+                let identifier = args["identifier"] as? String,
+                let probe = DeviceManager.shared.getProbes().first(where: { $0.uniqueIdentifier == identifier })
+            else {
+                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid probe identifier", details: nil))
+                return
+            }
+
+            currentTempsCancellable = probe.$currentTemperatures
+                .sink { [weak self] temperatures in
+                    guard let sink = self?.currentTempsSink, let values = temperatures?.values else { return }
+                    sink(values)
+                }
+
+            result(nil)
+            
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -198,6 +244,9 @@ extension FlutterCombustionIncPlugin: FlutterStreamHandler {
                 return nil
             case "batteryStatus":
                 self.batteryStatusSink = events
+                return nil
+            case "currentTemperatures":
+                self.currentTempsSink = events
                 return nil
             default:
                 break
@@ -223,6 +272,11 @@ extension FlutterCombustionIncPlugin: FlutterStreamHandler {
                 self.batteryStatusSink = nil
                 self.batteryStatusCancellable?.cancel()
                 self.batteryStatusCancellable = nil
+                return nil
+            case "currentTemperatures":
+                self.currentTempsSink = nil
+                self.currentTempsCancellable?.cancel()
+                self.currentTempsCancellable = nil
                 return nil
             default:
                 break

@@ -5,10 +5,12 @@ import 'package:flutter_combustion_inc/models/probe.dart';
 import '../../l10n/app_localizations.dart';
 import '../../values/inset.dart';
 import 'components/battery_status_indicator.dart';
+import 'components/physical_temperatures_display.dart';
 import 'components/temperature_unit_switch.dart';
-import 'components/virtual_temperatures.dart';
+import 'components/virtual_temperatures_display.dart';
 import 'home_controller.dart';
 import 'home_route.dart';
+import 'models/display_mode.dart';
 
 /// View for the [HomeRoute]. The view is dumb, and purely declarative. References values on the controller and widget.
 ///
@@ -44,6 +46,29 @@ class HomeView extends StatelessWidget {
       body: Center(
         child: Column(
           children: [
+            // A list of chips used to select a display mode
+            Wrap(
+              children: List.generate(DisplayMode.values.length, (int index) {
+                final DisplayMode mode = DisplayMode.values[index];
+
+                return Padding(
+                  padding: const EdgeInsets.all(Inset.small),
+                  child: ChoiceChip(
+                    label: Text(
+                      DisplayMode.label(context: context, displayMode: mode),
+                    ),
+                    selected: state.displayMode == mode,
+                    onSelected: (bool selected) {
+                      if (selected) {
+                        state.onDisplayModeChanged(mode);
+                      }
+                    },
+                  ),
+                );
+              }),
+            ),
+
+            // Display a card for each discovered probe
             ...List.generate(state.probes.length, (int index) {
               final Probe probe = state.probes[index];
 
@@ -90,8 +115,13 @@ class HomeView extends StatelessWidget {
                         height: Inset.medium,
                       ),
 
-                      // Temperature readings
-                      VirtualTemperaturesDisplay(probe: probe),
+                      // Virtual temperatures display
+                      if (state.displayMode == DisplayMode.virtualTemperatures)
+                        VirtualTemperaturesDisplay(probe: probe),
+
+                      // Physical temperatures display
+                      if (state.displayMode == DisplayMode.physicalTemperatures)
+                        PhysicalTemperaturesDisplay(probe: probe),
                     ],
                   ),
                 ),

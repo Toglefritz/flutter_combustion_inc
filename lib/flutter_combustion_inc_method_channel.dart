@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import 'flutter_combustion_inc_platform_interface.dart';
 import 'models/battery_status.dart';
+import 'models/probe_temperatures.dart';
 
 /// An implementation of [FlutterCombustionIncPlatform] that uses method channels.
 class MethodChannelFlutterCombustionInc extends FlutterCombustionIncPlatform {
@@ -22,9 +23,15 @@ class MethodChannelFlutterCombustionInc extends FlutterCombustionIncPlatform {
   @visibleForTesting
   final EventChannel batteryStatusEventChannel = const EventChannel('flutter_combustion_inc_battery_status');
 
+  /// The event channel used to stream current temperature updates.
+  @visibleForTesting
+  final EventChannel currentTempsEventChannel = const EventChannel('flutter_combustion_inc_current_temperatures');
+
   Stream<List<Map<String, dynamic>>>? _probeListStream;
 
   final Map<String, Stream<Map<String, double>>> _virtualTempStreams = {};
+
+  final Map<String, Stream<ProbeTemperatures>> _currentTempsStreams = {};
 
   @override
   Future<void> initBluetooth() async {
@@ -82,9 +89,27 @@ class MethodChannelFlutterCombustionInc extends FlutterCombustionIncPlatform {
   }
 
   @override
-  Future<List<double>> getCurrentTemperatures(String identifier) async {
-    final result = await methodChannel.invokeMethod('getCurrentTemperatures', {'identifier': identifier});
-    return List<double>.from(result as Iterable);
+  Future<ProbeTemperatures> getCurrentTemperatures(String identifier) async {
+    final dynamic result = await methodChannel.invokeMethod(
+      'getCurrentTemperatures',
+      {'identifier': identifier},
+    );
+
+    // Convert the result to a list of doubles
+    final List<double> values = List<double>.from(result as Iterable);
+
+    // Convert the list to a ProbeTemperatures object. This assumes the list has exactly 8 elements and that they
+    // are in the correct order as per the ProbeTemperatures class.
+    return ProbeTemperatures(
+      t1: values[0],
+      t2: values[1],
+      t3: values[2],
+      t4: values[3],
+      t5: values[4],
+      t6: values[5],
+      t7: values[6],
+      t8: values[7],
+    );
   }
 
   @override
@@ -96,9 +121,35 @@ class MethodChannelFlutterCombustionInc extends FlutterCombustionIncPlatform {
       });
 
       return virtualTempEventChannel.receiveBroadcastStream({'type': 'virtualTemps'}).map((event) {
-        final data = Map<String, dynamic>.from(event as Map);
+        final Map<String, dynamic> data = Map<String, dynamic>.from(event as Map);
+
         return data.map((key, value) => MapEntry(key, (value as num).toDouble()));
       });
+    });
+  }
+
+  @override
+  Stream<ProbeTemperatures> currentTemperaturesStream(String identifier) {
+    return _currentTempsStreams.putIfAbsent(identifier, () {
+      methodChannel.invokeMethod('startCurrentTemperaturesStream', {
+        'identifier': identifier,
+      });
+
+      return currentTempsEventChannel
+          .receiveBroadcastStream({'type': 'currentTemperatures'})
+          .map((event) {
+            final List<double> values = List<double>.from(event as List);
+            return ProbeTemperatures(
+              t1: values[0],
+              t2: values[1],
+              t3: values[2],
+              t4: values[3],
+              t5: values[4],
+              t6: values[5],
+              t7: values[6],
+              t8: values[7],
+            );
+          });
     });
   }
 }

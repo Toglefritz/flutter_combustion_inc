@@ -21,10 +21,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get coreTemperature => 'Core';
 
   @override
+  String get debugInfo => 'Debug Info';
+
+  @override
   String get fahrenheitAbbreviation => 'F';
 
   @override
   String get lowBatteryWarning => 'Battery low';
+
+  @override
+  String get physicalTemperatures => 'Physical Temperatures';
 
   @override
   String get probe => 'Probe';
@@ -36,7 +42,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get surfaceTemperature => 'Surface';
 
   @override
+  String temperatureTn(int number) {
+    return 'T$number';
+  }
+
+  @override
   String thermometers(int number) {
     return 'Thermometers ($number)';
   }
+
+  @override
+  String get virtualTemperatures => 'Virtual Temperatures';
 }

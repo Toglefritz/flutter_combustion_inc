@@ -5,11 +5,15 @@ import '../../services/temperature_unit_setting/temperature_unit_setting.dart';
 import 'home_route.dart';
 import 'home_view.dart';
 import 'home_view_searching.dart';
+import 'models/display_mode.dart';
 
 /// A controller for the [HomeRoute] that manages the state and owns all business logic.
 class HomeController extends State<HomeRoute> {
   /// A list of Combustion Inc. temperature probes discovered during scanning.
   List<Probe> probes = [];
+
+  /// The display mode for this view. This is used to determine what information to show and how it should be presented.
+  DisplayMode displayMode = DisplayMode.virtualTemperatures;
 
   @override
   void initState() {
@@ -44,6 +48,11 @@ class HomeController extends State<HomeRoute> {
 
   /// Handles changes in the temperature unit setting.
   void onTemperatureUnitChanged() => setState(TemperatureUnitSetting.toggle);
+
+  /// Handles changes in the display mode.
+  void onDisplayModeChanged(DisplayMode mode) => setState(() {
+    displayMode = mode;
+  });
 
   @override
   Widget build(BuildContext context) => AnimatedSwitcher(

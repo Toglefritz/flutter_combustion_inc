@@ -117,6 +117,12 @@ abstract class AppLocalizations {
   /// **'Core'**
   String get coreTemperature;
 
+  /// Label for the debug information display mode.
+  ///
+  /// In en, this message translates to:
+  /// **'Debug Info'**
+  String get debugInfo;
+
   /// Abbreviation for Fahrenheit temperature.
   ///
   /// In en, this message translates to:
@@ -128,6 +134,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Battery low'**
   String get lowBatteryWarning;
+
+  /// Label for the physical temperatures display mode.
+  ///
+  /// In en, this message translates to:
+  /// **'Physical Temperatures'**
+  String get physicalTemperatures;
 
   /// A generic label for a probe.
   ///
@@ -147,11 +159,23 @@ abstract class AppLocalizations {
   /// **'Surface'**
   String get surfaceTemperature;
 
+  /// Label for a temperature reading, where {number} is the probe number (e.g. T1-T8).
+  ///
+  /// In en, this message translates to:
+  /// **'T{number}'**
+  String temperatureTn(int number);
+
   /// Label for the list of thermometers, where {number} is the count of available thermometers.
   ///
   /// In en, this message translates to:
   /// **'Thermometers ({number})'**
   String thermometers(int number);
+
+  /// Label for the virtual temperatures display mode.
+  ///
+  /// In en, this message translates to:
+  /// **'Virtual Temperatures'**
+  String get virtualTemperatures;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

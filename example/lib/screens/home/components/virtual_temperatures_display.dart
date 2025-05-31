@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_combustion_inc/models/probe.dart';
 import 'package:flutter_combustion_inc/models/virtual_temperatures.dart';
 
-import '../../../extensions/double_extensions.dart';
 import '../../../l10n/app_localizations.dart';
+import 'temperature_value.dart';
 
 /// A widget displaying the "virtual temperatures" of a probe.
 ///
@@ -20,7 +20,8 @@ import '../../../l10n/app_localizations.dart';
 class VirtualTemperaturesDisplay extends StatelessWidget {
   /// Creates an instance of [VirtualTemperaturesDisplay].
   const VirtualTemperaturesDisplay({
-    required this.probe, super.key,
+    required this.probe,
+    super.key,
   });
 
   /// The probe instance from which to read the virtual temperatures.
@@ -41,47 +42,22 @@ class VirtualTemperaturesDisplay extends StatelessWidget {
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  temps.core.toUserSelectedTemperatureUnit().toInt().toString(),
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  AppLocalizations.of(context)!.coreTemperature,
-                ),
-              ],
+            // Core temperature
+            TemperatureValue(
+              temperature: temps.core,
+              label: AppLocalizations.of(context)!.coreTemperature,
             ),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  temps.surface.toUserSelectedTemperatureUnit().toInt().toString(),
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  AppLocalizations.of(context)!.surfaceTemperature,
-                ),
-              ],
+
+            // Surface temperature
+            TemperatureValue(
+              temperature: temps.surface,
+              label: AppLocalizations.of(context)!.surfaceTemperature,
             ),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  temps.ambient.toUserSelectedTemperatureUnit().toInt().toString(),
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  AppLocalizations.of(context)!.ambientTemperature,
-                ),
-              ],
+
+            // Ambient temperature
+            TemperatureValue(
+              temperature: temps.ambient,
+              label: AppLocalizations.of(context)!.ambientTemperature,
             ),
           ],
         );
