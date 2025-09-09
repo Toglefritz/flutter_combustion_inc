@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import 'flutter_combustion_inc_platform_interface.dart';
 import 'models/battery_status.dart';
+import 'models/probe_temperature_log.dart';
 import 'models/probe_temperatures.dart';
 
 /// An implementation of [FlutterCombustionIncPlatform] that uses method channels.
@@ -31,6 +32,14 @@ class MethodChannelFlutterCombustionInc extends FlutterCombustionIncPlatform {
   @visibleForTesting
   final EventChannel statusStaleEventChannel = const EventChannel('flutter_combustion_inc_status_stale');
 
+  /// The event channel used to stream log sync percent updates.
+  @visibleForTesting
+  final EventChannel logSyncPercentEventChannel = const EventChannel('flutter_combustion_inc_log_sync_percent');
+
+  /// The event channel used to stream temperature log updates.
+  @visibleForTesting
+  final EventChannel temperatureLogEventChannel = const EventChannel('flutter_combustion_inc_temperature_log');
+
   /// A stream that emits a list of discovered probes.
   Stream<List<Map<String, dynamic>>>? _probeListStream;
 
@@ -39,6 +48,9 @@ class MethodChannelFlutterCombustionInc extends FlutterCombustionIncPlatform {
 
   /// A map of streams for current temperature updates, keyed by probe identifier.
   final Map<String, Stream<ProbeTemperatures>> _currentTempsStreams = {};
+
+  /// A map of streams for log sync percent updates, keyed by probe identifier.
+  final Map<String, Stream<double>> _logSyncPercentStreams = {};
 
   @override
   Future<void> initBluetooth() async {
@@ -61,7 +73,6 @@ class MethodChannelFlutterCombustionInc extends FlutterCombustionIncPlatform {
     return result.map((e) => Map<String, dynamic>.from(e as Map)).toList();
   }
 
-
   @override
   Future<int> getRssi(String identifier) async {
     final result = await methodChannel.invokeMethod('getRssi', {
@@ -80,7 +91,6 @@ class MethodChannelFlutterCombustionInc extends FlutterCombustionIncPlatform {
     await methodChannel.invokeMethod('connectToProbe', {'identifier': identifier});
   }
 
-
   @override
   Stream<bool> statusStaleStream(String identifier) {
     // Start the native stream
@@ -88,9 +98,7 @@ class MethodChannelFlutterCombustionInc extends FlutterCombustionIncPlatform {
       'identifier': identifier,
     });
 
-    return statusStaleEventChannel
-        .receiveBroadcastStream({'type': 'statusStale'})
-        .map((event) => event as bool);
+    return statusStaleEventChannel.receiveBroadcastStream({'type': 'statusStale'}).map((event) => event as bool);
   }
 
   @override
@@ -170,21 +178,56 @@ class MethodChannelFlutterCombustionInc extends FlutterCombustionIncPlatform {
         'identifier': identifier,
       });
 
-      return currentTempsEventChannel
-          .receiveBroadcastStream({'type': 'currentTemperatures'})
-          .map((event) {
-            final List<double> values = List<double>.from(event as List);
-            return ProbeTemperatures(
-              t1: values[0],
-              t2: values[1],
-              t3: values[2],
-              t4: values[3],
-              t5: values[4],
-              t6: values[5],
-              t7: values[6],
-              t8: values[7],
-            );
-          });
+      return currentTempsEventChannel.receiveBroadcastStream({'type': 'currentTemperatures'}).map((event) {
+        final List<double> values = List<double>.from(event as List);
+        return ProbeTemperatures(
+          t1: values[0],
+          t2: values[1],
+          t3: values[2],
+          t4: values[3],
+          t5: values[4],
+          t6: values[5],
+          t7: values[6],
+          t8: values[7],
+        );
+      });
     });
+  }
+
+  @override
+  Stream<double> logSyncPercentStream(String identifier) {
+    return _logSyncPercentStreams.putIfAbsent(identifier, () {
+      methodChannel.invokeMethod('startLogSyncPercentStream', {
+        'identifier': identifier,
+      });
+
+      return logSyncPercentEventChannel
+          .receiveBroadcastStream({'type': 'logSyncPercent'})
+          .map((event) => (event as num).toDouble());
+    });
+  }
+
+  @override
+  Future<ProbeTemperatureLog> getTemperatureLog(String identifier) async {
+    // Request log metadata and initiate the stream from the native side
+    final Map<String, dynamic> result =
+        await methodChannel.invokeMethod(
+              'getTemperatureLog',
+              {'identifier': identifier},
+            )
+            as Map<String, dynamic>;
+
+    final int? startTimeMillis = result['startTime'] is int ? result['startTime'] as int : null;
+    final DateTime? startTime = startTimeMillis != null ? DateTime.fromMillisecondsSinceEpoch(startTimeMillis) : null;
+
+    // Subscribe to the EventChannel for streaming data points
+    final Stream<List<Map<String, dynamic>>> rawStream = temperatureLogEventChannel
+        .receiveBroadcastStream({'type': 'temperatureLog'})
+        .map((event) {
+          final List<dynamic> rawList = event as List<dynamic>;
+          return rawList.map((item) => Map<String, dynamic>.from(item as Map)).toList();
+        });
+
+    return ProbeTemperatureLog(startTime: startTime, rawStream: rawStream);
   }
 }

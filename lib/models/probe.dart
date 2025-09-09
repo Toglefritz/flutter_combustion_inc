@@ -1,5 +1,6 @@
 import '../flutter_combustion_inc_platform_interface.dart';
 import 'battery_status.dart';
+import 'probe_temperature_log.dart';
 import 'probe_temperatures.dart';
 import 'virtual_temperatures.dart';
 
@@ -91,6 +92,7 @@ class Probe {
   /// Throws a `PlatformException` if retrieval fails.
   Future<VirtualTemperatures> get virtualTemperatures async {
     final Map<String, double> result = await FlutterCombustionIncPlatform.instance.getVirtualTemperatures(identifier);
+
     return VirtualTemperatures.fromMap(result);
   }
 
@@ -110,6 +112,7 @@ class Probe {
   /// Throws a `PlatformException` if retrieval fails.
   Future<BatteryStatus> get batteryStatus async {
     final String status = await FlutterCombustionIncPlatform.instance.getBatteryStatus(identifier);
+
     return BatteryStatus.values.firstWhere((e) => e.name.toLowerCase() == status.toLowerCase());
   }
 
@@ -140,5 +143,21 @@ class Probe {
   /// Throws a `PlatformException` if the stream cannot be established.
   Stream<ProbeTemperatures> get currentTemperaturesStream {
     return FlutterCombustionIncPlatform.instance.currentTemperaturesStream(identifier);
+  }
+
+  /// Provides a stream of the percentage of temperature logs that have been synced from the probe.
+  ///
+  /// The stream emits an [int] value between 0 and 100 indicating the percentage of log data that has been
+  /// successfully synced from the probe to the app.
+  ///
+  /// Throws a `PlatformException` if the stream cannot be established.
+  Stream<double> get logSyncPercentageStream {
+    return FlutterCombustionIncPlatform.instance.logSyncPercentStream(identifier);
+  }
+
+  /// Get a temperature log for the probe. The [ProbeTemperatureLog] will contain a stream of data points within the
+  /// log session.
+  Future<ProbeTemperatureLog> get temperatureLog async {
+    return FlutterCombustionIncPlatform.instance.getTemperatureLog(identifier);
   }
 }

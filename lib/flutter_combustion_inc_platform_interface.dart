@@ -2,6 +2,7 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'flutter_combustion_inc_method_channel.dart';
 import 'models/battery_status.dart';
+import 'models/probe_temperature_log.dart';
 import 'models/probe_temperatures.dart';
 
 /// The platform interface that defines the contract for all communication between Dart and the native platforms in the
@@ -81,4 +82,15 @@ abstract class FlutterCombustionIncPlatform extends PlatformInterface {
   /// Provides a stream of the current temperatures from the specified probe. This stream emits updates whenever the
   /// probe's temperatures change.
   Stream<ProbeTemperatures> currentTemperaturesStream(String identifier);
+
+  /// Provides a stream of the percentage of temperature log data points that have been synchronized for the specified
+  /// probe. This stream emits a double value representing the percentage of log data that has been successfully
+  /// synchronized with the probe to the mobile device.
+  Stream<double> logSyncPercentStream(String identifier);
+
+  /// Retrieves a temperature log for the specified probe The temperature log will include a stream of data points that
+  /// constitute the stream. This data point stream emits a list of maps, where each map contains information about a
+  /// temperature log entry, such as the timestamp and temperature readings. The log is updated via polling the probe
+  /// once per second.
+  Future<ProbeTemperatureLog> getTemperatureLog(String identifier);
 }

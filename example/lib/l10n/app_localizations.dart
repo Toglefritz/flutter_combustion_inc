@@ -129,6 +129,12 @@ abstract class AppLocalizations {
   /// **'F'**
   String get fahrenheitAbbreviation;
 
+  /// Button label to hide the graphs in the temperature display.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide Graphs'**
+  String get hideGraphs;
+
   /// Warning message displayed when a probe's battery is low.
   ///
   /// In en, this message translates to:
@@ -159,6 +165,12 @@ abstract class AppLocalizations {
   /// **'Searching for probes...'**
   String get searchingForProbes;
 
+  /// Button label to show the graphs in the temperature display.
+  ///
+  /// In en, this message translates to:
+  /// **'Show Graphs'**
+  String get showGraphs;
+
   /// Label for the surface temperature of a probe.
   ///
   /// In en, this message translates to:
@@ -182,6 +194,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Virtual Temperatures'**
   String get virtualTemperatures;
+
+  /// Title for the temperature graph display.
+  ///
+  /// In en, this message translates to:
+  /// **'Temperature Graph'**
+  String get temperatureGraph;
+
+  /// Message displayed when no temperature data is available for graphing.
+  ///
+  /// In en, this message translates to:
+  /// **'No data available'**
+  String get noDataAvailable;
+
+  /// Message displayed while loading historical temperature data.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading historical data...'**
+  String get loadingHistoricalData;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

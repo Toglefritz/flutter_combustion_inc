@@ -15,6 +15,20 @@ class HomeController extends State<HomeRoute> {
   /// The display mode for this view. This is used to determine what information to show and how it should be presented.
   DisplayMode displayMode = DisplayMode.virtualTemperatures;
 
+  /// Determines if temperature graphs should be displayed in the view.
+  bool _showGraphs = false;
+
+  /// A getter for the current state of the temperature graphs display.
+  bool get showGraphs => _showGraphs;
+
+  /// Sets the state of the temperature graphs display.
+  set showGraphs(bool value) {
+    if (_showGraphs != value) {
+      _showGraphs = value;
+      setState(() {});
+    }
+  }
+
   @override
   void initState() {
     // Set up a listener for probe discovery events.

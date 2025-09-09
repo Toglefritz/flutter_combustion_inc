@@ -5,6 +5,7 @@ environment:
   sdk: ^3.7.2
 
 dependencies:
+  fl_chart: ^1.1.0
   flutter:
     sdk: flutter
   flutter_combustion_inc:

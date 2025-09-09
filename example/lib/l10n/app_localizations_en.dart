@@ -27,6 +27,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fahrenheitAbbreviation => 'F';
 
   @override
+  String get hideGraphs => 'Hide Graphs';
+
+  @override
   String get lowBatteryWarning => 'Battery low';
 
   @override
@@ -40,6 +43,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get searchingForProbes => 'Searching for probes...';
+
+  @override
+  String get showGraphs => 'Show Graphs';
 
   @override
   String get surfaceTemperature => 'Surface';
@@ -56,4 +62,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get virtualTemperatures => 'Virtual Temperatures';
+
+  @override
+  String get temperatureGraph => 'Temperature Graph';
+
+  @override
+  String get noDataAvailable => 'No data available';
+
+  @override
+  String get loadingHistoricalData => 'Loading historical data...';
 }

@@ -29,6 +29,11 @@
     "description": "Abbreviation for Fahrenheit temperature.",
     "placeholders": {}
   },
+  "hideGraphs": "Hide Graphs",
+  "@hideGraphs": {
+    "description": "Button label to hide the graphs in the temperature display.",
+    "placeholders": {}
+  },
   "lowBatteryWarning": "Battery low",
   "@lowBatteryWarning": {
     "description": "Warning message displayed when a probe's battery is low.",
@@ -52,6 +57,11 @@
   "searchingForProbes": "Searching for probes...",
   "@searchingForProbes": {
     "description": "Message displayed when the app is searching for nearby probes."
+  },
+  "showGraphs": "Show Graphs",
+  "@showGraphs": {
+    "description": "Button label to show the graphs in the temperature display.",
+    "placeholders": {}
   },
   "surfaceTemperature": "Surface",
   "@surfaceTemperature": {
@@ -81,6 +91,21 @@
   "virtualTemperatures": "Virtual Temperatures",
   "@virtualTemperatures": {
     "description": "Label for the virtual temperatures display mode.",
+    "placeholders": {}
+  },
+  "temperatureGraph": "Temperature Graph",
+  "@temperatureGraph": {
+    "description": "Title for the temperature graph display.",
+    "placeholders": {}
+  },
+  "noDataAvailable": "No data available",
+  "@noDataAvailable": {
+    "description": "Message displayed when no temperature data is available for graphing.",
+    "placeholders": {}
+  },
+  "loadingHistoricalData": "Loading historical data...",
+  "@loadingHistoricalData": {
+    "description": "Message displayed while loading historical temperature data.",
     "placeholders": {}
   }
 }

@@ -55,6 +55,19 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
     /// Combine subscription to status notification staleness.
     private var statusStaleCancellable: AnyCancellable?
     
+    /// Used to emit updates about log sync percent for a probe.
+    private var logSyncPercentSink: FlutterEventSink?
+
+    /// Combine subscription to percentOfLogsSynced updates.
+    private var logSyncPercentCancellable: AnyCancellable?
+
+
+    /// Used to emit temperature log data points as a stream to Flutter.
+    private var temperatureLogSink: FlutterEventSink?
+
+    /// Combine subscription to probe's temperature log stream.
+    private var temperatureLogCancellable: AnyCancellable?
+    
     /// Registers the plugin with the Flutter engine and sets up method and event channels.
     ///
     /// - Parameters:
@@ -100,6 +113,18 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
         )
         statusStaleChannel.setStreamHandler(instance)
         
+        let logSyncPercentChannel = FlutterEventChannel(
+            name: "flutter_combustion_inc_log_sync_percent",
+            binaryMessenger: registrar.messenger()
+        )
+        logSyncPercentChannel.setStreamHandler(instance)
+        
+        let temperatureLogChannel = FlutterEventChannel(
+            name: "flutter_combustion_inc_temperature_log",
+            binaryMessenger: registrar.messenger()
+        )
+        temperatureLogChannel.setStreamHandler(instance)
+
         // Register the method and event channel handlers
         registrar.addMethodCallDelegate(instance, channel: methodChannel)
     }
@@ -111,12 +136,12 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
     ///   - result: Callback for sending a result or error back to Dart.
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
-            // Initializes the Bluetooth stack in the Combustion SDK and begins scanning.
+        // Initializes the Bluetooth stack in the Combustion SDK and begins scanning.
         case "initBluetooth":
             DeviceManager.shared.initBluetooth()
             result(nil)
             
-            // Returns a snapshot list of all probes currently known to the DeviceManager.
+        // Returns a snapshot list of all probes currently known to the DeviceManager.
         case "getProbes":
             let probes = DeviceManager.shared.getProbes().map { probe in
                 return [
@@ -132,7 +157,7 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
             result(probes)
             
             
-            // Returns the RSSI for the specified probe.
+        // Returns the RSSI for the specified probe.
         case "getRssi":
             if let identifier = call.arguments as? [String: Any],
                let id = identifier["identifier"] as? String,
@@ -142,15 +167,15 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
                 result(FlutterError(code: "PROBE_NOT_FOUND", message: "Probe not found", details: nil))
             }
             
-            // Retrieves a one-time reading of virtual temperatures for a specific probe.
-            // The result contains `core`, `surface`, and `ambient` temperature values.
+        // Retrieves a one-time reading of virtual temperatures for a specific probe.
+        // The result contains `core`, `surface`, and `ambient` temperature values.
         case "getVirtualTemperatures":
             guard
                 let args = call.arguments as? [String: Any],
                 let identifier = args["identifier"] as? String,
                 let probe = DeviceManager.shared.getProbes().first(where: { $0.uniqueIdentifier == identifier })
             else {
-                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid probe identifier", details: nil))
+                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid probe identifier (getVirtualTemperatures)", details: nil))
                 return
             }
             
@@ -161,8 +186,8 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
                 "ambient": temps?.ambientTemperature,
             ])
             
-            // Retrieves all eight raw sensor temperatures from the specified probe.
-            // The values are returned in Celsius as a list of eight doubles.
+        // Retrieves all eight raw sensor temperatures from the specified probe.
+        // The values are returned in Celsius as a list of eight doubles.
         case "getCurrentTemperatures":
             guard
                 let args = call.arguments as? [String: Any],
@@ -170,21 +195,21 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
                 let probe = DeviceManager.shared.getProbes().first(where: { $0.uniqueIdentifier == identifier }),
                 let temps = probe.currentTemperatures?.values
             else {
-                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid probe identifier", details: nil))
+                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid probe identifier (getCurrentTemperatures)", details: nil))
                 return
             }
             // Return as a list of doubles for Dart to convert to ProbeTemperatures.
             result(temps)
             
-            // Starts streaming live virtual temperature updates for the specified probe.
-            // Uses Combine to observe the `virtualTemperatures` property.
+        // Starts streaming live virtual temperature updates for the specified probe.
+        // Uses Combine to observe the `virtualTemperatures` property.
         case "startVirtualTemperatureStream":
             guard
                 let args = call.arguments as? [String: Any],
                 let identifier = args["identifier"] as? String,
                 let probe = DeviceManager.shared.getProbes().first(where: { $0.uniqueIdentifier == identifier })
             else {
-                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid probe identifier", details: nil))
+                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid probe identifier (startVirtualTemperatureStream)", details: nil))
                 return
             }
             
@@ -199,14 +224,14 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
                 }
             result(nil)
             
-            // Starts streaming live battery status updates ("ok" or "low") for a probe.
+        // Starts streaming live battery status updates ("ok" or "low") for a probe.
         case "startBatteryStatusStream":
             guard
                 let args = call.arguments as? [String: Any],
                 let identifier = args["identifier"] as? String,
                 let probe = DeviceManager.shared.getProbes().first(where: { $0.uniqueIdentifier == identifier })
             else {
-                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid probe identifier", details: nil))
+                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid probe identifier (startBatteryStatusStream)", details: nil))
                 return
             }
             
@@ -217,28 +242,28 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
             
             result(nil)
             
-            // Initiates a connection to the specified probe and enables automatic reconnection.
+        // Initiates a connection to the specified probe and enables automatic reconnection.
         case "connectToProbe":
             guard
                 let args = call.arguments as? [String: Any],
                 let identifier = args["identifier"] as? String,
                 let probe = DeviceManager.shared.getProbes().first(where: { $0.uniqueIdentifier == identifier })
             else {
-                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid probe identifier", details: nil))
+                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid probe identifier (connectToProbe)", details: nil))
                 return
             }
             
             probe.connect()
             result(nil)
             
-            // Starts streaming live current temperatures (8 sensors) for the specified probe.
+        // Starts streaming live current temperatures (8 sensors) for the specified probe.
         case "startCurrentTemperaturesStream":
             guard
                 let args = call.arguments as? [String: Any],
                 let identifier = args["identifier"] as? String,
                 let probe = DeviceManager.shared.getProbes().first(where: { $0.uniqueIdentifier == identifier })
             else {
-                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid probe identifier", details: nil))
+                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid probe identifier (startCurrentTemperaturesStream)", details: nil))
                 return
             }
             
@@ -249,14 +274,15 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
                 }
             
             result(nil)
-            
+        
+        // Starts a stream used to determine if the probe temperature data becomes stale over time.
         case "startStatusStaleStream":
             guard
                 let args = call.arguments as? [String: Any],
                 let identifier = args["identifier"] as? String,
                 let probe = DeviceManager.shared.getProbes().first(where: { $0.uniqueIdentifier == identifier })
             else {
-                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid probe identifier", details: nil))
+                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid probe identifier (startStatusStaleStream)", details: nil))
                 return
             }
             
@@ -266,7 +292,77 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
                 }
             
             result(nil)
+        
+        // Starts a stream of the percentage of temperature logs that have been synced from the probe.
+        case "startLogSyncPercentStream":
+            guard
+                let args = call.arguments as? [String: Any],
+                let identifier = args["identifier"] as? String,
+                let probe = DeviceManager.shared.getProbes().first(where: { $0.uniqueIdentifier == identifier })
+            else {
+                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid probe identifier (startLogSyncPercentStream)", details: nil))
+                return
+            }
+
+            logSyncPercentCancellable = probe.$percentOfLogsSynced
+                .sink { [weak self] percent in
+                    guard let percent = percent else { return }
+                    self?.logSyncPercentSink?(percent)
+                }
+
+            result(nil)
             
+        // Returns the temperature log for a probe and streams data points via EventChannel.
+        case "getTemperatureLog":
+            guard
+                let args = call.arguments as? [String: Any],
+                let identifier = args["identifier"] as? String,
+                let probe = DeviceManager.shared.getProbes().first(where: { $0.uniqueIdentifier == identifier }),
+                let sessionInfo = probe.sessionInformation
+            else {
+                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid probe identifier (getTemperatureLog)", details: nil))
+                return
+            }
+
+            // Since sessionID is private, match logs using samplePeriod
+            guard let log = probe.temperatureLogs.first(where: { $0.sessionInformation.samplePeriod == sessionInfo.samplePeriod }) else {
+                result(FlutterError(code: "LOG_NOT_FOUND", message: "No matching temperature log found", details: nil))
+                return
+            }
+
+            var lastCount = 0
+            self.temperatureLogCancellable?.cancel()
+            self.temperatureLogCancellable = Timer.publish(every: 1.0, on: .main, in: .common)
+                .autoconnect()
+                .sink { [weak self] _ in
+                    guard let sink = self?.temperatureLogSink else { return }
+                    let points = log.dataPoints
+                    guard points.count != lastCount else { return }
+                    lastCount = points.count
+                    let startTimeMillis: Any = log.startTime.map { Int64($0.timeIntervalSince1970 * 1000) } ?? NSNull()
+                    let mapped = points.map { point in
+                        return [
+                            "sequence": point.sequenceNum,
+                            "startTime": startTimeMillis,
+                            "t1": point.temperatures.values[0],
+                            "t2": point.temperatures.values[1],
+                            "t3": point.temperatures.values[2],
+                            "t4": point.temperatures.values[3],
+                            "t5": point.temperatures.values[4],
+                            "t6": point.temperatures.values[5],
+                            "t7": point.temperatures.values[6],
+                            "t8": point.temperatures.values[7],
+                        ]
+                    }
+                    sink(mapped)
+                }
+
+            // Return initial metadata only; data points will stream via EventChannel
+            let startTimeMillis: Any = log.startTime.map { Int64($0.timeIntervalSince1970 * 1000) } ?? NSNull()
+            result([
+                "startTime": startTimeMillis
+            ])
+
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -291,11 +387,17 @@ extension FlutterCombustionIncPlugin: FlutterStreamHandler {
             case "statusStale":
                 self.statusStaleSink = events
                 return nil
+            case "logSyncPercent":
+                self.logSyncPercentSink = events
+                return nil
+            case "temperatureLog":
+                self.temperatureLogSink = events
+                return nil
             default:
                 break
             }
         }
-        
+
         self.probeListEventSink = events
         startProbeListStream()
         return nil
@@ -326,11 +428,21 @@ extension FlutterCombustionIncPlugin: FlutterStreamHandler {
                 self.statusStaleCancellable?.cancel()
                 self.statusStaleCancellable = nil
                 return nil
+            case "logSyncPercent":
+                self.logSyncPercentSink = nil
+                self.logSyncPercentCancellable?.cancel()
+                self.logSyncPercentCancellable = nil
+                return nil
+            case "temperatureLog":
+                self.temperatureLogSink = nil
+                self.temperatureLogCancellable?.cancel()
+                self.temperatureLogCancellable = nil
+                return nil
             default:
                 break
             }
         }
-        
+
         stopProbeListStream()
         self.probeListEventSink = nil
         return nil

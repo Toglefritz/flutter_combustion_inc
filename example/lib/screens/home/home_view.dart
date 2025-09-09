@@ -5,6 +5,8 @@ import 'package:flutter_combustion_inc/models/probe.dart';
 import '../../l10n/app_localizations.dart';
 import '../../values/inset.dart';
 import 'components/battery_status_indicator.dart';
+import 'components/graph/temperature_graph.dart';
+import 'components/graph_display_switch.dart';
 import 'components/physical_temperatures_display.dart';
 import 'components/temperature_unit_switch.dart';
 import 'components/virtual_temperatures_display.dart';
@@ -68,6 +70,19 @@ class HomeView extends StatelessWidget {
               }),
             ),
 
+            // Graph display selector
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: Inset.small),
+              child: GraphDisplaySwitch(
+                probe:
+                    state
+                        .probes
+                        .first, // TODO(Toglefritz): Select probe to display
+                onChanged: (bool active) => state.showGraphs = active,
+                enabled: state.showGraphs,
+              ),
+            ),
+
             // Display a card for each discovered probe
             ...List.generate(state.probes.length, (int index) {
               final Probe probe = state.probes[index];
@@ -94,7 +109,9 @@ class HomeView extends StatelessWidget {
                                 // Probe name
                                 Text(
                                   '${AppLocalizations.of(context)!.probe}: ${probe.name}',
-                                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                  style: Theme.of(
+                                    context,
+                                  ).textTheme.bodyLarge?.copyWith(
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -104,31 +121,45 @@ class HomeView extends StatelessWidget {
                                     children: [
                                       // Battery indicator
                                       Padding(
-                                        padding: const EdgeInsets.only(right: Inset.xSmall),
+                                        padding: const EdgeInsets.only(
+                                          right: Inset.xSmall,
+                                        ),
                                         child: StreamBuilder(
                                           stream: probe.batteryStatusStream,
-                                          builder: (BuildContext context, AsyncSnapshot<BatteryStatus> snapshot) {
+                                          builder: (
+                                            BuildContext context,
+                                            AsyncSnapshot<BatteryStatus>
+                                            snapshot,
+                                          ) {
                                             // If battery information is not available, return an empty widget
                                             if (!snapshot.hasData) {
                                               return const SizedBox.shrink();
                                             }
 
                                             // Otherwise, extract the battery status from the snapshot
-                                            final BatteryStatus status = snapshot.data!;
-                                            return BatteryStatusIndicator(status: status);
+                                            final BatteryStatus status =
+                                                snapshot.data!;
+                                            return BatteryStatusIndicator(
+                                              status: status,
+                                            );
                                           },
                                         ),
                                       ),
 
                                       // RSSI
                                       Padding(
-                                        padding: const EdgeInsets.only(left: Inset.xSmall),
+                                        padding: const EdgeInsets.only(
+                                          left: Inset.xSmall,
+                                        ),
                                         child: Column(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
                                             FutureBuilder(
                                               future: probe.rssi,
-                                              builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+                                              builder: (
+                                                BuildContext context,
+                                                AsyncSnapshot<int> snapshot,
+                                              ) {
                                                 // If RSSI information is not available, return a loading indicator
                                                 if (!snapshot.hasData) {
                                                   return const CircularProgressIndicator();
@@ -138,16 +169,25 @@ class HomeView extends StatelessWidget {
                                                 final int rssi = snapshot.data!;
                                                 return Text(
                                                   rssi.toString(),
-                                                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyLarge
+                                                      ?.copyWith(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
                                                 );
                                               },
                                             ),
 
                                             Text(
-                                              AppLocalizations.of(context)!.rssi,
-                                              style: Theme.of(context).textTheme.labelSmall,
+                                              AppLocalizations.of(
+                                                context,
+                                              )!.rssi,
+                                              style:
+                                                  Theme.of(
+                                                    context,
+                                                  ).textTheme.labelSmall,
                                             ),
                                           ],
                                         ),
@@ -162,13 +202,50 @@ class HomeView extends StatelessWidget {
                               height: Inset.medium,
                             ),
 
-                            // Virtual temperatures display
-                            if (state.displayMode == DisplayMode.virtualTemperatures)
-                              VirtualTemperaturesDisplay(probe: probe),
+                            // Animate the change in display mode
+                            AnimatedCrossFade(
+                              duration: const Duration(milliseconds: 250),
+                              // Virtual temperatures display
+                              firstChild: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: Inset.small,
+                                ),
+                                child: VirtualTemperaturesDisplay(probe: probe),
+                              ),
+                              // Physical temperatures display
+                              secondChild: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: Inset.small,
+                                ),
+                                child: PhysicalTemperaturesDisplay(
+                                  probe: probe,
+                                ),
+                              ),
+                              crossFadeState:
+                                  state.displayMode ==
+                                          DisplayMode.virtualTemperatures
+                                      ? CrossFadeState.showFirst
+                                      : CrossFadeState.showSecond,
+                            ),
 
-                            // Physical temperatures display
-                            if (state.displayMode == DisplayMode.physicalTemperatures)
-                              PhysicalTemperaturesDisplay(probe: probe),
+                            // Animate the change in graph display
+                            AnimatedCrossFade(
+                              duration: const Duration(milliseconds: 250),
+                              firstChild: const SizedBox.shrink(),
+                              secondChild: Padding(
+                                padding: const EdgeInsets.only(
+                                  top: Inset.medium,
+                                ),
+                                child: TemperatureGraph(
+                                  probe: probe,
+                                  displayMode: state.displayMode,
+                                ),
+                              ),
+                              crossFadeState:
+                                  state.showGraphs
+                                      ? CrossFadeState.showSecond
+                                      : CrossFadeState.showFirst,
+                            ),
                           ],
                         ),
                       ),
