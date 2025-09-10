@@ -89,7 +89,9 @@ abstract class AppLocalizations {
   ];
 
   /// A list of this localizations delegate's supported locales.
-  static const List<Locale> supportedLocales = <Locale>[Locale('en')];
+  static const List<Locale> supportedLocales = <Locale>[
+    Locale('en')
+  ];
 
   /// Label for the ambient temperature of a probe.
   ///
@@ -258,6 +260,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Historical data will be available once cooking session starts'**
   String get historicalDataUnavailable;
+
+  /// Button label to show only recent temperature data in the historical chart.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent'**
+  String get showRecentData;
+
+  /// Button label to show all available temperature data in the historical chart.
+  ///
+  /// In en, this message translates to:
+  /// **'All Data'**
+  String get showAllData;
+
+  /// Label for the timespan control that lets users choose between recent and all data.
+  ///
+  /// In en, this message translates to:
+  /// **'Show:'**
+  String get timespanControlLabel;
+
+  /// Tooltip for the zoom out button in the temperature chart.
+  ///
+  /// In en, this message translates to:
+  /// **'Zoom Out'**
+  String get zoomOutTooltip;
+
+  /// Tooltip for the zoom in button in the temperature chart.
+  ///
+  /// In en, this message translates to:
+  /// **'Zoom In'**
+  String get zoomInTooltip;
+
+  /// Tooltip for the reset view button in the temperature chart.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset View (or double-tap chart)'**
+  String get resetViewTooltip;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
@@ -276,16 +314,17 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
+
+
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'en':
-      return AppLocalizationsEn();
+    case 'en': return AppLocalizationsEn();
   }
 
   throw FlutterError(
     'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
     'an issue with the localizations generation tool. Please file an issue '
     'on GitHub with a reproducible sample app and the gen-l10n configuration '
-    'that was used.',
+    'that was used.'
   );
 }

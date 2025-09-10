@@ -76,12 +76,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loadingTemperatureLogs => 'Loading temperature logs...';
 
   @override
-  String get errorNoActiveSession =>
-      'No active cooking session found. Start a cooking session to view temperature logs.';
+  String get errorNoActiveSession => 'No active cooking session found. Start a cooking session to view temperature logs.';
 
   @override
-  String get errorNoLogsAvailable =>
-      'No temperature logs available. Ensure the probe is connected and logging temperatures.';
+  String get errorNoLogsAvailable => 'No temperature logs available. Ensure the probe is connected and logging temperatures.';
 
   @override
   String get errorProbeNotFound => 'Probe not found. Please check the connection and try again.';
@@ -97,4 +95,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get historicalDataUnavailable => 'Historical data will be available once cooking session starts';
+
+  @override
+  String get showRecentData => 'Recent';
+
+  @override
+  String get showAllData => 'All Data';
+
+  @override
+  String get timespanControlLabel => 'Show:';
+
+  @override
+  String get zoomOutTooltip => 'Zoom Out';
+
+  @override
+  String get zoomInTooltip => 'Zoom In';
+
+  @override
+  String get resetViewTooltip => 'Reset View (or double-tap chart)';
 }

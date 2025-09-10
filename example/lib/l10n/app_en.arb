@@ -147,5 +147,35 @@
   "@historicalDataUnavailable": {
     "description": "Message shown when historical data is not available because no cooking session has started.",
     "placeholders": {}
+  },
+  "showRecentData": "Recent",
+  "@showRecentData": {
+    "description": "Button label to show only recent temperature data in the historical chart.",
+    "placeholders": {}
+  },
+  "showAllData": "All Data",
+  "@showAllData": {
+    "description": "Button label to show all available temperature data in the historical chart.",
+    "placeholders": {}
+  },
+  "timespanControlLabel": "Show:",
+  "@timespanControlLabel": {
+    "description": "Label for the timespan control that lets users choose between recent and all data.",
+    "placeholders": {}
+  },
+  "zoomOutTooltip": "Zoom Out",
+  "@zoomOutTooltip": {
+    "description": "Tooltip for the zoom out button in the temperature chart.",
+    "placeholders": {}
+  },
+  "zoomInTooltip": "Zoom In",
+  "@zoomInTooltip": {
+    "description": "Tooltip for the zoom in button in the temperature chart.",
+    "placeholders": {}
+  },
+  "resetViewTooltip": "Reset View (or double-tap chart)",
+  "@resetViewTooltip": {
+    "description": "Tooltip for the reset view button in the temperature chart.",
+    "placeholders": {}
   }
 }
