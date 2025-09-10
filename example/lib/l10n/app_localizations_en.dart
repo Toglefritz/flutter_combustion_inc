@@ -71,4 +71,30 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get loadingHistoricalData => 'Loading historical data...';
+
+  @override
+  String get loadingTemperatureLogs => 'Loading temperature logs...';
+
+  @override
+  String get errorNoActiveSession =>
+      'No active cooking session found. Start a cooking session to view temperature logs.';
+
+  @override
+  String get errorNoLogsAvailable =>
+      'No temperature logs available. Ensure the probe is connected and logging temperatures.';
+
+  @override
+  String get errorProbeNotFound => 'Probe not found. Please check the connection and try again.';
+
+  @override
+  String get errorLogNotFound => 'No matching temperature log found for the current session.';
+
+  @override
+  String get errorLoadingLogs => 'Unable to load temperature logs. Please try again.';
+
+  @override
+  String get retryButton => 'Retry';
+
+  @override
+  String get historicalDataUnavailable => 'Historical data will be available once cooking session starts';
 }

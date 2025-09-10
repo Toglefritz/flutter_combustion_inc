@@ -21,7 +21,10 @@ enum DisplayMode {
   debugInfo;
 
   /// Returns a label for each mode to display in the UI.
-  static String label({required BuildContext context, required DisplayMode displayMode}) {
+  static String label({
+    required BuildContext context,
+    required DisplayMode displayMode,
+  }) {
     switch (displayMode) {
       case DisplayMode.virtualTemperatures:
         return AppLocalizations.of(context)!.virtualTemperatures;

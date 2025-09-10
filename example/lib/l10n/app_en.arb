@@ -107,5 +107,45 @@
   "@loadingHistoricalData": {
     "description": "Message displayed while loading historical temperature data.",
     "placeholders": {}
+  },
+  "loadingTemperatureLogs": "Loading temperature logs...",
+  "@loadingTemperatureLogs": {
+    "description": "Message displayed while loading temperature logs from the probe.",
+    "placeholders": {}
+  },
+  "errorNoActiveSession": "No active cooking session found. Start a cooking session to view temperature logs.",
+  "@errorNoActiveSession": {
+    "description": "Error message when no active cooking session is available for temperature logs.",
+    "placeholders": {}
+  },
+  "errorNoLogsAvailable": "No temperature logs available. Ensure the probe is connected and logging temperatures.",
+  "@errorNoLogsAvailable": {
+    "description": "Error message when no temperature logs are available on the probe.",
+    "placeholders": {}
+  },
+  "errorProbeNotFound": "Probe not found. Please check the connection and try again.",
+  "@errorProbeNotFound": {
+    "description": "Error message when the specified probe cannot be found.",
+    "placeholders": {}
+  },
+  "errorLogNotFound": "No matching temperature log found for the current session.",
+  "@errorLogNotFound": {
+    "description": "Error message when no matching temperature log is found for the current session.",
+    "placeholders": {}
+  },
+  "errorLoadingLogs": "Unable to load temperature logs. Please try again.",
+  "@errorLoadingLogs": {
+    "description": "Generic error message when temperature logs fail to load.",
+    "placeholders": {}
+  },
+  "retryButton": "Retry",
+  "@retryButton": {
+    "description": "Button label to retry a failed operation.",
+    "placeholders": {}
+  },
+  "historicalDataUnavailable": "Historical data will be available once cooking session starts",
+  "@historicalDataUnavailable": {
+    "description": "Message shown when historical data is not available because no cooking session has started.",
+    "placeholders": {}
   }
 }

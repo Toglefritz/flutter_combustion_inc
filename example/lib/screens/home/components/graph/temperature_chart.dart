@@ -29,6 +29,18 @@ class TemperatureChart extends StatelessWidget {
   /// Function to convert temperature values based on current unit setting.
   final double Function(double) convertTemperature;
 
+  /// Whether historical data is currently being loaded.
+  final bool isLoadingHistoricalData;
+
+  /// Error message when historical data loading fails.
+  final String? historicalDataError;
+
+  /// Callback to retry loading historical data.
+  final VoidCallback? onRetryLoadHistoricalData;
+
+  /// Whether session information is available for the probe.
+  final bool hasSessionInfo;
+
   /// Creates a [TemperatureChart].
   const TemperatureChart({
     required this.showHistoricalData,
@@ -40,18 +52,71 @@ class TemperatureChart extends StatelessWidget {
     required this.historicalData,
     required this.unitSymbol,
     required this.convertTemperature,
+    required this.isLoadingHistoricalData,
+    required this.historicalDataError,
+    required this.onRetryLoadHistoricalData,
+    required this.hasSessionInfo,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
     if (showHistoricalData) {
-      return HistoricalTemperatureChart(
-        displayMode: displayMode,
-        historicalData: historicalData,
-        unitSymbol: unitSymbol,
-        convertTemperature: convertTemperature,
-      );
+      // Show loading, error, or historical data based on state
+      if (isLoadingHistoricalData) {
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const CircularProgressIndicator(),
+              Padding(
+                padding: const EdgeInsets.only(top: Inset.medium),
+                child: Text(
+                  AppLocalizations.of(context)!.loadingTemperatureLogs,
+                ),
+              ),
+            ],
+          ),
+        );
+      } else if (historicalDataError != null) {
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.error_outline,
+                size: 48,
+                color: Theme.of(context).colorScheme.error,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: Inset.medium),
+                child: Text(
+                  historicalDataError!,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.error,
+                  ),
+                ),
+              ),
+              if (onRetryLoadHistoricalData != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: Inset.medium),
+                  child: ElevatedButton(
+                    onPressed: onRetryLoadHistoricalData,
+                    child: Text(AppLocalizations.of(context)!.retryButton),
+                  ),
+                ),
+            ],
+          ),
+        );
+      } else {
+        return HistoricalTemperatureChart(
+          displayMode: displayMode,
+          historicalData: historicalData,
+          unitSymbol: unitSymbol,
+          convertTemperature: convertTemperature,
+        );
+      }
     } else {
       return RealTimeTemperatureChart(
         displayMode: displayMode,

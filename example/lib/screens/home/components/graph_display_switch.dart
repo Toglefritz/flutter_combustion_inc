@@ -56,24 +56,25 @@ class GraphDisplaySwitch extends StatelessWidget {
               ),
               child: AnimatedSwitcher(
                 duration: const Duration(milliseconds: 250),
-                child: snapshot.hasData && snapshot.data! == 100.0
-                    ? Switch(
-                        key: ValueKey<bool>(enabled),
-                        value: enabled,
-                        onChanged: onChanged,
-                      )
-                    : SizedBox(
-                        key: const ValueKey<String>('syncing'),
-                        width: 48,
-                        height: 48,
-                        child: Center(
-                          child: CircularProgressIndicator(
-                            value: snapshot.data,
-                            strokeWidth: 2.0,
-                            color: Theme.of(context).primaryColorDark,
+                child:
+                    snapshot.hasData && snapshot.data! == 100.0
+                        ? Switch(
+                          key: ValueKey<bool>(enabled),
+                          value: enabled,
+                          onChanged: onChanged,
+                        )
+                        : SizedBox(
+                          key: const ValueKey<String>('syncing'),
+                          width: 48,
+                          height: 48,
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              value: snapshot.data,
+                              strokeWidth: 2.0,
+                              color: Theme.of(context).primaryColorDark,
+                            ),
                           ),
                         ),
-                      ),
               ),
             ),
             Text(

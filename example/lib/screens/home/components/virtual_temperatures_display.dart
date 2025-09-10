@@ -31,7 +31,10 @@ class VirtualTemperaturesDisplay extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamBuilder<VirtualTemperatures>(
       stream: probe.virtualTemperatureStream,
-      builder: (BuildContext context, AsyncSnapshot<VirtualTemperatures> snapshot) {
+      builder: (
+        BuildContext context,
+        AsyncSnapshot<VirtualTemperatures> snapshot,
+      ) {
         if (!snapshot.hasData) {
           return const Text('Loading...');
         }

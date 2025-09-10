@@ -89,9 +89,7 @@ abstract class AppLocalizations {
   ];
 
   /// A list of this localizations delegate's supported locales.
-  static const List<Locale> supportedLocales = <Locale>[
-    Locale('en')
-  ];
+  static const List<Locale> supportedLocales = <Locale>[Locale('en')];
 
   /// Label for the ambient temperature of a probe.
   ///
@@ -212,6 +210,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Loading historical data...'**
   String get loadingHistoricalData;
+
+  /// Message displayed while loading temperature logs from the probe.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading temperature logs...'**
+  String get loadingTemperatureLogs;
+
+  /// Error message when no active cooking session is available for temperature logs.
+  ///
+  /// In en, this message translates to:
+  /// **'No active cooking session found. Start a cooking session to view temperature logs.'**
+  String get errorNoActiveSession;
+
+  /// Error message when no temperature logs are available on the probe.
+  ///
+  /// In en, this message translates to:
+  /// **'No temperature logs available. Ensure the probe is connected and logging temperatures.'**
+  String get errorNoLogsAvailable;
+
+  /// Error message when the specified probe cannot be found.
+  ///
+  /// In en, this message translates to:
+  /// **'Probe not found. Please check the connection and try again.'**
+  String get errorProbeNotFound;
+
+  /// Error message when no matching temperature log is found for the current session.
+  ///
+  /// In en, this message translates to:
+  /// **'No matching temperature log found for the current session.'**
+  String get errorLogNotFound;
+
+  /// Generic error message when temperature logs fail to load.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to load temperature logs. Please try again.'**
+  String get errorLoadingLogs;
+
+  /// Button label to retry a failed operation.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retryButton;
+
+  /// Message shown when historical data is not available because no cooking session has started.
+  ///
+  /// In en, this message translates to:
+  /// **'Historical data will be available once cooking session starts'**
+  String get historicalDataUnavailable;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
@@ -230,17 +276,16 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
-
-
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'en': return AppLocalizationsEn();
+    case 'en':
+      return AppLocalizationsEn();
   }
 
   throw FlutterError(
     'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
     'an issue with the localizations generation tool. Please file an issue '
     'on GitHub with a reproducible sample app and the gen-l10n configuration '
-    'that was used.'
+    'that was used.',
   );
 }

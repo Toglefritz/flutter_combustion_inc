@@ -26,8 +26,7 @@ class TemperatureLegend extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Don't show legend if no data is available
-    final bool hasData =
-        showHistoricalData ? hasHistoricalData : hasRealTimeData;
+    final bool hasData = showHistoricalData ? hasHistoricalData : hasRealTimeData;
     if (!hasData) {
       return const SizedBox.shrink();
     }
@@ -62,10 +61,7 @@ class TemperatureLegend extends StatelessWidget {
     return Wrap(
       spacing: 16,
       runSpacing: 8,
-      children:
-          legendItems
-              .map((LegendItem item) => LegendItemWidget(item: item))
-              .toList(),
+      children: legendItems.map((LegendItem item) => LegendItemWidget(item: item)).toList(),
     );
   }
 }

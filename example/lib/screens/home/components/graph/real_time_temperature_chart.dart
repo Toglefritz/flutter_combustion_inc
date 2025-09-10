@@ -97,9 +97,9 @@ class RealTimeTemperatureChart extends StatelessWidget {
               reservedSize: 60,
               getTitlesWidget:
                   (value, meta) => Text(
-                '${value.toInt()}$unitSymbol',
-                style: const TextStyle(fontSize: 10),
-              ),
+                    '${value.toInt()}$unitSymbol',
+                    style: const TextStyle(fontSize: 10),
+                  ),
             ),
           ),
           bottomTitles: AxisTitles(
@@ -108,17 +108,13 @@ class RealTimeTemperatureChart extends StatelessWidget {
               reservedSize: 30,
               getTitlesWidget:
                   (value, meta) => Text(
-                '${value.toInt()}s',
-                style: const TextStyle(fontSize: 10),
-              ),
+                    '${value.toInt()}s',
+                    style: const TextStyle(fontSize: 10),
+                  ),
             ),
           ),
-          rightTitles: const AxisTitles(
-
-          ),
-          topTitles: const AxisTitles(
-
-          ),
+          rightTitles: const AxisTitles(),
+          topTitles: const AxisTitles(),
         ),
         gridData: const FlGridData(
           horizontalInterval: 10,
@@ -135,10 +131,10 @@ class RealTimeTemperatureChart extends StatelessWidget {
 
   /// Creates a LineChartBarData for the given data points.
   LineChartBarData _createLineChartBarData(
-      List<FlSpot> spots,
-      Color color,
-      String label,
-      ) {
+    List<FlSpot> spots,
+    Color color,
+    String label,
+  ) {
     return LineChartBarData(
       spots: spots,
       isCurved: true,
@@ -152,36 +148,28 @@ class RealTimeTemperatureChart extends StatelessWidget {
   /// Gets the minimum X value from all line data.
   double _getMinX(List<LineChartBarData> lineBarsData) {
     if (lineBarsData.isEmpty) return 0;
-    return lineBarsData
-        .expand((line) => line.spots)
-        .map((spot) => spot.x)
-        .reduce(min);
+
+    return lineBarsData.expand((line) => line.spots).map((spot) => spot.x).reduce(min);
   }
 
   /// Gets the maximum X value from all line data.
   double _getMaxX(List<LineChartBarData> lineBarsData) {
     if (lineBarsData.isEmpty) return 100;
-    return lineBarsData
-        .expand((line) => line.spots)
-        .map((spot) => spot.x)
-        .reduce(max);
+
+    return lineBarsData.expand((line) => line.spots).map((spot) => spot.x).reduce(max);
   }
 
   /// Gets the minimum Y value from all line data.
   double _getMinY(List<LineChartBarData> lineBarsData) {
     if (lineBarsData.isEmpty) return 0;
-    return lineBarsData
-        .expand((line) => line.spots)
-        .map((spot) => spot.y)
-        .reduce(min);
+
+    return lineBarsData.expand((line) => line.spots).map((spot) => spot.y).reduce(min);
   }
 
   /// Gets the maximum Y value from all line data.
   double _getMaxY(List<LineChartBarData> lineBarsData) {
     if (lineBarsData.isEmpty) return 100;
-    return lineBarsData
-        .expand((line) => line.spots)
-        .map((spot) => spot.y)
-        .reduce(max);
+
+    return lineBarsData.expand((line) => line.spots).map((spot) => spot.y).reduce(max);
   }
 }

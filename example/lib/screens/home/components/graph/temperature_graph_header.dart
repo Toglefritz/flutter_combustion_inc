@@ -8,10 +8,14 @@ class TemperatureGraphHeader extends StatelessWidget {
   /// Callback for toggling between real-time and historical data modes.
   final VoidCallback onToggleDataMode;
 
+  /// Whether session information is available for the probe.
+  final bool hasSessionInfo;
+
   /// Creates a [TemperatureGraphHeader].
   const TemperatureGraphHeader({
     required this.showHistoricalData,
     required this.onToggleDataMode,
+    required this.hasSessionInfo,
     super.key,
   });
 
@@ -26,11 +30,21 @@ class TemperatureGraphHeader extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        TextButton.icon(
-          onPressed: onToggleDataMode,
-          icon: Icon(showHistoricalData ? Icons.timeline : Icons.history),
-          label: Text(showHistoricalData ? 'Live' : 'History'),
-        ),
+        if (hasSessionInfo)
+          TextButton.icon(
+            onPressed: onToggleDataMode,
+            icon: Icon(showHistoricalData ? Icons.timeline : Icons.history),
+            label: Text(showHistoricalData ? 'Live' : 'History'),
+          )
+        else
+          Tooltip(
+            message: AppLocalizations.of(context)!.historicalDataUnavailable,
+            child: TextButton.icon(
+              onPressed: null, // Disabled when no session info
+              icon: const Icon(Icons.history),
+              label: const Text('History'),
+            ),
+          ),
       ],
     );
   }

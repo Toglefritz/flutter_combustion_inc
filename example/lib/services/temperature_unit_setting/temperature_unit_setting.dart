@@ -14,8 +14,6 @@ class TemperatureUnitSetting {
 
   /// Toggles between Celsius and Fahrenheit.
   static void toggle() {
-    currentUnit = currentUnit == TemperatureUnit.celsius
-        ? TemperatureUnit.fahrenheit
-        : TemperatureUnit.celsius;
+    currentUnit = currentUnit == TemperatureUnit.celsius ? TemperatureUnit.fahrenheit : TemperatureUnit.celsius;
   }
 }

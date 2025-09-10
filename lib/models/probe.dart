@@ -64,7 +64,9 @@ class Probe {
 
   /// Returns the RSSI (Received Signal Strength Indicator) for the probe.
   Future<int> get rssi async {
-    final int result = await FlutterCombustionIncPlatform.instance.getRssi(identifier);
+    final int result = await FlutterCombustionIncPlatform.instance.getRssi(
+      identifier,
+    );
 
     return result;
   }
@@ -91,7 +93,9 @@ class Probe {
   ///
   /// Throws a `PlatformException` if retrieval fails.
   Future<VirtualTemperatures> get virtualTemperatures async {
-    final Map<String, double> result = await FlutterCombustionIncPlatform.instance.getVirtualTemperatures(identifier);
+    final Map<String, double> result = await FlutterCombustionIncPlatform
+        .instance
+        .getVirtualTemperatures(identifier);
 
     return VirtualTemperatures.fromMap(result);
   }
@@ -102,7 +106,9 @@ class Probe {
   ///
   /// Throws a `PlatformException` if the stream cannot be established.
   Stream<VirtualTemperatures> get virtualTemperatureStream {
-    return FlutterCombustionIncPlatform.instance.virtualTemperatureStream(identifier).map(VirtualTemperatures.fromMap);
+    return FlutterCombustionIncPlatform.instance
+        .virtualTemperatureStream(identifier)
+        .map(VirtualTemperatures.fromMap);
   }
 
   /// Gets the battery status of the probe.
@@ -111,9 +117,12 @@ class Probe {
   ///
   /// Throws a `PlatformException` if retrieval fails.
   Future<BatteryStatus> get batteryStatus async {
-    final String status = await FlutterCombustionIncPlatform.instance.getBatteryStatus(identifier);
+    final String status = await FlutterCombustionIncPlatform.instance
+        .getBatteryStatus(identifier);
 
-    return BatteryStatus.values.firstWhere((e) => e.name.toLowerCase() == status.toLowerCase());
+    return BatteryStatus.values.firstWhere(
+      (e) => e.name.toLowerCase() == status.toLowerCase(),
+    );
   }
 
   /// Provides a stream of battery status updates from the probe.
@@ -122,7 +131,9 @@ class Probe {
   ///
   /// Throws a `PlatformException` if the stream cannot be established.
   Stream<BatteryStatus> get batteryStatusStream {
-    return FlutterCombustionIncPlatform.instance.batteryStatusStream(identifier);
+    return FlutterCombustionIncPlatform.instance.batteryStatusStream(
+      identifier,
+    );
   }
 
   /// Gets the most recent temperature readings from the probe.
@@ -133,7 +144,9 @@ class Probe {
   ///
   /// Throws a `PlatformException` if retrieval fails.
   Future<ProbeTemperatures> get currentTemperatures async {
-    return FlutterCombustionIncPlatform.instance.getCurrentTemperatures(identifier);
+    return FlutterCombustionIncPlatform.instance.getCurrentTemperatures(
+      identifier,
+    );
   }
 
   /// Provides a stream of current temperature readings from the probe.
@@ -142,7 +155,9 @@ class Probe {
   ///
   /// Throws a `PlatformException` if the stream cannot be established.
   Stream<ProbeTemperatures> get currentTemperaturesStream {
-    return FlutterCombustionIncPlatform.instance.currentTemperaturesStream(identifier);
+    return FlutterCombustionIncPlatform.instance.currentTemperaturesStream(
+      identifier,
+    );
   }
 
   /// Provides a stream of the percentage of temperature logs that have been synced from the probe.
@@ -152,12 +167,29 @@ class Probe {
   ///
   /// Throws a `PlatformException` if the stream cannot be established.
   Stream<double> get logSyncPercentageStream {
-    return FlutterCombustionIncPlatform.instance.logSyncPercentStream(identifier);
+    return FlutterCombustionIncPlatform.instance.logSyncPercentStream(
+      identifier,
+    );
   }
 
   /// Get a temperature log for the probe. The [ProbeTemperatureLog] will contain a stream of data points within the
   /// log session.
   Future<ProbeTemperatureLog> get temperatureLog async {
     return FlutterCombustionIncPlatform.instance.getTemperatureLog(identifier);
+  }
+
+  /// Stream that emits session information availability for this probe.
+  ///
+  /// The stream emits a map containing:
+  /// - `hasSession`: boolean indicating if session information is available
+  /// - `samplePeriod`: the sample period in milliseconds (if available)
+  Stream<Map<String, dynamic>> get sessionInfoStream {
+    return FlutterCombustionIncPlatform.instance.sessionInfoStream(identifier);
+  }
+
+  /// Gets the current session information for this probe synchronously.
+  /// Used for debugging session availability issues.
+  Future<Map<String, dynamic>> get sessionInfo async {
+    return FlutterCombustionIncPlatform.instance.getSessionInfo(identifier);
   }
 }

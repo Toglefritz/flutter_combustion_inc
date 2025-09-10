@@ -23,7 +23,8 @@ abstract class FlutterCombustionIncPlatform extends PlatformInterface {
   static final Object _token = Object();
 
   /// The default instance of [FlutterCombustionIncPlatform] to use.
-  static FlutterCombustionIncPlatform _instance = MethodChannelFlutterCombustionInc();
+  static FlutterCombustionIncPlatform _instance =
+      MethodChannelFlutterCombustionInc();
 
   /// The default instance of [FlutterCombustionIncPlatform] to use.
   ///
@@ -93,4 +94,17 @@ abstract class FlutterCombustionIncPlatform extends PlatformInterface {
   /// temperature log entry, such as the timestamp and temperature readings. The log is updated via polling the probe
   /// once per second.
   Future<ProbeTemperatureLog> getTemperatureLog(String identifier);
+
+  /// Provides a stream of session information availability for the specified probe. This stream emits updates
+  /// whenever the probe's session information becomes available or unavailable, allowing the UI to show or hide
+  /// historical data features accordingly.
+  Stream<Map<String, dynamic>> sessionInfoStream(String identifier);
+
+  /// Retrieves the current session information for the specified probe synchronously.
+  /// Used for debugging session availability issues.
+  Future<Map<String, dynamic>> getSessionInfo(String identifier);
+
+  /// Forces the probe to refresh its session information from the device.
+  /// This can help resolve timing issues where session info becomes stale.
+  Future<void> refreshSessionInfo(String identifier);
 }

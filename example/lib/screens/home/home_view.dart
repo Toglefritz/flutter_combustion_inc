@@ -74,10 +74,7 @@ class HomeView extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: Inset.small),
               child: GraphDisplaySwitch(
-                probe:
-                    state
-                        .probes
-                        .first, // TODO(Toglefritz): Select probe to display
+                probe: state.probes.first, // TODO(Toglefritz): Select probe to display
                 onChanged: (bool active) => state.showGraphs = active,
                 enabled: state.showGraphs,
               ),
@@ -128,8 +125,7 @@ class HomeView extends StatelessWidget {
                                           stream: probe.batteryStatusStream,
                                           builder: (
                                             BuildContext context,
-                                            AsyncSnapshot<BatteryStatus>
-                                            snapshot,
+                                            AsyncSnapshot<BatteryStatus> snapshot,
                                           ) {
                                             // If battery information is not available, return an empty widget
                                             if (!snapshot.hasData) {
@@ -137,8 +133,7 @@ class HomeView extends StatelessWidget {
                                             }
 
                                             // Otherwise, extract the battery status from the snapshot
-                                            final BatteryStatus status =
-                                                snapshot.data!;
+                                            final BatteryStatus status = snapshot.data!;
                                             return BatteryStatusIndicator(
                                               status: status,
                                             );
@@ -169,13 +164,9 @@ class HomeView extends StatelessWidget {
                                                 final int rssi = snapshot.data!;
                                                 return Text(
                                                   rssi.toString(),
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodyLarge
-                                                      ?.copyWith(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
+                                                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
                                                 );
                                               },
                                             ),
@@ -222,8 +213,7 @@ class HomeView extends StatelessWidget {
                                 ),
                               ),
                               crossFadeState:
-                                  state.displayMode ==
-                                          DisplayMode.virtualTemperatures
+                                  state.displayMode == DisplayMode.virtualTemperatures
                                       ? CrossFadeState.showFirst
                                       : CrossFadeState.showSecond,
                             ),
@@ -241,10 +231,7 @@ class HomeView extends StatelessWidget {
                                   displayMode: state.displayMode,
                                 ),
                               ),
-                              crossFadeState:
-                                  state.showGraphs
-                                      ? CrossFadeState.showSecond
-                                      : CrossFadeState.showFirst,
+                              crossFadeState: state.showGraphs ? CrossFadeState.showSecond : CrossFadeState.showFirst,
                             ),
                           ],
                         ),

@@ -18,5 +18,7 @@ class ProbeTemperatureLog {
   ProbeTemperatureLog({
     required Stream<List<Map<String, dynamic>>> rawStream,
     required this.startTime,
-  }) : dataStream = rawStream.expand((batch) => batch).map(ProbeLogDataPoint.fromMap);
+  }) : dataStream = rawStream
+           .expand((batch) => batch)
+           .map(ProbeLogDataPoint.fromMap);
 }

@@ -41,9 +41,10 @@ class FlutterCombustionIncExampleApp extends StatelessWidget {
       ),
       darkTheme: ThemeData(
         brightness: Brightness.dark,
-        colorScheme: const ColorScheme.dark(
+        colorScheme: ColorScheme.dark(
           primary: Colors.amber,
           secondary: Colors.amberAccent,
+          error: Colors.red[900]!,
         ),
         primaryColorDark: Colors.white,
         cardTheme: CardThemeData(

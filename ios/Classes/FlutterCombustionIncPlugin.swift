@@ -68,6 +68,15 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
     /// Combine subscription to probe's temperature log stream.
     private var temperatureLogCancellable: AnyCancellable?
     
+    /// Used to emit session information availability updates to Flutter.
+    private var sessionInfoSink: FlutterEventSink?
+
+    /// Combine subscription to session information updates.
+    private var sessionInfoCancellable: AnyCancellable?
+    
+    /// Store the probe reference for session info monitoring to ensure consistency.
+    private var sessionInfoProbe: Probe?
+    
     /// Registers the plugin with the Flutter engine and sets up method and event channels.
     ///
     /// - Parameters:
@@ -124,6 +133,12 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
             binaryMessenger: registrar.messenger()
         )
         temperatureLogChannel.setStreamHandler(instance)
+        
+        let sessionInfoChannel = FlutterEventChannel(
+            name: "flutter_combustion_inc_session_info",
+            binaryMessenger: registrar.messenger()
+        )
+        sessionInfoChannel.setStreamHandler(instance)
 
         // Register the method and event channel handlers
         registrar.addMethodCallDelegate(instance, channel: methodChannel)
@@ -312,21 +327,117 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
 
             result(nil)
             
+        // Starts a stream that emits session information availability for the specified probe.
+        // Emits updates whenever the probe's session information becomes available or unavailable.
+        case "startSessionInfoStream":
+            guard
+                let args = call.arguments as? [String: Any],
+                let identifier = args["identifier"] as? String,
+                let probe = DeviceManager.shared.getProbes().first(where: { $0.uniqueIdentifier == identifier })
+            else {
+                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid probe identifier (startSessionInfoStream)", details: nil))
+                return
+            }
+
+            // Store the probe reference for consistency
+            sessionInfoProbe = probe
+            
+            sessionInfoCancellable = probe.$sessionInformation
+                .sink { [weak self] sessionInfo in
+                    guard let sink = self?.sessionInfoSink else { return }
+                    
+                    if let sessionInfo = sessionInfo {
+                        sink([
+                            "hasSession": true,
+                            "samplePeriod": sessionInfo.samplePeriod
+                        ])
+                    } else {
+                        sink([
+                            "hasSession": false,
+                            "samplePeriod": NSNull()
+                        ])
+                    }
+                }
+
+            result(nil)
+            
+        // Forces the probe to refresh its session information from the device.
+        // This can help resolve timing issues where session info becomes stale.
+        case "refreshSessionInfo":
+            guard
+                let args = call.arguments as? [String: Any],
+                let identifier = args["identifier"] as? String,
+                let probe = DeviceManager.shared.getProbes().first(where: { $0.uniqueIdentifier == identifier })
+            else {
+                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid probe identifier (refreshSessionInfo)", details: nil))
+                return
+            }
+            
+            // Force the probe to request session information from the device
+            // This is a private method, but we can try to trigger it indirectly by connecting if not connected
+            if probe.connectionState != .connected {
+                probe.connect()
+            }
+            
+            result(nil)
+            
+        // Returns the current session information for a probe synchronously.
+        // Used for debugging session availability issues and validation.
+        case "getSessionInfo":
+            guard
+                let args = call.arguments as? [String: Any],
+                let identifier = args["identifier"] as? String
+            else {
+                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid probe identifier (getSessionInfo)", details: nil))
+                return
+            }
+            
+            guard let probe = DeviceManager.shared.getProbes().first(where: { $0.uniqueIdentifier == identifier }) else {
+                result(FlutterError(code: "PROBE_NOT_FOUND", message: "Probe with identifier '\(identifier)' not found", details: nil))
+                return
+            }
+            
+            if let sessionInfo = probe.sessionInformation {
+                result([
+                    "hasSession": true,
+                    "samplePeriod": sessionInfo.samplePeriod
+                ])
+            } else {
+                result([
+                    "hasSession": false,
+                    "samplePeriod": NSNull()
+                ])
+            }
+            
         // Returns the temperature log for a probe and streams data points via EventChannel.
         case "getTemperatureLog":
             guard
                 let args = call.arguments as? [String: Any],
-                let identifier = args["identifier"] as? String,
-                let probe = DeviceManager.shared.getProbes().first(where: { $0.uniqueIdentifier == identifier }),
-                let sessionInfo = probe.sessionInformation
+                let identifier = args["identifier"] as? String
             else {
                 result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid probe identifier (getTemperatureLog)", details: nil))
                 return
             }
+            
+            guard let probe = DeviceManager.shared.getProbes().first(where: { $0.uniqueIdentifier == identifier }) else {
+                result(FlutterError(code: "PROBE_NOT_FOUND", message: "Probe with identifier '\(identifier)' not found", details: nil))
+                return
+            }
+            
+            guard let sessionInfo = probe.sessionInformation else {
+                result(FlutterError(code: "NO_SESSION_INFO", message: "Probe has no active session information. Start a cooking session first.", details: nil))
+                return
+            }
 
+            // Check if probe has any temperature logs
+            guard !probe.temperatureLogs.isEmpty else {
+                result(FlutterError(code: "NO_LOGS_AVAILABLE", message: "No temperature logs available on probe. Ensure the probe is connected and logging.", details: nil))
+                return
+            }
+            
             // Since sessionID is private, match logs using samplePeriod
             guard let log = probe.temperatureLogs.first(where: { $0.sessionInformation.samplePeriod == sessionInfo.samplePeriod }) else {
-                result(FlutterError(code: "LOG_NOT_FOUND", message: "No matching temperature log found", details: nil))
+                result(FlutterError(code: "LOG_NOT_FOUND", message: "No matching temperature log found for current session", details: nil))
                 return
             }
 
@@ -393,6 +504,9 @@ extension FlutterCombustionIncPlugin: FlutterStreamHandler {
             case "temperatureLog":
                 self.temperatureLogSink = events
                 return nil
+            case "sessionInfo":
+                self.sessionInfoSink = events
+                return nil
             default:
                 break
             }
@@ -437,6 +551,12 @@ extension FlutterCombustionIncPlugin: FlutterStreamHandler {
                 self.temperatureLogSink = nil
                 self.temperatureLogCancellable?.cancel()
                 self.temperatureLogCancellable = nil
+                return nil
+            case "sessionInfo":
+                self.sessionInfoSink = nil
+                self.sessionInfoCancellable?.cancel()
+                self.sessionInfoCancellable = nil
+                self.sessionInfoProbe = nil
                 return nil
             default:
                 break
