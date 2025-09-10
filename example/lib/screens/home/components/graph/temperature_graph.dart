@@ -195,10 +195,19 @@ class _TemperatureGraphState extends State<TemperatureGraph> {
 
       if (!mounted) return;
 
+      // Cancel existing subscription and clear data
+      await _logSubscription?.cancel();
+      _historicalData.clear();
+
       _logSubscription = log.dataStream.listen((ProbeLogDataPoint dataPoint) {
         if (mounted) {
           setState(() {
-            _historicalData.add(dataPoint);
+            // Check for duplicates based on sequence number
+            if (!_historicalData.any(
+              (ProbeLogDataPoint existingPoint) => existingPoint.sequence == dataPoint.sequence,
+            )) {
+              _historicalData.add(dataPoint);
+            }
           });
         }
       });
@@ -278,10 +287,19 @@ class _TemperatureGraphState extends State<TemperatureGraph> {
         _isLoadingHistoricalData = false;
       });
 
+      // Cancel existing subscription and clear data
+      await _logSubscription?.cancel();
+      _historicalData.clear();
+
       _logSubscription = log.dataStream.listen((ProbeLogDataPoint dataPoint) {
         if (mounted) {
           setState(() {
-            _historicalData.add(dataPoint);
+            // Check for duplicates based on sequence number
+            if (!_historicalData.any(
+              (ProbeLogDataPoint existingPoint) => existingPoint.sequence == dataPoint.sequence,
+            )) {
+              _historicalData.add(dataPoint);
+            }
           });
         }
       });

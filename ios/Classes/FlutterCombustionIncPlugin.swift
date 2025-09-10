@@ -448,10 +448,14 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
                 .sink { [weak self] _ in
                     guard let sink = self?.temperatureLogSink else { return }
                     let points = log.dataPoints
-                    guard points.count != lastCount else { return }
+                    guard points.count > lastCount else { return }
+                    
+                    // Only send new data points, not all data points
+                    let newPoints = Array(points[lastCount...])
                     lastCount = points.count
+                    
                     let startTimeMillis: Any = log.startTime.map { Int64($0.timeIntervalSince1970 * 1000) } ?? NSNull()
-                    let mapped = points.map { point in
+                    let mapped = newPoints.map { point in
                         return [
                             "sequence": point.sequenceNum,
                             "startTime": startTimeMillis,

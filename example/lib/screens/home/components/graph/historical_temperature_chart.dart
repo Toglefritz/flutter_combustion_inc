@@ -51,24 +51,31 @@ class HistoricalTemperatureChart extends StatelessWidget {
 
       for (int i = 0; i < historicalData.length; i++) {
         final ProbeLogDataPoint point = historicalData[i];
-        final double x = i.toDouble();
+        // Use sequence number as X-axis for proper time-based positioning
+        final double x = point.sequence.toDouble();
 
         // Approximate core as average of inner sensors
         final double core = (point.temperatures.t3 + point.temperatures.t4) / 2;
         // Approximate surface as average of middle sensors
         final double surface = (point.temperatures.t2 + point.temperatures.t5) / 2;
         // Approximate ambient as outermost sensor
-        final double ambient = point.temperatures.t1;
+        final double ambient = point.temperatures.t8; // Use T8 for ambient (handle tip)
 
         coreSpots.add(FlSpot(x, convertTemperature(core)));
         surfaceSpots.add(FlSpot(x, convertTemperature(surface)));
         ambientSpots.add(FlSpot(x, convertTemperature(ambient)));
       }
 
-      lineBarsData
-        ..add(_createLineChartBarData(coreSpots, Colors.red, 'Core'))
-        ..add(_createLineChartBarData(surfaceSpots, Colors.orange, 'Surface'))
-        ..add(_createLineChartBarData(ambientSpots, Colors.blue, 'Ambient'));
+      // Only add lines if they have data points
+      if (coreSpots.isNotEmpty) {
+        lineBarsData.add(_createLineChartBarData(coreSpots, Colors.red, 'Core'));
+      }
+      if (surfaceSpots.isNotEmpty) {
+        lineBarsData.add(_createLineChartBarData(surfaceSpots, Colors.orange, 'Surface'));
+      }
+      if (ambientSpots.isNotEmpty) {
+        lineBarsData.add(_createLineChartBarData(ambientSpots, Colors.blue, 'Ambient'));
+      }
     } else {
       // Physical temperatures from historical data
       final List<List<FlSpot>> physicalSpots = List.generate(
@@ -88,7 +95,8 @@ class HistoricalTemperatureChart extends StatelessWidget {
 
       for (int i = 0; i < historicalData.length; i++) {
         final ProbeLogDataPoint point = historicalData[i];
-        final double x = i.toDouble();
+        // Use sequence number as X-axis for proper time-based positioning
+        final double x = point.sequence.toDouble();
         final List<double> temps = [
           point.temperatures.t1,
           point.temperatures.t2,
@@ -106,51 +114,70 @@ class HistoricalTemperatureChart extends StatelessWidget {
       }
 
       for (int i = 0; i < 8; i++) {
-        lineBarsData.add(
-          _createLineChartBarData(physicalSpots[i], colors[i], 'T${i + 1}'),
-        );
+        // Only add lines if they have data points
+        if (physicalSpots[i].isNotEmpty) {
+          lineBarsData.add(
+            _createLineChartBarData(physicalSpots[i], colors[i], 'T${i + 1}'),
+          );
+        }
       }
     }
 
-    return LineChart(
-      LineChartData(
-        lineBarsData: lineBarsData,
-        titlesData: FlTitlesData(
-          leftTitles: AxisTitles(
-            sideTitles: SideTitles(
-              showTitles: true,
-              reservedSize: 60,
-              getTitlesWidget:
-                  (value, meta) => Text(
-                    '${value.toInt()}$unitSymbol',
-                    style: const TextStyle(fontSize: 10),
+    return Column(
+      children: [
+        Expanded(
+          child: LineChart(
+            LineChartData(
+              lineBarsData: lineBarsData,
+              clipData: const FlClipData.all(), // Clip lines to chart boundaries
+              titlesData: FlTitlesData(
+                leftTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    reservedSize: 60,
+                    getTitlesWidget:
+                        (value, meta) => Text(
+                          '${value.toInt()}$unitSymbol',
+                          style: const TextStyle(fontSize: 10),
+                        ),
                   ),
+                ),
+                bottomTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    reservedSize: 30,
+                    getTitlesWidget:
+                        (value, meta) => Text(
+                          '${value.toInt()}',
+                          style: const TextStyle(fontSize: 10),
+                        ),
+                  ),
+                ),
+                rightTitles: const AxisTitles(),
+                topTitles: const AxisTitles(),
+              ),
+              gridData: const FlGridData(
+                horizontalInterval: 10,
+                verticalInterval: 10,
+              ),
+              borderData: FlBorderData(show: true),
+              minX: _getMinX(lineBarsData),
+              maxX: _getMaxX(lineBarsData),
+              minY: _getMinY(lineBarsData) - 5,
+              maxY: _getMaxY(lineBarsData) + 5,
             ),
           ),
-          bottomTitles: AxisTitles(
-            sideTitles: SideTitles(
-              showTitles: true,
-              reservedSize: 30,
-              getTitlesWidget:
-                  (value, meta) => Text(
-                    '${value.toInt()}',
-                    style: const TextStyle(fontSize: 10),
-                  ),
-            ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: Inset.small),
+          child: TemperatureLegend(
+            displayMode: displayMode,
+            showHistoricalData: true,
+            hasRealTimeData: false,
+            hasHistoricalData: historicalData.isNotEmpty,
           ),
-          rightTitles: const AxisTitles(),
-          topTitles: const AxisTitles(),
         ),
-        gridData: const FlGridData(
-          horizontalInterval: 10,
-          verticalInterval: 10,
-        ),
-        borderData: FlBorderData(show: true),
-        minX: 0,
-        maxX: historicalData.length.toDouble(),
-        minY: _getMinY(lineBarsData) - 5,
-        maxY: _getMaxY(lineBarsData) + 5,
-      ),
+      ],
     );
   }
 
@@ -168,6 +195,20 @@ class HistoricalTemperatureChart extends StatelessWidget {
       dotData: const FlDotData(show: false),
       belowBarData: BarAreaData(),
     );
+  }
+
+  /// Gets the minimum X value from all line data.
+  double _getMinX(List<LineChartBarData> lineBarsData) {
+    if (lineBarsData.isEmpty) return 0;
+
+    return lineBarsData.expand((line) => line.spots).map((spot) => spot.x).reduce(min);
+  }
+
+  /// Gets the maximum X value from all line data.
+  double _getMaxX(List<LineChartBarData> lineBarsData) {
+    if (lineBarsData.isEmpty) return 100;
+
+    return lineBarsData.expand((line) => line.spots).map((spot) => spot.x).reduce(max);
   }
 
   /// Gets the minimum Y value from all line data.

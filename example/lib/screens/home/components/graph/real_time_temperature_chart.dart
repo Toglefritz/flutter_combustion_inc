@@ -87,45 +87,61 @@ class RealTimeTemperatureChart extends StatelessWidget {
       );
     }
 
-    return LineChart(
-      LineChartData(
-        lineBarsData: lineBarsData,
-        titlesData: FlTitlesData(
-          leftTitles: AxisTitles(
-            sideTitles: SideTitles(
-              showTitles: true,
-              reservedSize: 60,
-              getTitlesWidget:
-                  (value, meta) => Text(
-                    '${value.toInt()}$unitSymbol',
-                    style: const TextStyle(fontSize: 10),
+    return Column(
+      children: [
+        Expanded(
+          child: LineChart(
+            LineChartData(
+              lineBarsData: lineBarsData,
+              clipData: const FlClipData.all(), // Clip lines to chart boundaries
+              titlesData: FlTitlesData(
+                leftTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    reservedSize: 60,
+                    getTitlesWidget:
+                        (value, meta) => Text(
+                          '${value.toInt()}$unitSymbol',
+                          style: const TextStyle(fontSize: 10),
+                        ),
                   ),
+                ),
+                bottomTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    reservedSize: 30,
+                    getTitlesWidget:
+                        (value, meta) => Text(
+                          '${value.toInt()}s',
+                          style: const TextStyle(fontSize: 10),
+                        ),
+                  ),
+                ),
+                rightTitles: const AxisTitles(),
+                topTitles: const AxisTitles(),
+              ),
+              gridData: const FlGridData(
+                horizontalInterval: 10,
+                verticalInterval: 10,
+              ),
+              borderData: FlBorderData(show: true),
+              minX: _getMinX(lineBarsData),
+              maxX: _getMaxX(lineBarsData),
+              minY: _getMinY(lineBarsData) - 5,
+              maxY: _getMaxY(lineBarsData) + 5,
             ),
           ),
-          bottomTitles: AxisTitles(
-            sideTitles: SideTitles(
-              showTitles: true,
-              reservedSize: 30,
-              getTitlesWidget:
-                  (value, meta) => Text(
-                    '${value.toInt()}s',
-                    style: const TextStyle(fontSize: 10),
-                  ),
-            ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: Inset.small),
+          child: TemperatureLegend(
+            displayMode: displayMode,
+            showHistoricalData: false,
+            hasRealTimeData: lineBarsData.isNotEmpty,
+            hasHistoricalData: false,
           ),
-          rightTitles: const AxisTitles(),
-          topTitles: const AxisTitles(),
         ),
-        gridData: const FlGridData(
-          horizontalInterval: 10,
-          verticalInterval: 10,
-        ),
-        borderData: FlBorderData(show: true),
-        minX: _getMinX(lineBarsData),
-        maxX: _getMaxX(lineBarsData),
-        minY: _getMinY(lineBarsData) - 5,
-        maxY: _getMaxY(lineBarsData) + 5,
-      ),
+      ],
     );
   }
 
