@@ -110,11 +110,14 @@ class RealTimeTemperatureChart extends StatelessWidget {
                   sideTitles: SideTitles(
                     showTitles: true,
                     reservedSize: 30,
-                    getTitlesWidget:
-                        (value, meta) => Text(
-                          '${value.toInt()}s',
-                          style: const TextStyle(fontSize: 10),
-                        ),
+                    getTitlesWidget: (value, meta) {
+                      final double maxX = _getMaxX(lineBarsData);
+                      final int secondsAgo = (maxX - value).round();
+                      return Text(
+                        '${secondsAgo}s ago',
+                        style: const TextStyle(fontSize: 10),
+                      );
+                    },
                   ),
                 ),
                 rightTitles: const AxisTitles(),
@@ -161,16 +164,29 @@ class RealTimeTemperatureChart extends StatelessWidget {
     );
   }
 
-  /// Gets the minimum X value from all line data.
+  /// Gets the minimum X value for the chart display.
+  ///
+  /// For real-time data, this ensures the chart always shows a maximum of 30 seconds
+  /// of data by calculating the minimum X value based on the maximum X value.
   double _getMinX(List<LineChartBarData> lineBarsData) {
     if (lineBarsData.isEmpty) return 0;
 
-    return lineBarsData.expand((line) => line.spots).map((spot) => spot.x).reduce(min);
+    final double maxX = _getMaxX(lineBarsData);
+    final double minX = lineBarsData.expand((line) => line.spots).map((spot) => spot.x).reduce(min);
+
+    // Ensure we show at most 30 seconds of data
+    final double calculatedMinX = maxX - 30.0;
+
+    // Use the larger of the calculated minimum or the actual minimum data point
+    // This ensures we don't show empty space when there's less than 30 seconds of data
+    return max(minX, calculatedMinX);
   }
 
   /// Gets the maximum X value from all line data.
+  ///
+  /// Returns the latest timestamp from all available data points.
   double _getMaxX(List<LineChartBarData> lineBarsData) {
-    if (lineBarsData.isEmpty) return 100;
+    if (lineBarsData.isEmpty) return 30;
 
     return lineBarsData.expand((line) => line.spots).map((spot) => spot.x).reduce(max);
   }

@@ -51,8 +51,8 @@ class TemperatureGraph extends StatefulWidget {
 
 /// The state for the [TemperatureGraph] widget.
 class _TemperatureGraphState extends State<TemperatureGraph> {
-  /// Maximum number of data points to keep in memory for real-time display.
-  static const int maxDataPoints = 100;
+  /// Maximum time window in seconds for real-time display.
+  static const double maxTimeWindowSeconds = 30.0;
 
   /// Real-time virtual core temperature data points.
   final List<FlSpot> _coreTemps = [];
@@ -114,6 +114,8 @@ class _TemperatureGraphState extends State<TemperatureGraph> {
       if (mounted && !_showHistoricalData) {
         setState(() {
           _currentTimeOffset += 1;
+          // Clean up old data points even when no new data arrives
+          _cleanupOldDataPoints();
         });
       }
     });
@@ -344,7 +346,7 @@ class _TemperatureGraphState extends State<TemperatureGraph> {
   /// Adds a new virtual temperature data point to the real-time data.
   ///
   /// Converts temperatures to the current unit setting and maintains a rolling
-  /// window of the most recent [maxDataPoints] data points for performance.
+  /// window of the most recent [maxTimeWindowSeconds] seconds of data for performance.
   void _addVirtualTemperaturePoint(VirtualTemperatures temps) {
     final double time = _currentTimeOffset;
 
@@ -352,19 +354,17 @@ class _TemperatureGraphState extends State<TemperatureGraph> {
     _surfaceTemps.add(FlSpot(time, _convertTemperature(temps.surface)));
     _ambientTemps.add(FlSpot(time, _convertTemperature(temps.ambient)));
 
-    // Keep only the last maxDataPoints
-    if (_coreTemps.length > maxDataPoints) {
-      _coreTemps.removeAt(0);
-      _surfaceTemps.removeAt(0);
-      _ambientTemps.removeAt(0);
-    }
+    // Remove data points older than maxTimeWindowSeconds
+    _removeOldDataPoints(_coreTemps, time);
+    _removeOldDataPoints(_surfaceTemps, time);
+    _removeOldDataPoints(_ambientTemps, time);
   }
 
   /// Adds a new physical temperature data point to the real-time data.
   ///
   /// Processes all 8 physical temperature sensors (T1-T8) and converts them
   /// to the current unit setting. Maintains a rolling window of the most recent
-  /// [maxDataPoints] data points for each sensor for performance.
+  /// [maxTimeWindowSeconds] seconds of data for each sensor for performance.
   void _addPhysicalTemperaturePoint(ProbeTemperatures temps) {
     final double time = _currentTimeOffset;
     final List<double> values = [
@@ -381,10 +381,8 @@ class _TemperatureGraphState extends State<TemperatureGraph> {
     for (int sensorIndex = 0; sensorIndex < 8; sensorIndex++) {
       _physicalTemps[sensorIndex].add(FlSpot(time, _convertTemperature(values[sensorIndex])));
 
-      // Keep only the last maxDataPoints
-      if (_physicalTemps[sensorIndex].length > maxDataPoints) {
-        _physicalTemps[sensorIndex].removeAt(0);
-      }
+      // Remove data points older than maxTimeWindowSeconds
+      _removeOldDataPoints(_physicalTemps[sensorIndex], time);
     }
   }
 
@@ -394,6 +392,38 @@ class _TemperatureGraphState extends State<TemperatureGraph> {
   /// preferred unit (Celsius or Fahrenheit) based on the current setting.
   double _convertTemperature(double celsius) {
     return TemperatureUnitSetting.currentUnit == TemperatureUnit.celsius ? celsius : (celsius * 9 / 5) + 32;
+  }
+
+  /// Removes data points older than the maximum time window from a data series.
+  ///
+  /// Maintains a rolling window of the most recent [maxTimeWindowSeconds] seconds
+  /// of data by removing points that fall outside the time window. This ensures
+  /// the live chart always shows the most recent 30 seconds of data.
+  void _removeOldDataPoints(List<FlSpot> dataPoints, double currentTime) {
+    final double cutoffTime = currentTime - maxTimeWindowSeconds;
+
+    // Remove points from the beginning of the list that are older than the cutoff
+    while (dataPoints.isNotEmpty && dataPoints.first.x < cutoffTime) {
+      dataPoints.removeAt(0);
+    }
+  }
+
+  /// Cleans up old data points from all data series based on current time.
+  ///
+  /// This method is called periodically by the timer to ensure that even when
+  /// no new data arrives, the chart maintains the 30-second rolling window.
+  void _cleanupOldDataPoints() {
+    final double currentTime = _currentTimeOffset;
+
+    // Clean up virtual temperature data
+    _removeOldDataPoints(_coreTemps, currentTime);
+    _removeOldDataPoints(_surfaceTemps, currentTime);
+    _removeOldDataPoints(_ambientTemps, currentTime);
+
+    // Clean up physical temperature data
+    for (int sensorIndex = 0; sensorIndex < 8; sensorIndex++) {
+      _removeOldDataPoints(_physicalTemps[sensorIndex], currentTime);
+    }
   }
 
   /// Gets the temperature unit symbol.
