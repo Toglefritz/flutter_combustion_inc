@@ -1,0 +1,45 @@
+PODS:
+  - CombustionBLE (1.0.0):
+    - NordicDFU
+  - flutter_combustion_inc (0.0.1):
+    - CombustionBLE
+    - FlutterMacOS
+  - FlutterMacOS (1.0.0)
+  - NordicDFU (4.16.0):
+    - ZIPFoundation (= 0.9.19)
+  - ZIPFoundation (0.9.19)
+
+DEPENDENCIES:
+  - CombustionBLE (from `https://github.com/Toglefritz/combustion-ios-ble.git`, branch `main`)
+  - flutter_combustion_inc (from `Flutter/ephemeral/.symlinks/plugins/flutter_combustion_inc/macos`)
+  - FlutterMacOS (from `Flutter/ephemeral`)
+
+SPEC REPOS:
+  trunk:
+    - NordicDFU
+    - ZIPFoundation
+
+EXTERNAL SOURCES:
+  CombustionBLE:
+    :branch: main
+    :git: https://github.com/Toglefritz/combustion-ios-ble.git
+  flutter_combustion_inc:
+    :path: Flutter/ephemeral/.symlinks/plugins/flutter_combustion_inc/macos
+  FlutterMacOS:
+    :path: Flutter/ephemeral
+
+CHECKOUT OPTIONS:
+  CombustionBLE:
+    :commit: 6775b83b31af445004c6d2305eb6931184130c4e
+    :git: https://github.com/Toglefritz/combustion-ios-ble.git
+
+SPEC CHECKSUMS:
+  CombustionBLE: ce712f2720bfb104e8b4d137dc4a0db45759db68
+  flutter_combustion_inc: ba15f3ab9d55495641d32348f1dd92851ffe507e
+  FlutterMacOS: d0db08ddef1a9af05a5ec4b724367152bb0500b1
+  NordicDFU: 116a4ec458945889f8e0e71759e03b23c39c3482
+  ZIPFoundation: b8c29ea7ae353b309bc810586181fd073cb3312c
+
+PODFILE CHECKSUM: e590f6abf69f412c679f6cf0e7f8ac3849042f6b
+
+COCOAPODS: 1.16.2

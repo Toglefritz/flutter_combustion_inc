@@ -16,6 +16,7 @@ A Flutter plugin that enables communication between Flutter mobile applications 
 
 - ✅ Android (uses [combustion-android-ble](https://github.com/combustion-inc/combustion-android-ble))
 - ✅ iOS (uses [combustion-ios-ble](https://github.com/combustion-inc/combustion-ios-ble))
+- ✅ macOS (uses [combustion-ios-ble](https://github.com/combustion-inc/combustion-ios-ble))
 
 ## Installation
 
@@ -31,6 +32,16 @@ Then run:
 ```bash
 flutter pub get
 ```
+
+### macOS Setup
+
+For macOS support, ensure you have:
+
+1. macOS 10.11 or later
+2. Xcode with Swift 5.0+ support
+3. The CombustionBLE framework available for macOS
+
+The plugin uses the same CombustionBLE framework as iOS, so no additional setup is required beyond standard Flutter macOS configuration.
 
 ## Usage
 

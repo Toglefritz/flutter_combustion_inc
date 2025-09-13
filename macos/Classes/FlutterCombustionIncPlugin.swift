@@ -1,15 +1,9 @@
-#if os(iOS)
-import Flutter
-import UIKit
-#elseif os(macOS)
 import FlutterMacOS
 import AppKit
-#endif
-
-import CombustionBLE
 import Combine
+import CombustionBLE
 
-/// `FlutterCombustionIncPlugin` is the iOS-side implementation of the
+/// `FlutterCombustionIncPlugin` is the macOS-side implementation of the
 /// flutter_combustion_inc plugin. It uses Flutter method and event channels
 /// to connect Flutter apps to Combustion Inc. temperature probes.
 ///
@@ -67,7 +61,6 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
     /// Combine subscription to percentOfLogsSynced updates.
     private var logSyncPercentCancellable: AnyCancellable?
 
-
     /// Used to emit temperature log data points as a stream to Flutter.
     private var temperatureLogSink: FlutterEventSink?
 
@@ -94,55 +87,55 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
         // Method channel for one-off method calls (e.g., connect, disconnect, etc.)
         let methodChannel = FlutterMethodChannel(
             name: "flutter_combustion_inc",
-            binaryMessenger: registrar.messenger()
+            binaryMessenger: registrar.messenger
         )
         
         // Event channel for continuous scan results.
         let probeListChannel = FlutterEventChannel(
             name: "flutter_combustion_inc_scan",
-            binaryMessenger: registrar.messenger()
+            binaryMessenger: registrar.messenger
         )
         probeListChannel.setStreamHandler(instance)
         
         let virtualTempChannel = FlutterEventChannel(
             name: "flutter_combustion_inc_virtual_temps",
-            binaryMessenger: registrar.messenger()
+            binaryMessenger: registrar.messenger
         )
         virtualTempChannel.setStreamHandler(instance)
         
         let currentTempsChannel = FlutterEventChannel(
             name: "flutter_combustion_inc_current_temperatures",
-            binaryMessenger: registrar.messenger()
+            binaryMessenger: registrar.messenger
         )
         currentTempsChannel.setStreamHandler(instance)
         
         let batteryStatusChannel = FlutterEventChannel(
             name: "flutter_combustion_inc_battery_status",
-            binaryMessenger: registrar.messenger()
+            binaryMessenger: registrar.messenger
         )
         batteryStatusChannel.setStreamHandler(instance)
         
         let statusStaleChannel = FlutterEventChannel(
             name: "flutter_combustion_inc_status_stale",
-            binaryMessenger: registrar.messenger()
+            binaryMessenger: registrar.messenger
         )
         statusStaleChannel.setStreamHandler(instance)
         
         let logSyncPercentChannel = FlutterEventChannel(
             name: "flutter_combustion_inc_log_sync_percent",
-            binaryMessenger: registrar.messenger()
+            binaryMessenger: registrar.messenger
         )
         logSyncPercentChannel.setStreamHandler(instance)
         
         let temperatureLogChannel = FlutterEventChannel(
             name: "flutter_combustion_inc_temperature_log",
-            binaryMessenger: registrar.messenger()
+            binaryMessenger: registrar.messenger
         )
         temperatureLogChannel.setStreamHandler(instance)
         
         let sessionInfoChannel = FlutterEventChannel(
             name: "flutter_combustion_inc_session_info",
-            binaryMessenger: registrar.messenger()
+            binaryMessenger: registrar.messenger
         )
         sessionInfoChannel.setStreamHandler(instance)
 

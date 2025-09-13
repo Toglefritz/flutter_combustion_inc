@@ -25,6 +25,8 @@ flutter:
         pluginClass: FlutterCombustionIncPlugin
       ios:
         pluginClass: FlutterCombustionIncPlugin
+      macos:
+        pluginClass: FlutterCombustionIncPlugin
 
   assets:
     - assets/
