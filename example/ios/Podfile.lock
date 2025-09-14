@@ -10,7 +10,7 @@ PODS:
   - ZIPFoundation (0.9.19)
 
 DEPENDENCIES:
-  - CombustionBLE (from `https://github.com/Toglefritz/combustion-ios-ble.git`)
+  - CombustionBLE (from `https://github.com/Toglefritz/combustion-ios-ble.git`, branch `main`)
   - Flutter (from `Flutter`)
   - flutter_combustion_inc (from `.symlinks/plugins/flutter_combustion_inc/ios`)
 
@@ -21,6 +21,7 @@ SPEC REPOS:
 
 EXTERNAL SOURCES:
   CombustionBLE:
+    :branch: main
     :git: https://github.com/Toglefritz/combustion-ios-ble.git
   Flutter:
     :path: Flutter
@@ -29,16 +30,16 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   CombustionBLE:
-    :commit: 0fceab17f9d665b6fcb1d8a07c37e820aa28b0da
+    :commit: 6775b83b31af445004c6d2305eb6931184130c4e
     :git: https://github.com/Toglefritz/combustion-ios-ble.git
 
 SPEC CHECKSUMS:
-  CombustionBLE: bc3a3765b2ae09a8a58cf7fa8b7e5c6d9d153503
+  CombustionBLE: ce712f2720bfb104e8b4d137dc4a0db45759db68
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
   flutter_combustion_inc: 3e62698c04eb39bff05c8e17eff0b2ff94faa058
   NordicDFU: 116a4ec458945889f8e0e71759e03b23c39c3482
   ZIPFoundation: b8c29ea7ae353b309bc810586181fd073cb3312c
 
-PODFILE CHECKSUM: 049248d3ce894510c9daaecd15057c37693d53fa
+PODFILE CHECKSUM: ccc0742b3759a2b55607feb5760c76164688c4f1
 
 COCOAPODS: 1.16.2

@@ -8,6 +8,7 @@ import 'components/battery_status_indicator.dart';
 import 'components/graph/temperature_graph.dart';
 import 'components/graph_display_switch.dart';
 import 'components/physical_temperatures_display.dart';
+import 'components/target_temperature_control.dart';
 import 'components/temperature_unit_switch.dart';
 import 'components/virtual_temperatures_display.dart';
 import 'home_controller.dart';
@@ -242,6 +243,12 @@ class HomeView extends StatelessWidget {
                   },
                 );
               }),
+
+              // Target temperature control - positioned below all probe displays
+              TargetTemperatureControl(
+                onTargetSet: state.onTargetTemperatureSet,
+                enabled: state.probes.isNotEmpty,
+              ),
             ],
           ),
         ),

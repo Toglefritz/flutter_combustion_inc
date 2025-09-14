@@ -314,4 +314,15 @@ class MethodChannelFlutterCombustionInc extends FlutterCombustionIncPlatform {
       'identifier': identifier,
     });
   }
+
+  @override
+  Future<void> setTargetTemperature(
+    String identifier,
+    double temperatureCelsius,
+  ) async {
+    await methodChannel.invokeMethod('setTargetTemperature', {
+      'identifier': identifier,
+      'temperatureCelsius': temperatureCelsius,
+    });
+  }
 }

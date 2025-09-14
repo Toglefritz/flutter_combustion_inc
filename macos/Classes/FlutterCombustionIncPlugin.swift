@@ -84,55 +84,66 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
         // Create a shared plugin instance
         let instance = FlutterCombustionIncPlugin()
         
-        // Method channel for one-off method calls (e.g., connect, disconnect, etc.)
+        // Method channel for one-off commands and queries: initialize BLE, list probes / RSSI,
+        // fetch single readings (virtual & raw temps), connect to a probe, start specific data
+        // streams, refresh/read session info, and request a temperature log (returns metadata; log
+        // points stream on the event channel).
         let methodChannel = FlutterMethodChannel(
             name: "flutter_combustion_inc",
             binaryMessenger: registrar.messenger
         )
-        
-        // Event channel for continuous scan results.
+
+        // Emits snapshots of nearby probes whenever the discovered list changes (identifier, name,
+        // color, RSSI, etc.).
         let probeListChannel = FlutterEventChannel(
             name: "flutter_combustion_inc_scan",
             binaryMessenger: registrar.messenger
         )
         probeListChannel.setStreamHandler(instance)
-        
+
+        // Streams virtual temperatures (core, surface, ambient) from the connected probe.
         let virtualTempChannel = FlutterEventChannel(
             name: "flutter_combustion_inc_virtual_temps",
             binaryMessenger: registrar.messenger
         )
         virtualTempChannel.setStreamHandler(instance)
-        
+
+        // Streams the eight raw sensor temperatures.
         let currentTempsChannel = FlutterEventChannel(
             name: "flutter_combustion_inc_current_temperatures",
             binaryMessenger: registrar.messenger
         )
         currentTempsChannel.setStreamHandler(instance)
-        
+
+        // Streams battery status changes (e.g., “ok” / “low”).
         let batteryStatusChannel = FlutterEventChannel(
             name: "flutter_combustion_inc_battery_status",
             binaryMessenger: registrar.messenger
         )
         batteryStatusChannel.setStreamHandler(instance)
-        
+
+        // Streams a boolean indicating if incoming probe data has gone stale.
         let statusStaleChannel = FlutterEventChannel(
             name: "flutter_combustion_inc_status_stale",
             binaryMessenger: registrar.messenger
         )
         statusStaleChannel.setStreamHandler(instance)
-        
+
+         // Streams the percent of temperature logs that have been synchronized from the probe.
         let logSyncPercentChannel = FlutterEventChannel(
             name: "flutter_combustion_inc_log_sync_percent",
             binaryMessenger: registrar.messenger
         )
         logSyncPercentChannel.setStreamHandler(instance)
-        
+
+        // Streams temperature-log data points incrementally (sequence, start time, T1–T8).
         let temperatureLogChannel = FlutterEventChannel(
             name: "flutter_combustion_inc_temperature_log",
             binaryMessenger: registrar.messenger
         )
         temperatureLogChannel.setStreamHandler(instance)
-        
+
+        // Streams session-info availability and metadata (e.g., hasSession, samplePeriod).
         let sessionInfoChannel = FlutterEventChannel(
             name: "flutter_combustion_inc_session_info",
             binaryMessenger: registrar.messenger

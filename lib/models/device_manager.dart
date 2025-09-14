@@ -51,4 +51,23 @@ class DeviceManager {
 
     return result.map(Probe.fromMap).toList();
   }
+
+  /// Sets a target temperature for the specified probe to enable temperature predictions.
+  ///
+  /// Once a target temperature is set, the probe will begin making predictions
+  /// including an estimated time of arrival (ETA) for when the food will reach
+  /// the target temperature.
+  ///
+  /// @param identifier The unique identifier of the probe
+  /// @param temperatureCelsius The target temperature in Celsius
+  /// @throws PlatformException if the temperature is outside valid range or probe is not connected
+  Future<void> setTargetTemperature(
+    String identifier,
+    double temperatureCelsius,
+  ) async {
+    await FlutterCombustionIncPlatform.instance.setTargetTemperature(
+      identifier,
+      temperatureCelsius,
+    );
+  }
 }

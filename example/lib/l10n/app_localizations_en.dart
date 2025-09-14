@@ -113,4 +113,70 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get resetViewTooltip => 'Reset View (or double-tap chart)';
+
+  @override
+  String get setTargetTemperature => 'Set Target Temperature';
+
+  @override
+  String get selectFoodTypeOrEnterCustom => 'Select a food type for quick setup, or enter a custom temperature below.';
+
+  @override
+  String get or => 'OR';
+
+  @override
+  String get enterCustomTemperature => 'Enter Custom Temperature';
+
+  @override
+  String get temperature => 'Temperature';
+
+  @override
+  String get set => 'Set';
+
+  @override
+  String get temperatureRequired => 'Temperature is required';
+
+  @override
+  String get invalidTemperature => 'Please enter a valid number';
+
+  @override
+  String temperatureOutOfRange(int min, int max, String unit) {
+    return 'Temperature must be between $min and $max $unit';
+  }
+
+  @override
+  String targetTemperatureSet(String food, int temperature, String unit) {
+    return 'Target set: $food at $temperature$unit';
+  }
+
+  @override
+  String customTargetTemperatureSet(int temperature, String unit) {
+    return 'Custom target set: $temperature$unit';
+  }
+
+  @override
+  String get clear => 'Clear';
+
+  @override
+  String get quickPresets => 'Quick Presets';
+
+  @override
+  String get targetTemperature => 'Target Temperature';
+
+  @override
+  String get changeTarget => 'Change Target';
+
+  @override
+  String get predictionInfo => 'Prediction Information';
+
+  @override
+  String get estimatedTimeRemaining => 'Estimated time remaining:';
+
+  @override
+  String get predictionPlaceholder => 'Calculating... (Prediction system integration pending)';
+
+  @override
+  String get currentProgress => 'Current progress:';
+
+  @override
+  String get progressPlaceholder => 'Monitoring temperature... (Progress tracking pending)';
 }

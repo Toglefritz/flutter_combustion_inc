@@ -177,5 +177,140 @@
   "@resetViewTooltip": {
     "description": "Tooltip for the reset view button in the temperature chart.",
     "placeholders": {}
+  },
+  "setTargetTemperature": "Set Target Temperature",
+  "@setTargetTemperature": {
+    "description": "Header for the target temperature control section.",
+    "placeholders": {}
+  },
+  "selectFoodTypeOrEnterCustom": "Select a food type for quick setup, or enter a custom temperature below.",
+  "@selectFoodTypeOrEnterCustom": {
+    "description": "Instructions for using the target temperature control.",
+    "placeholders": {}
+  },
+  "or": "OR",
+  "@or": {
+    "description": "Conjunction used to separate different options.",
+    "placeholders": {}
+  },
+  "enterCustomTemperature": "Enter Custom Temperature",
+  "@enterCustomTemperature": {
+    "description": "Button label to show the custom temperature input field.",
+    "placeholders": {}
+  },
+  "temperature": "Temperature",
+  "@temperature": {
+    "description": "Label for temperature input field.",
+    "placeholders": {}
+  },
+  "set": "Set",
+  "@set": {
+    "description": "Button label to confirm setting a temperature.",
+    "placeholders": {}
+  },
+  "temperatureRequired": "Temperature is required",
+  "@temperatureRequired": {
+    "description": "Error message when temperature field is empty.",
+    "placeholders": {}
+  },
+  "invalidTemperature": "Please enter a valid number",
+  "@invalidTemperature": {
+    "description": "Error message when temperature input is not a valid number.",
+    "placeholders": {}
+  },
+  "temperatureOutOfRange": "Temperature must be between {min} and {max} {unit}",
+  "@temperatureOutOfRange": {
+    "description": "Error message when temperature is outside valid cooking range.",
+    "placeholders": {
+      "min": {
+        "type": "int",
+        "description": "Minimum allowed temperature"
+      },
+      "max": {
+        "type": "int",
+        "description": "Maximum allowed temperature"
+      },
+      "unit": {
+        "type": "String",
+        "description": "Temperature unit (°C or °F)"
+      }
+    }
+  },
+  "targetTemperatureSet": "Target set: {food} at {temperature}{unit}",
+  "@targetTemperatureSet": {
+    "description": "Confirmation message when a food preset target temperature is set.",
+    "placeholders": {
+      "food": {
+        "type": "String",
+        "description": "Name of the food type"
+      },
+      "temperature": {
+        "type": "int",
+        "description": "Target temperature value"
+      },
+      "unit": {
+        "type": "String",
+        "description": "Temperature unit (°C or °F)"
+      }
+    }
+  },
+  "customTargetTemperatureSet": "Custom target set: {temperature}{unit}",
+  "@customTargetTemperatureSet": {
+    "description": "Confirmation message when a custom target temperature is set.",
+    "placeholders": {
+      "temperature": {
+        "type": "int",
+        "description": "Target temperature value"
+      },
+      "unit": {
+        "type": "String",
+        "description": "Temperature unit (°C or °F)"
+      }
+    }
+  },
+  "clear": "Clear",
+  "@clear": {
+    "description": "Button label to clear input.",
+    "placeholders": {}
+  },
+  "quickPresets": "Quick Presets",
+  "@quickPresets": {
+    "description": "Header for the food preset selection section.",
+    "placeholders": {}
+  },
+  "targetTemperature": "Target Temperature",
+  "@targetTemperature": {
+    "description": "Label for the currently set target temperature.",
+    "placeholders": {}
+  },
+  "changeTarget": "Change Target",
+  "@changeTarget": {
+    "description": "Tooltip for the button to change the target temperature.",
+    "placeholders": {}
+  },
+  "predictionInfo": "Prediction Information",
+  "@predictionInfo": {
+    "description": "Header for the prediction information section.",
+    "placeholders": {}
+  },
+  "estimatedTimeRemaining": "Estimated time remaining:",
+  "@estimatedTimeRemaining": {
+    "description": "Label for the estimated time until target temperature is reached.",
+    "placeholders": {}
+  },
+  "predictionPlaceholder": "Calculating... (Prediction system integration pending)",
+  "@predictionPlaceholder": {
+    "description": "Placeholder text shown while prediction system is not yet integrated.",
+    "placeholders": {}
+  },
+  "currentProgress": "Current progress:",
+  "@currentProgress": {
+    "description": "Label for the current cooking progress information.",
+    "placeholders": {}
+  },
+  "progressPlaceholder": "Monitoring temperature... (Progress tracking pending)",
+  "@progressPlaceholder": {
+    "description": "Placeholder text shown while progress tracking is not yet integrated.",
+    "placeholders": {}
   }
 }

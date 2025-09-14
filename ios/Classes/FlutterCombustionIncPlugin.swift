@@ -67,7 +67,6 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
     /// Combine subscription to percentOfLogsSynced updates.
     private var logSyncPercentCancellable: AnyCancellable?
 
-
     /// Used to emit temperature log data points as a stream to Flutter.
     private var temperatureLogSink: FlutterEventSink?
 
@@ -82,6 +81,9 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
     
     /// Store the probe reference for session info monitoring to ensure consistency.
     private var sessionInfoProbe: Probe?
+
+    /// Used to emit temperature prediction data as a stream to Flutter.
+    private var predictionSink: FlutterEventSink?
     
     /// Registers the plugin with the Flutter engine and sets up method and event channels.
     ///
@@ -91,60 +93,73 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
         // Create a shared plugin instance
         let instance = FlutterCombustionIncPlugin()
         
-        // Method channel for one-off method calls (e.g., connect, disconnect, etc.)
+        // Method channel for one-off commands and queries: initialize BLE, list probes / RSSI,
+        // fetch single readings (virtual & raw temps), connect to a probe, start specific data
+        // streams, refresh/read session info, and request a temperature log (returns metadata; log
+        // points stream on the event channel).
         let methodChannel = FlutterMethodChannel(
             name: "flutter_combustion_inc",
             binaryMessenger: registrar.messenger()
         )
         
-        // Event channel for continuous scan results.
+        // Emits snapshots of nearby probes whenever the discovered list changes (identifier, name,
+        // color, RSSI, etc.).
         let probeListChannel = FlutterEventChannel(
             name: "flutter_combustion_inc_scan",
             binaryMessenger: registrar.messenger()
         )
         probeListChannel.setStreamHandler(instance)
-        
+
+        // Streams virtual temperatures (core, surface, ambient) from the connected probe.
         let virtualTempChannel = FlutterEventChannel(
             name: "flutter_combustion_inc_virtual_temps",
             binaryMessenger: registrar.messenger()
         )
         virtualTempChannel.setStreamHandler(instance)
-        
+
+        // Streams the eight raw sensor temperatures.
         let currentTempsChannel = FlutterEventChannel(
             name: "flutter_combustion_inc_current_temperatures",
             binaryMessenger: registrar.messenger()
         )
         currentTempsChannel.setStreamHandler(instance)
-        
+
+        // Streams battery status changes (e.g., “ok” / “low”).
         let batteryStatusChannel = FlutterEventChannel(
             name: "flutter_combustion_inc_battery_status",
             binaryMessenger: registrar.messenger()
         )
         batteryStatusChannel.setStreamHandler(instance)
-        
+
+        // Streams a boolean indicating if incoming probe data has gone stale.
         let statusStaleChannel = FlutterEventChannel(
             name: "flutter_combustion_inc_status_stale",
             binaryMessenger: registrar.messenger()
         )
         statusStaleChannel.setStreamHandler(instance)
-        
+
+        // Streams the percent of temperature logs that have been synchronized from the probe.
         let logSyncPercentChannel = FlutterEventChannel(
             name: "flutter_combustion_inc_log_sync_percent",
             binaryMessenger: registrar.messenger()
         )
         logSyncPercentChannel.setStreamHandler(instance)
-        
+
+        // Streams temperature-log data points incrementally (sequence, start time, T1–T8).
         let temperatureLogChannel = FlutterEventChannel(
             name: "flutter_combustion_inc_temperature_log",
             binaryMessenger: registrar.messenger()
         )
         temperatureLogChannel.setStreamHandler(instance)
-        
+
+        // Streams session-info availability and metadata (e.g., hasSession, samplePeriod).
         let sessionInfoChannel = FlutterEventChannel(
             name: "flutter_combustion_inc_session_info",
             binaryMessenger: registrar.messenger()
         )
         sessionInfoChannel.setStreamHandler(instance)
+
+        // TODO add Event Channel for streaming predictions from the probe
 
         // Register the method and event channel handlers
         registrar.addMethodCallDelegate(instance, channel: methodChannel)
@@ -483,6 +498,52 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
             result([
                 "startTime": startTimeMillis
             ])
+
+         // Sets a target food temperature for the probe. Once a target temperature is set, the
+         // probe will begin delivering predictions including an ETA for when the food will
+         // reach the target temperature.
+         case "setTargetTemperature":
+            guard
+                let args = call.arguments as? [String: Any],
+                let identifier = args["identifier"] as? String,
+                let temperatureCelsius = args["temperatureCelsius"] as? Double
+            else {
+                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid arguments. Expected 'identifier' (String) and 'temperatureCelsius' (Double)", details: nil))
+                return
+            }
+            
+            guard let probe = DeviceManager.shared.getProbes().first(where: { $0.uniqueIdentifier == identifier }) else {
+                result(FlutterError(code: "PROBE_NOT_FOUND", message: "Probe with identifier '\(identifier)' not found", details: nil))
+                return
+            }
+            
+            // Set the removal prediction using the DeviceManager
+            DeviceManager.shared.setRemovalPrediction(
+                probe,
+                removalTemperatureC: temperatureCelsius
+            ) { success in
+                DispatchQueue.main.async {
+                    if success {
+                        result(nil)
+                    } else {
+                        result(FlutterError(
+                            code: "SET_TEMPERATURE_FAILED",
+                            message: "Failed to set target temperature. Temperature may be outside valid range or probe may not be connected.",
+                            details: [
+                                "identifier": identifier,
+                                "temperatureCelsius": temperatureCelsius
+                            ]
+                        ))
+                    }
+                }
+            }
+
+         // Starts a stream that emits temperature prediction information for the specified probe.
+         // Emits updates whenever the probe's prediction information changes. Note that a
+         // target temperature must be set before the probe will begin making predictions.
+         case "startPredictionStream":
+            // TODO add event channel handler to stream predictions from the probe
+            result(FlutterMethodNotImplemented)
 
         default:
             result(FlutterMethodNotImplemented)

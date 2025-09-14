@@ -68,6 +68,44 @@ class HomeController extends State<HomeRoute> {
     displayMode = mode;
   });
 
+  /// Sets the target temperature for the first available probe.
+  ///
+  /// This method sends the target temperature to the probe using the Method Channel.
+  /// The temperature is provided in Celsius and will be used by the probe to
+  /// generate cooking predictions and estimated completion times.
+  ///
+  /// @param temperatureCelsius The target temperature in Celsius
+  Future<void> onTargetTemperatureSet(double temperatureCelsius) async {
+    if (probes.isEmpty) {
+      debugPrint('No probes available to set target temperature');
+      return;
+    }
+
+    // Use the first probe for now - TODO: Allow user to select which probe
+    final Probe targetProbe = probes.first;
+
+    try {
+      await DeviceManager.instance.setTargetTemperature(
+        targetProbe.identifier,
+        temperatureCelsius,
+      );
+
+      debugPrint('Target temperature set to $temperatureCelsius°C for probe ${targetProbe.name}');
+    } on Exception catch (e) {
+      debugPrint('Failed to set target temperature: $e');
+
+      // Show error to user if context is available
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to set target temperature: $e'),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) => AnimatedSwitcher(
     duration: const Duration(microseconds: 250),

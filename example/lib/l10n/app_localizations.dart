@@ -296,6 +296,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reset View (or double-tap chart)'**
   String get resetViewTooltip;
+
+  /// Header for the target temperature control section.
+  ///
+  /// In en, this message translates to:
+  /// **'Set Target Temperature'**
+  String get setTargetTemperature;
+
+  /// Instructions for using the target temperature control.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a food type for quick setup, or enter a custom temperature below.'**
+  String get selectFoodTypeOrEnterCustom;
+
+  /// Conjunction used to separate different options.
+  ///
+  /// In en, this message translates to:
+  /// **'OR'**
+  String get or;
+
+  /// Button label to show the custom temperature input field.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Custom Temperature'**
+  String get enterCustomTemperature;
+
+  /// Label for temperature input field.
+  ///
+  /// In en, this message translates to:
+  /// **'Temperature'**
+  String get temperature;
+
+  /// Button label to confirm setting a temperature.
+  ///
+  /// In en, this message translates to:
+  /// **'Set'**
+  String get set;
+
+  /// Error message when temperature field is empty.
+  ///
+  /// In en, this message translates to:
+  /// **'Temperature is required'**
+  String get temperatureRequired;
+
+  /// Error message when temperature input is not a valid number.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid number'**
+  String get invalidTemperature;
+
+  /// Error message when temperature is outside valid cooking range.
+  ///
+  /// In en, this message translates to:
+  /// **'Temperature must be between {min} and {max} {unit}'**
+  String temperatureOutOfRange(int min, int max, String unit);
+
+  /// Confirmation message when a food preset target temperature is set.
+  ///
+  /// In en, this message translates to:
+  /// **'Target set: {food} at {temperature}{unit}'**
+  String targetTemperatureSet(String food, int temperature, String unit);
+
+  /// Confirmation message when a custom target temperature is set.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom target set: {temperature}{unit}'**
+  String customTargetTemperatureSet(int temperature, String unit);
+
+  /// Button label to clear input.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get clear;
+
+  /// Header for the food preset selection section.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Presets'**
+  String get quickPresets;
+
+  /// Label for the currently set target temperature.
+  ///
+  /// In en, this message translates to:
+  /// **'Target Temperature'**
+  String get targetTemperature;
+
+  /// Tooltip for the button to change the target temperature.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Target'**
+  String get changeTarget;
+
+  /// Header for the prediction information section.
+  ///
+  /// In en, this message translates to:
+  /// **'Prediction Information'**
+  String get predictionInfo;
+
+  /// Label for the estimated time until target temperature is reached.
+  ///
+  /// In en, this message translates to:
+  /// **'Estimated time remaining:'**
+  String get estimatedTimeRemaining;
+
+  /// Placeholder text shown while prediction system is not yet integrated.
+  ///
+  /// In en, this message translates to:
+  /// **'Calculating... (Prediction system integration pending)'**
+  String get predictionPlaceholder;
+
+  /// Label for the current cooking progress information.
+  ///
+  /// In en, this message translates to:
+  /// **'Current progress:'**
+  String get currentProgress;
+
+  /// Placeholder text shown while progress tracking is not yet integrated.
+  ///
+  /// In en, this message translates to:
+  /// **'Monitoring temperature... (Progress tracking pending)'**
+  String get progressPlaceholder;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
