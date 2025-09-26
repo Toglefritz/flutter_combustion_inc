@@ -75,6 +75,12 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
     
     /// Store the probe reference for session info monitoring to ensure consistency.
     private var sessionInfoProbe: Probe?
+
+    /// Used to emit temperature prediction data as a stream to Flutter.
+    private var predictionSink: FlutterEventSink?
+    
+    /// Combine subscription to prediction updates.
+    private var predictionCancellable: AnyCancellable?
     
     /// Registers the plugin with the Flutter engine and sets up method and event channels.
     ///
@@ -149,6 +155,13 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
             binaryMessenger: registrar.messenger
         )
         sessionInfoChannel.setStreamHandler(instance)
+
+        // Streams temperature prediction information from the probe.
+        let predictionChannel = FlutterEventChannel(
+            name: "flutter_combustion_inc_predictions",
+            binaryMessenger: registrar.messenger
+        )
+        predictionChannel.setStreamHandler(instance)
 
         // Register the method and event channel handlers
         registrar.addMethodCallDelegate(instance, channel: methodChannel)
@@ -488,6 +501,77 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
                 "startTime": startTimeMillis
             ])
 
+         // Sets a target food temperature for the probe. Once a target temperature is set, the
+         // probe will begin delivering predictions including an ETA for when the food will
+         // reach the target temperature.
+         case "setTargetTemperature":
+            guard
+                let args = call.arguments as? [String: Any],
+                let identifier = args["identifier"] as? String,
+                let temperatureCelsius = args["temperatureCelsius"] as? Double
+            else {
+                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid arguments. Expected 'identifier' (String) and 'temperatureCelsius' (Double)", details: nil))
+                return
+            }
+            
+            guard let probe = DeviceManager.shared.getProbes().first(where: { $0.uniqueIdentifier == identifier }) else {
+                result(FlutterError(code: "PROBE_NOT_FOUND", message: "Probe with identifier '\(identifier)' not found", details: nil))
+                return
+            }
+            
+            // Set the removal prediction using the DeviceManager
+            DeviceManager.shared.setRemovalPrediction(
+                probe,
+                removalTemperatureC: temperatureCelsius
+            ) { success in
+                DispatchQueue.main.async {
+                    if success {
+                        result(nil)
+                    } else {
+                        result(FlutterError(
+                            code: "SET_TEMPERATURE_FAILED",
+                            message: "Failed to set target temperature. Temperature may be outside valid range or probe may not be connected.",
+                            details: [
+                                "identifier": identifier,
+                                "temperatureCelsius": temperatureCelsius
+                            ]
+                        ))
+                    }
+                }
+            }
+
+         // Starts a stream that emits temperature prediction information for the specified probe.
+         // Emits updates whenever the probe's prediction information changes. Note that a
+         // target temperature must be set before the probe will begin making predictions.
+         case "startPredictionStream":
+            guard
+                let args = call.arguments as? [String: Any],
+                let identifier = args["identifier"] as? String,
+                let probe = DeviceManager.shared.getProbes().first(where: { $0.uniqueIdentifier == identifier })
+            else {
+                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid probe identifier (startPredictionStream)", details: nil))
+                return
+            }
+            
+            predictionCancellable = PredictionManager.shared.$predictions
+                .sink { [weak self] predictions in
+                    guard let sink = self?.predictionSink else { return }
+                    
+                    // Find predictions for this specific probe
+                    if let prediction = predictions.first(where: { $0.probe.uniqueIdentifier == identifier }) {
+                        let predictionData: [String: Any] = [
+                            "estimatedTimeSeconds": prediction.estimatedSecondsRemaining ?? NSNull(),
+                            "targetTemperatureCelsius": prediction.removalTemperature,
+                            "currentCoreTempCelsius": prediction.probe.virtualTemperatures?.coreTemperature ?? NSNull(),
+                            "isReliable": true, // PredictionManager only emits reliable predictions
+                            "timestampMillis": Int64(Date().timeIntervalSince1970 * 1000)
+                        ]
+                        sink(predictionData)
+                    }
+                }
+            
+            result(nil)
+
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -520,6 +604,9 @@ extension FlutterCombustionIncPlugin: FlutterStreamHandler {
                 return nil
             case "sessionInfo":
                 self.sessionInfoSink = events
+                return nil
+            case "predictions":
+                self.predictionSink = events
                 return nil
             default:
                 break
@@ -571,6 +658,11 @@ extension FlutterCombustionIncPlugin: FlutterStreamHandler {
                 self.sessionInfoCancellable?.cancel()
                 self.sessionInfoCancellable = nil
                 self.sessionInfoProbe = nil
+                return nil
+            case "predictions":
+                self.predictionSink = nil
+                self.predictionCancellable?.cancel()
+                self.predictionCancellable = nil
                 return nil
             default:
                 break
