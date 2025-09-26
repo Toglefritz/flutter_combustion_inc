@@ -1,5 +1,6 @@
 import '../flutter_combustion_inc_platform_interface.dart';
 import 'battery_status.dart';
+import 'prediction_info.dart';
 import 'probe_temperature_log.dart';
 import 'probe_temperatures.dart';
 import 'virtual_temperatures.dart';
@@ -191,5 +192,19 @@ class Probe {
   /// Used for debugging session availability issues.
   Future<Map<String, dynamic>> get sessionInfo async {
     return FlutterCombustionIncPlatform.instance.getSessionInfo(identifier);
+  }
+
+  /// Provides a stream of temperature prediction information for this probe.
+  ///
+  /// This stream emits [PredictionInfo] objects containing estimated time to reach
+  /// target temperature and other cooking predictions. Predictions are only available
+  /// after a target temperature has been set using DeviceManager.setTargetTemperature.
+  ///
+  /// The stream will emit updates whenever the probe's prediction calculations
+  /// change based on current temperature trends and cooking conditions.
+  ///
+  /// Returns Stream of prediction information updates
+  Stream<PredictionInfo> get predictionStream {
+    return FlutterCombustionIncPlatform.instance.predictionStream(identifier);
   }
 }

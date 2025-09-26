@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_combustion_inc/models/device_manager.dart';
+import 'package:flutter_combustion_inc/models/prediction_info.dart';
 import 'package:flutter_combustion_inc/models/probe.dart';
 import '../../services/temperature_unit_setting/temperature_unit_setting.dart';
 import 'home_route.dart';
@@ -18,6 +20,12 @@ class HomeController extends State<HomeRoute> {
   /// Determines if temperature graphs should be displayed in the view.
   bool _showGraphs = false;
 
+  /// The current prediction information for the selected probe.
+  PredictionInfo? _currentPrediction;
+
+  /// Stream subscription for prediction updates.
+  StreamSubscription<PredictionInfo>? _predictionSubscription;
+
   /// A getter for the current state of the temperature graphs display.
   bool get showGraphs => _showGraphs;
 
@@ -28,6 +36,9 @@ class HomeController extends State<HomeRoute> {
       setState(() {});
     }
   }
+
+  /// Gets the current prediction information.
+  PredictionInfo? get currentPrediction => _currentPrediction;
 
   @override
   void initState() {
@@ -91,6 +102,9 @@ class HomeController extends State<HomeRoute> {
       );
 
       debugPrint('Target temperature set to $temperatureCelsius°C for probe ${targetProbe.name}');
+
+      // Start listening to prediction updates for this probe
+      _startPredictionStream(targetProbe);
     } on Exception catch (e) {
       debugPrint('Failed to set target temperature: $e');
 
@@ -106,9 +120,43 @@ class HomeController extends State<HomeRoute> {
     }
   }
 
+  /// Starts listening to prediction updates for the specified probe.
+  ///
+  /// This method subscribes to the prediction stream and updates the UI whenever new prediction information becomes
+  /// available.
+  void _startPredictionStream(Probe probe) {
+    // Cancel any existing subscription
+    _predictionSubscription?.cancel();
+
+    // Start listening to prediction updates
+    _predictionSubscription = probe.predictionStream.listen(
+      (PredictionInfo prediction) {
+        debugPrint('Received prediction update: $prediction');
+        setState(() {
+          _currentPrediction = prediction;
+        });
+      },
+      onError: (Object error) {
+        debugPrint('Error in prediction stream: $error');
+        // Clear prediction on error
+        setState(() {
+          _currentPrediction = null;
+        });
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) => AnimatedSwitcher(
     duration: const Duration(microseconds: 250),
     child: probes.isEmpty ? const HomeViewSearching() : HomeView(this),
   );
+
+  @override
+  void dispose() {
+    // Clean up the prediction stream subscription
+    _predictionSubscription?.cancel();
+
+    super.dispose();
+  }
 }

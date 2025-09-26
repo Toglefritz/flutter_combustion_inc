@@ -248,6 +248,7 @@ class HomeView extends StatelessWidget {
               TargetTemperatureControl(
                 onTargetSet: state.onTargetTemperatureSet,
                 enabled: state.probes.isNotEmpty,
+                predictionInfo: state.currentPrediction,
               ),
             ],
           ),

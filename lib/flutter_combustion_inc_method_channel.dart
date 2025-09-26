@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import 'flutter_combustion_inc_platform_interface.dart';
 import 'models/battery_status.dart';
+import 'models/prediction_info.dart';
 import 'models/probe_temperature_log.dart';
 import 'models/probe_temperatures.dart';
 
@@ -60,6 +61,12 @@ class MethodChannelFlutterCombustionInc extends FlutterCombustionIncPlatform {
     'flutter_combustion_inc_session_info',
   );
 
+  /// The event channel used to stream temperature prediction updates.
+  @visibleForTesting
+  final EventChannel predictionEventChannel = const EventChannel(
+    'flutter_combustion_inc_predictions',
+  );
+
   /// A stream that emits a list of discovered probes.
   Stream<List<Map<String, dynamic>>>? _probeListStream;
 
@@ -74,6 +81,9 @@ class MethodChannelFlutterCombustionInc extends FlutterCombustionIncPlatform {
 
   /// A map of streams for session information updates, keyed by probe identifier.
   final Map<String, Stream<Map<String, dynamic>>> _sessionInfoStreams = {};
+
+  /// A map of streams for prediction updates, keyed by probe identifier.
+  final Map<String, Stream<PredictionInfo>> _predictionStreams = {};
 
   @override
   Future<void> initBluetooth() async {
@@ -323,6 +333,25 @@ class MethodChannelFlutterCombustionInc extends FlutterCombustionIncPlatform {
     await methodChannel.invokeMethod('setTargetTemperature', {
       'identifier': identifier,
       'temperatureCelsius': temperatureCelsius,
+    });
+  }
+
+  @override
+  Stream<PredictionInfo> predictionStream(String identifier) {
+    return _predictionStreams.putIfAbsent(identifier, () {
+      // Start the native stream
+      methodChannel.invokeMethod('startPredictionStream', {
+        'identifier': identifier,
+      });
+
+      return predictionEventChannel
+          .receiveBroadcastStream({'type': 'predictions'})
+          .map((event) {
+            final Map<String, dynamic> data = Map<String, dynamic>.from(
+              event as Map,
+            );
+            return PredictionInfo.fromMap(data);
+          });
     });
   }
 }

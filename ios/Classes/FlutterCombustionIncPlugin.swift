@@ -85,6 +85,9 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
     /// Used to emit temperature prediction data as a stream to Flutter.
     private var predictionSink: FlutterEventSink?
     
+    /// Combine subscription to prediction updates.
+    private var predictionCancellable: AnyCancellable?
+    
     /// Registers the plugin with the Flutter engine and sets up method and event channels.
     ///
     /// - Parameters:
@@ -159,7 +162,12 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
         )
         sessionInfoChannel.setStreamHandler(instance)
 
-        // TODO add Event Channel for streaming predictions from the probe
+        // Streams temperature prediction information from the probe.
+        let predictionChannel = FlutterEventChannel(
+            name: "flutter_combustion_inc_predictions",
+            binaryMessenger: registrar.messenger()
+        )
+        predictionChannel.setStreamHandler(instance)
 
         // Register the method and event channel handlers
         registrar.addMethodCallDelegate(instance, channel: methodChannel)
@@ -542,8 +550,33 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
          // Emits updates whenever the probe's prediction information changes. Note that a
          // target temperature must be set before the probe will begin making predictions.
          case "startPredictionStream":
-            // TODO add event channel handler to stream predictions from the probe
-            result(FlutterMethodNotImplemented)
+            guard
+                let args = call.arguments as? [String: Any],
+                let identifier = args["identifier"] as? String,
+                let probe = DeviceManager.shared.getProbes().first(where: { $0.uniqueIdentifier == identifier })
+            else {
+                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid probe identifier (startPredictionStream)", details: nil))
+                return
+            }
+            
+            predictionCancellable = PredictionManager.shared.$predictions
+                .sink { [weak self] predictions in
+                    guard let sink = self?.predictionSink else { return }
+                    
+                    // Find predictions for this specific probe
+                    if let prediction = predictions.first(where: { $0.probe.uniqueIdentifier == identifier }) {
+                        let predictionData: [String: Any] = [
+                            "estimatedTimeSeconds": prediction.estimatedSecondsRemaining ?? NSNull(),
+                            "targetTemperatureCelsius": prediction.removalTemperature,
+                            "currentCoreTempCelsius": prediction.probe.virtualTemperatures?.coreTemperature ?? NSNull(),
+                            "isReliable": true, // PredictionManager only emits reliable predictions
+                            "timestampMillis": Int64(Date().timeIntervalSince1970 * 1000)
+                        ]
+                        sink(predictionData)
+                    }
+                }
+            
+            result(nil)
 
         default:
             result(FlutterMethodNotImplemented)
@@ -577,6 +610,9 @@ extension FlutterCombustionIncPlugin: FlutterStreamHandler {
                 return nil
             case "sessionInfo":
                 self.sessionInfoSink = events
+                return nil
+            case "predictions":
+                self.predictionSink = events
                 return nil
             default:
                 break
@@ -628,6 +664,11 @@ extension FlutterCombustionIncPlugin: FlutterStreamHandler {
                 self.sessionInfoCancellable?.cancel()
                 self.sessionInfoCancellable = nil
                 self.sessionInfoProbe = nil
+                return nil
+            case "predictions":
+                self.predictionSink = nil
+                self.predictionCancellable?.cancel()
+                self.predictionCancellable = nil
                 return nil
             default:
                 break

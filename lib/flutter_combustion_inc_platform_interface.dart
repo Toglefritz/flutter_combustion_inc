@@ -2,6 +2,7 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'flutter_combustion_inc_method_channel.dart';
 import 'models/battery_status.dart';
+import 'models/prediction_info.dart';
 import 'models/probe_temperature_log.dart';
 import 'models/probe_temperatures.dart';
 
@@ -121,4 +122,17 @@ abstract class FlutterCombustionIncPlatform extends PlatformInterface {
     String identifier,
     double temperatureCelsius,
   );
+
+  /// Provides a stream of temperature prediction information for the specified probe.
+  ///
+  /// This stream emits [PredictionInfo] objects containing estimated time to reach target temperature and other
+  /// cooking predictions. Predictions are only available after a target temperature has been set using
+  /// [setTargetTemperature].
+  ///
+  /// The stream will emit updates whenever the probe's prediction calculations change based on current temperature
+  /// trends and cooking conditions.
+  ///
+  /// @param identifier The unique identifier of the probe
+  /// @returns Stream of prediction information updates
+  Stream<PredictionInfo> predictionStream(String identifier);
 }
