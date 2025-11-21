@@ -558,24 +558,22 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
                 result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid probe identifier (startPredictionStream)", details: nil))
                 return
             }
-            
-            predictionCancellable = PredictionManager.shared.$predictions
-                .sink { [weak self] predictions in
-                    guard let sink = self?.predictionSink else { return }
-                    
-                    // Find predictions for this specific probe
-                    if let prediction = predictions.first(where: { $0.probe.uniqueIdentifier == identifier }) {
-                        let predictionData: [String: Any] = [
-                            "estimatedTimeSeconds": prediction.estimatedSecondsRemaining ?? NSNull(),
-                            "targetTemperatureCelsius": prediction.removalTemperature,
-                            "currentCoreTempCelsius": prediction.probe.virtualTemperatures?.coreTemperature ?? NSNull(),
-                            "isReliable": true, // PredictionManager only emits reliable predictions
-                            "timestampMillis": Int64(Date().timeIntervalSince1970 * 1000)
-                        ]
-                        sink(predictionData)
-                    }
+
+             // Get prediction information from the probe
+            predictionCancellable = probe.$predictionInfo
+                .sink { [weak self] predictionInfo in
+                    guard let sink = self?.predictionSink, let info = predictionInfo else { return }
+
+                    let predictionData: [String: Any] = [
+                        "estimatedTimeSeconds": info.secondsRemaining ?? NSNull(),
+                        "targetTemperatureCelsius": info.predictionSetPointTemperature,
+                        "currentCoreTempCelsius": probe.virtualTemperatures?.coreTemperature ?? NSNull(),
+                        "isReliable": info.predictionState == .probeNotInserted ? false : true,
+                        "timestampMillis": Int64(Date().timeIntervalSince1970 * 1000)
+                    ]
+                    sink(predictionData)
                 }
-            
+
             result(nil)
 
         default:
