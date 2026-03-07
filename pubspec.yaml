@@ -10,9 +10,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  meta: ^1.16.0
-  plugin_platform_interface: ^2.0.2
-  very_good_analysis: ^8.0.0
+  meta: ^1.17.0
+  plugin_platform_interface: ^2.1.8
+  very_good_analysis: ^10.2.0
 
 dev_dependencies:
   flutter_test:
