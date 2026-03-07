@@ -8,16 +8,16 @@ import 'components/battery_status_indicator.dart';
 import 'components/graph/temperature_graph.dart';
 import 'components/graph_display_switch.dart';
 import 'components/physical_temperatures_display.dart';
-import 'components/target_temperature_control.dart';
 import 'components/temperature_unit_switch.dart';
 import 'components/virtual_temperatures_display.dart';
 import 'home_controller.dart';
 import 'home_route.dart';
 import 'models/display_mode.dart';
 
-/// View for the [HomeRoute]. The view is dumb, and purely declarative. References values on the controller and widget.
+/// View for the [HomeRoute].
 ///
-/// This view is displayed when at least one probe has been discovered.
+/// This view displays temperature readings from discovered probes.
+/// It is purely declarative and references values from the controller.
 class HomeView extends StatelessWidget {
   /// A reference to the controller for the [HomeRoute].
   final HomeController state;
@@ -37,6 +37,13 @@ class HomeView extends StatelessWidget {
         ),
         centerTitle: false,
         actions: [
+          // Predictions button
+          IconButton(
+            icon: const Icon(Icons.timer_outlined),
+            tooltip: AppLocalizations.of(context)!.predictions,
+            onPressed: state.onPredictionsTap,
+          ),
+
           // Temperature unit selector switch
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: Inset.small),
@@ -243,13 +250,6 @@ class HomeView extends StatelessWidget {
                   },
                 );
               }),
-
-              // Target temperature control - positioned below all probe displays
-              TargetTemperatureControl(
-                onTargetSet: state.onTargetTemperatureSet,
-                enabled: state.probes.isNotEmpty,
-                predictionInfo: state.currentPrediction,
-              ),
             ],
           ),
         ),

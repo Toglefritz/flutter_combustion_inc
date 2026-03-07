@@ -10,6 +10,7 @@ linter:
     sort_constructors_first: false
     prefer_int_literals: false
     require_trailing_commas: true
+    avoid_types_on_closure_parameters: false
 
 formatter:
   trailing_commas: preserve

@@ -156,7 +156,7 @@ class _TemperatureGraphState extends State<TemperatureGraph> {
   /// attempts to load historical data when a session becomes available.
   /// Clears any previous errors when session info becomes available.
   void _startSessionInfoStream() {
-    _sessionInfoSubscription = widget.probe.sessionInfoStream.listen((Map<String, dynamic> sessionInfo) {
+    _sessionInfoSubscription = widget.probe.sessionInfoStream.listen((Map<String, dynamic> sessionInfo) async {
       if (mounted) {
         final bool hasSession = sessionInfo['hasSession'] as bool? ?? false;
         final bool previousHasSession = _hasSessionInfo;
@@ -172,7 +172,7 @@ class _TemperatureGraphState extends State<TemperatureGraph> {
         // If session info just became available and we don't have historical data yet, try to load it
         // But don't show errors immediately - wait for user to explicitly request historical data
         if (hasSession && !previousHasSession && _historicalData.isEmpty && !_isLoadingHistoricalData) {
-          _loadHistoricalDataSilently();
+          await _loadHistoricalDataSilently();
           _startSilentRetryTimer();
         }
 
@@ -229,13 +229,13 @@ class _TemperatureGraphState extends State<TemperatureGraph> {
   void _startSilentRetryTimer() {
     _stopSilentRetryTimer(); // Stop any existing timer
 
-    _silentRetryTimer = Timer.periodic(const Duration(seconds: 5), (Timer timer) {
+    _silentRetryTimer = Timer.periodic(const Duration(seconds: 5), (Timer timer) async {
       if (!mounted || !_hasSessionInfo || _historicalData.isNotEmpty) {
         _stopSilentRetryTimer();
         return;
       }
 
-      _loadHistoricalDataSilently();
+      await _loadHistoricalDataSilently();
 
       // Stop after 12 attempts (1 minute)
       if (timer.tick >= 12) {
@@ -337,9 +337,9 @@ class _TemperatureGraphState extends State<TemperatureGraph> {
   ///
   /// Only attempts to load data if session information is available.
   /// This method is called when the user presses the retry button in the error state.
-  void _retryLoadHistoricalData() {
+  Future<void> _retryLoadHistoricalData() async {
     if (_hasSessionInfo) {
-      _loadHistoricalData();
+      await _loadHistoricalData();
     }
   }
 
@@ -481,12 +481,14 @@ class _TemperatureGraphState extends State<TemperatureGraph> {
 
   @override
   void dispose() {
-    _virtualTempSubscription?.cancel();
-    _physicalTempSubscription?.cancel();
-    _logSubscription?.cancel();
-    _sessionInfoSubscription?.cancel();
+    unawaited(_virtualTempSubscription?.cancel());
+    unawaited(_physicalTempSubscription?.cancel());
+    unawaited(_logSubscription?.cancel());
+    unawaited(_sessionInfoSubscription?.cancel());
+
     _updateTimer?.cancel();
     _stopSilentRetryTimer();
+
     super.dispose();
   }
 }

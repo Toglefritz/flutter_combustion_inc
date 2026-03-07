@@ -179,4 +179,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get progressPlaceholder => 'Monitoring temperature... (Progress tracking pending)';
+
+  @override
+  String get predictions => 'Predictions';
+
+  @override
+  String get selectProbe => 'Select Probe';
+
+  @override
+  String get noProbesAvailable => 'No Probes Available';
+
+  @override
+  String get connectProbeFirst => 'Please connect a probe from the home screen first.';
 }

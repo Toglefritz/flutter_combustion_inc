@@ -416,6 +416,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Monitoring temperature... (Progress tracking pending)'**
   String get progressPlaceholder;
+
+  /// Title for the predictions screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Predictions'**
+  String get predictions;
+
+  /// Label for the probe selection dropdown.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Probe'**
+  String get selectProbe;
+
+  /// Message shown when no probes are available for predictions.
+  ///
+  /// In en, this message translates to:
+  /// **'No Probes Available'**
+  String get noProbesAvailable;
+
+  /// Instructions shown when no probes are available.
+  ///
+  /// In en, this message translates to:
+  /// **'Please connect a probe from the home screen first.'**
+  String get connectProbeFirst;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

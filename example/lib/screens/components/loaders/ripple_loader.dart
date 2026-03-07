@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/widgets.dart';
 
 /// A Flutter widget that displays a ripple loader animation.
@@ -57,13 +59,13 @@ class RippleLoaderState extends State<RippleLoader> with SingleTickerProviderSta
     super.initState();
 
     _controller =
-        (widget.controller ?? AnimationController(vsync: this, duration: widget.duration))
-          ..addListener(() {
-            if (mounted) {
-              setState(() {});
-            }
-          })
-          ..repeat();
+        (widget.controller ?? AnimationController(vsync: this, duration: widget.duration))..addListener(() {
+          if (mounted) {
+            setState(() {});
+          }
+        });
+    unawaited(_controller.repeat());
+
     _animation1 = Tween(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: _controller,

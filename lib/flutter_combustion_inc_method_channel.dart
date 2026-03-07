@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
@@ -132,9 +134,11 @@ class MethodChannelFlutterCombustionInc extends FlutterCombustionIncPlatform {
   @override
   Stream<bool> statusStaleStream(String identifier) {
     // Start the native stream
-    methodChannel.invokeMethod('startStatusStaleStream', {
-      'identifier': identifier,
-    });
+    unawaited(
+      methodChannel.invokeMethod('startStatusStaleStream', {
+        'identifier': identifier,
+      }),
+    );
 
     return statusStaleEventChannel
         .receiveBroadcastStream({'type': 'statusStale'})
@@ -168,9 +172,11 @@ class MethodChannelFlutterCombustionInc extends FlutterCombustionIncPlatform {
   @override
   Stream<BatteryStatus> batteryStatusStream(String identifier) {
     // Start the native stream
-    methodChannel.invokeMethod('startBatteryStatusStream', {
-      'identifier': identifier,
-    });
+    unawaited(
+      methodChannel.invokeMethod('startBatteryStatusStream', {
+        'identifier': identifier,
+      }),
+    );
 
     return batteryStatusEventChannel
         .receiveBroadcastStream({'type': 'batteryStatus'})
@@ -205,9 +211,11 @@ class MethodChannelFlutterCombustionInc extends FlutterCombustionIncPlatform {
   Stream<Map<String, double>> virtualTemperatureStream(String identifier) {
     return _virtualTempStreams.putIfAbsent(identifier, () {
       // Start the native stream
-      methodChannel.invokeMethod('startVirtualTemperatureStream', {
-        'identifier': identifier,
-      });
+      unawaited(
+        methodChannel.invokeMethod('startVirtualTemperatureStream', {
+          'identifier': identifier,
+        }),
+      );
 
       return virtualTempEventChannel
           .receiveBroadcastStream({'type': 'virtualTemps'})
@@ -226,9 +234,11 @@ class MethodChannelFlutterCombustionInc extends FlutterCombustionIncPlatform {
   @override
   Stream<ProbeTemperatures> currentTemperaturesStream(String identifier) {
     return _currentTempsStreams.putIfAbsent(identifier, () {
-      methodChannel.invokeMethod('startCurrentTemperaturesStream', {
-        'identifier': identifier,
-      });
+      unawaited(
+        methodChannel.invokeMethod('startCurrentTemperaturesStream', {
+          'identifier': identifier,
+        }),
+      );
 
       return currentTempsEventChannel
           .receiveBroadcastStream({'type': 'currentTemperatures'})
@@ -251,9 +261,11 @@ class MethodChannelFlutterCombustionInc extends FlutterCombustionIncPlatform {
   @override
   Stream<double> logSyncPercentStream(String identifier) {
     return _logSyncPercentStreams.putIfAbsent(identifier, () {
-      methodChannel.invokeMethod('startLogSyncPercentStream', {
-        'identifier': identifier,
-      });
+      unawaited(
+        methodChannel.invokeMethod('startLogSyncPercentStream', {
+          'identifier': identifier,
+        }),
+      );
 
       return logSyncPercentEventChannel
           .receiveBroadcastStream({'type': 'logSyncPercent'})
@@ -298,9 +310,11 @@ class MethodChannelFlutterCombustionInc extends FlutterCombustionIncPlatform {
   Stream<Map<String, dynamic>> sessionInfoStream(String identifier) {
     return _sessionInfoStreams.putIfAbsent(identifier, () {
       // Start the native stream
-      methodChannel.invokeMethod('startSessionInfoStream', {
-        'identifier': identifier,
-      });
+      unawaited(
+        methodChannel.invokeMethod('startSessionInfoStream', {
+          'identifier': identifier,
+        }),
+      );
 
       return sessionInfoEventChannel
           .receiveBroadcastStream({'type': 'sessionInfo'})
@@ -340,9 +354,11 @@ class MethodChannelFlutterCombustionInc extends FlutterCombustionIncPlatform {
   Stream<PredictionInfo> predictionStream(String identifier) {
     return _predictionStreams.putIfAbsent(identifier, () {
       // Start the native stream
-      methodChannel.invokeMethod('startPredictionStream', {
-        'identifier': identifier,
-      });
+      unawaited(
+        methodChannel.invokeMethod('startPredictionStream', {
+          'identifier': identifier,
+        }),
+      );
 
       return predictionEventChannel
           .receiveBroadcastStream({'type': 'predictions'})

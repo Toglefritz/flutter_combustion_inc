@@ -312,5 +312,25 @@
   "@progressPlaceholder": {
     "description": "Placeholder text shown while progress tracking is not yet integrated.",
     "placeholders": {}
+  },
+  "predictions": "Predictions",
+  "@predictions": {
+    "description": "Title for the predictions screen.",
+    "placeholders": {}
+  },
+  "selectProbe": "Select Probe",
+  "@selectProbe": {
+    "description": "Label for the probe selection dropdown.",
+    "placeholders": {}
+  },
+  "noProbesAvailable": "No Probes Available",
+  "@noProbesAvailable": {
+    "description": "Message shown when no probes are available for predictions.",
+    "placeholders": {}
+  },
+  "connectProbeFirst": "Please connect a probe from the home screen first.",
+  "@connectProbeFirst": {
+    "description": "Instructions shown when no probes are available.",
+    "placeholders": {}
   }
 }
