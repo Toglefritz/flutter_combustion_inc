@@ -1,709 +1,861 @@
 import FlutterMacOS
 import AppKit
-import Combine
 import CombustionBLE
 
-/// `FlutterCombustionIncPlugin` is the macOS-side implementation of the
-/// flutter_combustion_inc plugin. It uses Flutter method and event channels
-/// to connect Flutter apps to Combustion Inc. temperature probes.
+/// Flutter plugin for Combustion Inc. temperature probes on macOS.
 ///
-/// This class acts as a communication bridge, relaying probe information such as:
-/// - Probe discovery and connection status
-/// - Virtual temperature data (core, surface, ambient)
-/// - Battery status updates
+/// This plugin serves as the primary communication bridge between Flutter
+/// applications and Combustion Inc. Bluetooth temperature probes. It delegates
+/// specific responsibilities to specialized manager classes while coordinating
+/// method channel calls and event channel streams.
 ///
-/// The plugin listens to probe events using Combine publishers and streams
-/// real-time updates to the Dart layer through `FlutterEventSink`s.
+/// Architecture:
+/// The plugin follows a manager-based architecture where each manager handles
+/// a specific domain of functionality:
+/// * ProbeDiscoveryManager - Probe scanning and discovery
+/// * ProbeConnectionManager - Connection lifecycle management
+/// * ProbeTemperatureStreamManager - Temperature data streaming
+/// * ProbeStatusStreamManager - Battery and staleness status
+/// * ProbeSessionManager - Session info and temperature logs
+/// * ProbePredictionManager - Temperature predictions and ETAs
+///
+/// Communication Channels:
+/// * Method Channel - One-off commands and queries
+/// * Event Channels - Real-time data streams to Flutter
+///
+/// Usage:
+/// The plugin is automatically registered by Flutter when the app starts.
+/// Flutter code communicates with the plugin through platform channels.
+///
+/// Thread Safety:
+/// All Flutter communication occurs on the main thread. Manager operations
+/// that involve Combine publishers automatically handle thread synchronization.
 public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
     
-    /// Stream for probe scan results triggered via EventChannel.
-    /// Sends discovered probes to Dart during active scanning.
-    private var scanEventSink: FlutterEventSink?
-    
-    /// Stream for the complete list of nearby discovered probes.
-    /// Used for regularly emitting full probe snapshots.
-    private var probeListEventSink: FlutterEventSink?
-    
-    /// Timer to periodically check for updates to the probe list.
-    private var probeListUpdateTimer: Timer?
-    
-    /// Most recent snapshot of probe identifiers.
-    private var lastProbeIdentifiers: Set<String> = []
-    
-    /// Used to emit real-time virtual temperature readings (core, surface, ambient)
-    /// from a connected probe to Flutter.
-    private var virtualTempEventSink: FlutterEventSink?
-    
-    /// Combine subscription to virtual temperature updates.
-    private var virtualTempCancellable: AnyCancellable?
-    
-    /// Used to emit battery status changes from a probe ("ok" or "low") to Flutter.
-    private var batteryStatusSink: FlutterEventSink?
-    
-    /// Combine subscription to battery status updates.
-    private var batteryStatusCancellable: AnyCancellable?
-    
-    /// Used to emit updates for the raw sensor temperatures (8 probes) to Flutter.
-    private var currentTempsSink: FlutterEventSink?
-    
-    /// Combine subscription to current temperature updates.
-    private var currentTempsCancellable: AnyCancellable?
-    
-    /// Used to emit updates about whether the probe data is considered stale.
-    private var statusStaleSink: FlutterEventSink?
-
-    /// Combine subscription to status notification staleness.
-    private var statusStaleCancellable: AnyCancellable?
-    
-    /// Used to emit updates about log sync percent for a probe.
-    private var logSyncPercentSink: FlutterEventSink?
-
-    /// Combine subscription to percentOfLogsSynced updates.
-    private var logSyncPercentCancellable: AnyCancellable?
-
-    /// Used to emit temperature log data points as a stream to Flutter.
-    private var temperatureLogSink: FlutterEventSink?
-
-    /// Combine subscription to probe's temperature log stream.
-    private var temperatureLogCancellable: AnyCancellable?
-    
-    /// Used to emit session information availability updates to Flutter.
-    private var sessionInfoSink: FlutterEventSink?
-
-    /// Combine subscription to session information updates.
-    private var sessionInfoCancellable: AnyCancellable?
-    
-    /// Store the probe reference for session info monitoring to ensure consistency.
-    private var sessionInfoProbe: Probe?
-
-    /// Used to emit temperature prediction data as a stream to Flutter.
-    private var predictionSink: FlutterEventSink?
-    
-    /// Combine subscription to prediction updates.
-    private var predictionCancellable: AnyCancellable?
-    
-    /// Registers the plugin with the Flutter engine and sets up method and event channels.
+    /// Manager for probe discovery and scanning operations.
     ///
-    /// - Parameters:
-    ///   - registrar: The FlutterPluginRegistrar provided by the Flutter engine.
+    /// Handles periodic polling of discovered probes and streams updates
+    /// to Flutter when the probe list changes.
+    private let discoveryManager = ProbeDiscoveryManager()
+    
+    /// Manager for probe connection operations.
+    ///
+    /// Handles establishing and maintaining connections to specific probes.
+    private let connectionManager = ProbeConnectionManager()
+    
+    /// Manager for temperature data streaming.
+    ///
+    /// Handles both virtual temperatures (core, surface, ambient) and
+    /// raw sensor temperatures (8 sensors) streaming to Flutter.
+    private let temperatureStreamManager = ProbeTemperatureStreamManager()
+    
+    /// Manager for status data streaming.
+    ///
+    /// Handles battery status and data staleness indicator streaming
+    /// to Flutter.
+    private let statusStreamManager = ProbeStatusStreamManager()
+    
+    /// Manager for session information and temperature logs.
+    ///
+    /// Handles session info retrieval, temperature log access, and
+    /// log synchronization progress monitoring.
+    private let sessionManager = ProbeSessionManager()
+    
+    /// Manager for temperature prediction operations.
+    ///
+    /// Handles setting target temperatures and streaming prediction
+    /// information including estimated time to target.
+    private let predictionManager = ProbePredictionManager()
+    
+    /// Cached probe identifiers for stream operations.
+    ///
+    /// Maps stream types to probe identifiers to enable proper stream
+    /// activation when Flutter begins listening to event channels.
+    private var pendingStreamProbes: [String: String] = [:]
+    
+    /// Registers the plugin with the Flutter engine.
+    ///
+    /// This method is called automatically by Flutter during app initialization.
+    /// It sets up all method and event channels for communication between
+    /// Flutter and native macOS code.
+    ///
+    /// Method Channel:
+    /// * flutter_combustion_inc - Commands and queries
+    ///
+    /// Event Channels:
+    /// * flutter_combustion_inc_scan - Probe discovery updates
+    /// * flutter_combustion_inc_virtual_temps - Virtual temperature stream
+    /// * flutter_combustion_inc_current_temperatures - Raw sensor stream
+    /// * flutter_combustion_inc_battery_status - Battery status stream
+    /// * flutter_combustion_inc_status_stale - Data staleness stream
+    /// * flutter_combustion_inc_log_sync_percent - Log sync progress stream
+    /// * flutter_combustion_inc_temperature_log - Temperature log data stream
+    /// * flutter_combustion_inc_session_info - Session information stream
+    /// * flutter_combustion_inc_predictions - Temperature prediction stream
+    ///
+    /// - Parameter registrar: Flutter plugin registrar provided by the engine
     public static func register(with registrar: FlutterPluginRegistrar) {
-        // Create a shared plugin instance
         let instance = FlutterCombustionIncPlugin()
         
-        // Method channel for one-off commands and queries: initialize BLE, list probes / RSSI,
-        // fetch single readings (virtual & raw temps), connect to a probe, start specific data
-        // streams, refresh/read session info, and request a temperature log (returns metadata; log
-        // points stream on the event channel).
+        // Method channel for commands and queries
         let methodChannel = FlutterMethodChannel(
             name: "flutter_combustion_inc",
             binaryMessenger: registrar.messenger
         )
-
-        // Emits snapshots of nearby probes whenever the discovered list changes (identifier, name,
-        // color, RSSI, etc.).
+        registrar.addMethodCallDelegate(instance, channel: methodChannel)
+        
+        // Event channel for probe discovery
         let probeListChannel = FlutterEventChannel(
             name: "flutter_combustion_inc_scan",
             binaryMessenger: registrar.messenger
         )
         probeListChannel.setStreamHandler(instance)
-
-        // Streams virtual temperatures (core, surface, ambient) from the connected probe.
+        
+        // Event channel for virtual temperatures
         let virtualTempChannel = FlutterEventChannel(
             name: "flutter_combustion_inc_virtual_temps",
             binaryMessenger: registrar.messenger
         )
         virtualTempChannel.setStreamHandler(instance)
-
-        // Streams the eight raw sensor temperatures.
+        
+        // Event channel for raw sensor temperatures
         let currentTempsChannel = FlutterEventChannel(
             name: "flutter_combustion_inc_current_temperatures",
             binaryMessenger: registrar.messenger
         )
         currentTempsChannel.setStreamHandler(instance)
-
-        // Streams battery status changes (e.g., “ok” / “low”).
+        
+        // Event channel for battery status
         let batteryStatusChannel = FlutterEventChannel(
             name: "flutter_combustion_inc_battery_status",
             binaryMessenger: registrar.messenger
         )
         batteryStatusChannel.setStreamHandler(instance)
-
-        // Streams a boolean indicating if incoming probe data has gone stale.
+        
+        // Event channel for data staleness
         let statusStaleChannel = FlutterEventChannel(
             name: "flutter_combustion_inc_status_stale",
             binaryMessenger: registrar.messenger
         )
         statusStaleChannel.setStreamHandler(instance)
-
-         // Streams the percent of temperature logs that have been synchronized from the probe.
+        
+        // Event channel for log sync progress
         let logSyncPercentChannel = FlutterEventChannel(
             name: "flutter_combustion_inc_log_sync_percent",
             binaryMessenger: registrar.messenger
         )
         logSyncPercentChannel.setStreamHandler(instance)
-
-        // Streams temperature-log data points incrementally (sequence, start time, T1–T8).
+        
+        // Event channel for temperature log data
         let temperatureLogChannel = FlutterEventChannel(
             name: "flutter_combustion_inc_temperature_log",
             binaryMessenger: registrar.messenger
         )
         temperatureLogChannel.setStreamHandler(instance)
-
-        // Streams session-info availability and metadata (e.g., hasSession, samplePeriod).
+        
+        // Event channel for session information
         let sessionInfoChannel = FlutterEventChannel(
             name: "flutter_combustion_inc_session_info",
             binaryMessenger: registrar.messenger
         )
         sessionInfoChannel.setStreamHandler(instance)
-
-        // Streams temperature prediction information from the probe.
+        
+        // Event channel for temperature predictions
         let predictionChannel = FlutterEventChannel(
             name: "flutter_combustion_inc_predictions",
             binaryMessenger: registrar.messenger
         )
         predictionChannel.setStreamHandler(instance)
-
-        // Register the method and event channel handlers
-        registrar.addMethodCallDelegate(instance, channel: methodChannel)
     }
     
     /// Handles method channel calls from Flutter.
     ///
+    /// This method routes incoming method calls to the appropriate manager
+    /// and returns results or errors back to Flutter. All operations are
+    /// performed on the main thread to ensure thread safety with Flutter.
+    ///
+    /// Supported Methods:
+    /// * initBluetooth - Initialize Bluetooth stack
+    /// * getProbes - Get snapshot of discovered probes
+    /// * getRssi - Get RSSI for specific probe
+    /// * getVirtualTemperatures - Get one-time virtual temperature reading
+    /// * getCurrentTemperatures - Get one-time raw sensor reading
+    /// * connectToProbe - Connect to specific probe
+    /// * startVirtualTemperatureStream - Begin virtual temp streaming
+    /// * startCurrentTemperaturesStream - Begin raw sensor streaming
+    /// * startBatteryStatusStream - Begin battery status streaming
+    /// * startStatusStaleStream - Begin staleness streaming
+    /// * startLogSyncPercentStream - Begin log sync progress streaming
+    /// * startSessionInfoStream - Begin session info streaming
+    /// * refreshSessionInfo - Force session info refresh
+    /// * getSessionInfo - Get one-time session info reading
+    /// * getTemperatureLog - Get temperature log and start streaming
+    /// * setTargetTemperature - Set target temp for predictions
+    /// * startPredictionStream - Begin prediction streaming
+    ///
     /// - Parameters:
-    ///   - call: The method call from Dart.
-    ///   - result: Callback for sending a result or error back to Dart.
+    ///   - call: Method call from Flutter containing method name and arguments
+    ///   - result: Callback for returning results or errors to Flutter
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
-        // Initializes the Bluetooth stack in the Combustion SDK and begins scanning.
         case "initBluetooth":
-            DeviceManager.shared.initBluetooth()
-            result(nil)
+            handleInitBluetooth(result: result)
             
-        // Returns a snapshot list of all probes currently known to the DeviceManager.
         case "getProbes":
-            let probes = DeviceManager.shared.getProbes().map { probe in
-                return [
-                    "identifier": probe.uniqueIdentifier,
-                    "serialNumber": probe.serialNumberString,
-                    "name": probe.name,
-                    "macAddress": probe.macAddressString,
-                    "id": probe.id.rawValue,
-                    "color": probe.color.rawValue,
-                    "rssi": probe.rssi
-                ]
-            }
-            result(probes)
+            handleGetProbes(result: result)
             
-            
-        // Returns the RSSI for the specified probe.
         case "getRssi":
-            if let identifier = call.arguments as? [String: Any],
-               let id = identifier["identifier"] as? String,
-               let probe = DeviceManager.shared.getProbes().first(where: { $0.uniqueIdentifier == id }) {
-                result(probe.rssi)
-            } else {
-                result(FlutterError(code: "PROBE_NOT_FOUND", message: "Probe not found", details: nil))
-            }
+            handleGetRssi(call: call, result: result)
             
-        // Retrieves a one-time reading of virtual temperatures for a specific probe.
-        // The result contains `core`, `surface`, and `ambient` temperature values.
         case "getVirtualTemperatures":
-            guard
-                let args = call.arguments as? [String: Any],
-                let identifier = args["identifier"] as? String,
-                let probe = DeviceManager.shared.getProbes().first(where: { $0.uniqueIdentifier == identifier })
-            else {
-                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid probe identifier (getVirtualTemperatures)", details: nil))
-                return
-            }
+            handleGetVirtualTemperatures(call: call, result: result)
             
-            let temps = probe.virtualTemperatures
-            result([
-                "core": temps?.coreTemperature,
-                "surface": temps?.surfaceTemperature,
-                "ambient": temps?.ambientTemperature,
-            ])
-            
-        // Retrieves all eight raw sensor temperatures from the specified probe.
-        // The values are returned in Celsius as a list of eight doubles.
         case "getCurrentTemperatures":
-            guard
-                let args = call.arguments as? [String: Any],
-                let identifier = args["identifier"] as? String,
-                let probe = DeviceManager.shared.getProbes().first(where: { $0.uniqueIdentifier == identifier }),
-                let temps = probe.currentTemperatures?.values
-            else {
-                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid probe identifier (getCurrentTemperatures)", details: nil))
-                return
-            }
-            // Return as a list of doubles for Dart to convert to ProbeTemperatures.
-            result(temps)
+            handleGetCurrentTemperatures(call: call, result: result)
             
-        // Starts streaming live virtual temperature updates for the specified probe.
-        // Uses Combine to observe the `virtualTemperatures` property.
-        case "startVirtualTemperatureStream":
-            guard
-                let args = call.arguments as? [String: Any],
-                let identifier = args["identifier"] as? String,
-                let probe = DeviceManager.shared.getProbes().first(where: { $0.uniqueIdentifier == identifier })
-            else {
-                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid probe identifier (startVirtualTemperatureStream)", details: nil))
-                return
-            }
-            
-            virtualTempCancellable = probe.$virtualTemperatures
-                .sink { [weak self] temps in
-                    guard let sink = self?.virtualTempEventSink, let temps = temps else { return }
-                    sink([
-                        "core": temps.coreTemperature,
-                        "surface": temps.surfaceTemperature,
-                        "ambient": temps.ambientTemperature,
-                    ])
-                }
-            result(nil)
-            
-        // Starts streaming live battery status updates ("ok" or "low") for a probe.
-        case "startBatteryStatusStream":
-            guard
-                let args = call.arguments as? [String: Any],
-                let identifier = args["identifier"] as? String,
-                let probe = DeviceManager.shared.getProbes().first(where: { $0.uniqueIdentifier == identifier })
-            else {
-                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid probe identifier (startBatteryStatusStream)", details: nil))
-                return
-            }
-            
-            batteryStatusCancellable = probe.$batteryStatus
-                .sink { [weak self] status in
-                    self?.batteryStatusSink?(status.rawValue)
-                }
-            
-            result(nil)
-            
-        // Initiates a connection to the specified probe and enables automatic reconnection.
         case "connectToProbe":
-            guard
-                let args = call.arguments as? [String: Any],
-                let identifier = args["identifier"] as? String,
-                let probe = DeviceManager.shared.getProbes().first(where: { $0.uniqueIdentifier == identifier })
-            else {
-                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid probe identifier (connectToProbe)", details: nil))
-                return
-            }
+            handleConnectToProbe(call: call, result: result)
             
-            probe.connect()
-            result(nil)
+        case "startVirtualTemperatureStream":
+            handleStartVirtualTemperatureStream(call: call, result: result)
             
-        // Starts streaming live current temperatures (8 sensors) for the specified probe.
         case "startCurrentTemperaturesStream":
-            guard
-                let args = call.arguments as? [String: Any],
-                let identifier = args["identifier"] as? String,
-                let probe = DeviceManager.shared.getProbes().first(where: { $0.uniqueIdentifier == identifier })
-            else {
-                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid probe identifier (startCurrentTemperaturesStream)", details: nil))
-                return
-            }
+            handleStartCurrentTemperaturesStream(call: call, result: result)
             
-            currentTempsCancellable = probe.$currentTemperatures
-                .sink { [weak self] temperatures in
-                    guard let sink = self?.currentTempsSink, let values = temperatures?.values else { return }
-                    sink(values)
-                }
+        case "startBatteryStatusStream":
+            handleStartBatteryStatusStream(call: call, result: result)
             
-            result(nil)
-        
-        // Starts a stream used to determine if the probe temperature data becomes stale over time.
         case "startStatusStaleStream":
-            guard
-                let args = call.arguments as? [String: Any],
-                let identifier = args["identifier"] as? String,
-                let probe = DeviceManager.shared.getProbes().first(where: { $0.uniqueIdentifier == identifier })
-            else {
-                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid probe identifier (startStatusStaleStream)", details: nil))
-                return
-            }
+            handleStartStatusStaleStream(call: call, result: result)
             
-            statusStaleCancellable = probe.$statusNotificationsStale
-                .sink { [weak self] isStale in
-                    self?.statusStaleSink?(isStale)
-                }
-            
-            result(nil)
-        
-        // Starts a stream of the percentage of temperature logs that have been synced from the probe.
         case "startLogSyncPercentStream":
-            guard
-                let args = call.arguments as? [String: Any],
-                let identifier = args["identifier"] as? String,
-                let probe = DeviceManager.shared.getProbes().first(where: { $0.uniqueIdentifier == identifier })
-            else {
-                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid probe identifier (startLogSyncPercentStream)", details: nil))
-                return
-            }
-
-            logSyncPercentCancellable = probe.$percentOfLogsSynced
-                .sink { [weak self] percent in
-                    guard let percent = percent else { return }
-                    self?.logSyncPercentSink?(percent)
-                }
-
-            result(nil)
+            handleStartLogSyncPercentStream(call: call, result: result)
             
-        // Starts a stream that emits session information availability for the specified probe.
-        // Emits updates whenever the probe's session information becomes available or unavailable.
         case "startSessionInfoStream":
-            guard
-                let args = call.arguments as? [String: Any],
-                let identifier = args["identifier"] as? String,
-                let probe = DeviceManager.shared.getProbes().first(where: { $0.uniqueIdentifier == identifier })
-            else {
-                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid probe identifier (startSessionInfoStream)", details: nil))
-                return
-            }
-
-            // Store the probe reference for consistency
-            sessionInfoProbe = probe
+            handleStartSessionInfoStream(call: call, result: result)
             
-            sessionInfoCancellable = probe.$sessionInformation
-                .sink { [weak self] sessionInfo in
-                    guard let sink = self?.sessionInfoSink else { return }
-                    
-                    if let sessionInfo = sessionInfo {
-                        sink([
-                            "hasSession": true,
-                            "samplePeriod": sessionInfo.samplePeriod
-                        ])
-                    } else {
-                        sink([
-                            "hasSession": false,
-                            "samplePeriod": NSNull()
-                        ])
-                    }
-                }
-
-            result(nil)
-            
-        // Forces the probe to refresh its session information from the device.
-        // This can help resolve timing issues where session info becomes stale.
         case "refreshSessionInfo":
-            guard
-                let args = call.arguments as? [String: Any],
-                let identifier = args["identifier"] as? String,
-                let probe = DeviceManager.shared.getProbes().first(where: { $0.uniqueIdentifier == identifier })
-            else {
-                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid probe identifier (refreshSessionInfo)", details: nil))
-                return
-            }
+            handleRefreshSessionInfo(call: call, result: result)
             
-            // Force the probe to request session information from the device
-            // This is a private method, but we can try to trigger it indirectly by connecting if not connected
-            if probe.connectionState != .connected {
-                probe.connect()
-            }
-            
-            result(nil)
-            
-        // Returns the current session information for a probe synchronously.
-        // Used for debugging session availability issues and validation.
         case "getSessionInfo":
-            guard
-                let args = call.arguments as? [String: Any],
-                let identifier = args["identifier"] as? String
-            else {
-                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid probe identifier (getSessionInfo)", details: nil))
-                return
-            }
+            handleGetSessionInfo(call: call, result: result)
             
-            guard let probe = DeviceManager.shared.getProbes().first(where: { $0.uniqueIdentifier == identifier }) else {
-                result(FlutterError(code: "PROBE_NOT_FOUND", message: "Probe with identifier '\(identifier)' not found", details: nil))
-                return
-            }
-            
-            if let sessionInfo = probe.sessionInformation {
-                result([
-                    "hasSession": true,
-                    "samplePeriod": sessionInfo.samplePeriod
-                ])
-            } else {
-                result([
-                    "hasSession": false,
-                    "samplePeriod": NSNull()
-                ])
-            }
-            
-        // Returns the temperature log for a probe and streams data points via EventChannel.
         case "getTemperatureLog":
-            guard
-                let args = call.arguments as? [String: Any],
-                let identifier = args["identifier"] as? String
-            else {
-                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid probe identifier (getTemperatureLog)", details: nil))
-                return
-            }
+            handleGetTemperatureLog(call: call, result: result)
             
-            guard let probe = DeviceManager.shared.getProbes().first(where: { $0.uniqueIdentifier == identifier }) else {
-                result(FlutterError(code: "PROBE_NOT_FOUND", message: "Probe with identifier '\(identifier)' not found", details: nil))
-                return
-            }
+        case "setTargetTemperature":
+            handleSetTargetTemperature(call: call, result: result)
             
-            guard let sessionInfo = probe.sessionInformation else {
-                result(FlutterError(code: "NO_SESSION_INFO", message: "Probe has no active session information. Start a cooking session first.", details: nil))
-                return
-            }
-
-            // Check if probe has any temperature logs
-            guard !probe.temperatureLogs.isEmpty else {
-                result(FlutterError(code: "NO_LOGS_AVAILABLE", message: "No temperature logs available on probe. Ensure the probe is connected and logging.", details: nil))
-                return
-            }
+        case "startPredictionStream":
+            handleStartPredictionStream(call: call, result: result)
             
-            // Since sessionID is private, match logs using samplePeriod
-            guard let log = probe.temperatureLogs.first(where: { $0.sessionInformation.samplePeriod == sessionInfo.samplePeriod }) else {
-                result(FlutterError(code: "LOG_NOT_FOUND", message: "No matching temperature log found for current session", details: nil))
-                return
-            }
-
-            var lastCount = 0
-            self.temperatureLogCancellable?.cancel()
-            self.temperatureLogCancellable = Timer.publish(every: 1.0, on: .main, in: .common)
-                .autoconnect()
-                .sink { [weak self] _ in
-                    guard let sink = self?.temperatureLogSink else { return }
-                    let points = log.dataPoints
-                    guard points.count > lastCount else { return }
-                    
-                    // Only send new data points, not all data points
-                    let newPoints = Array(points[lastCount...])
-                    lastCount = points.count
-                    
-                    let startTimeMillis: Any = log.startTime.map { Int64($0.timeIntervalSince1970 * 1000) } ?? NSNull()
-                    let mapped = newPoints.map { point in
-                        return [
-                            "sequence": point.sequenceNum,
-                            "startTime": startTimeMillis,
-                            "t1": point.temperatures.values[0],
-                            "t2": point.temperatures.values[1],
-                            "t3": point.temperatures.values[2],
-                            "t4": point.temperatures.values[3],
-                            "t5": point.temperatures.values[4],
-                            "t6": point.temperatures.values[5],
-                            "t7": point.temperatures.values[6],
-                            "t8": point.temperatures.values[7],
-                        ]
-                    }
-                    sink(mapped)
-                }
-
-            // Return initial metadata only; data points will stream via EventChannel
-            let startTimeMillis: Any = log.startTime.map { Int64($0.timeIntervalSince1970 * 1000) } ?? NSNull()
-            result([
-                "startTime": startTimeMillis
-            ])
-
-         // Sets a target food temperature for the probe. Once a target temperature is set, the
-         // probe will begin delivering predictions including an ETA for when the food will
-         // reach the target temperature.
-         case "setTargetTemperature":
-            guard
-                let args = call.arguments as? [String: Any],
-                let identifier = args["identifier"] as? String,
-                let temperatureCelsius = args["temperatureCelsius"] as? Double
-            else {
-                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid arguments. Expected 'identifier' (String) and 'temperatureCelsius' (Double)", details: nil))
-                return
-            }
-            
-            guard let probe = DeviceManager.shared.getProbes().first(where: { $0.uniqueIdentifier == identifier }) else {
-                result(FlutterError(code: "PROBE_NOT_FOUND", message: "Probe with identifier '\(identifier)' not found", details: nil))
-                return
-            }
-            
-            // Set the removal prediction using the DeviceManager
-            DeviceManager.shared.setRemovalPrediction(
-                probe,
-                removalTemperatureC: temperatureCelsius
-            ) { success in
-                DispatchQueue.main.async {
-                    if success {
-                        result(nil)
-                    } else {
-                        result(FlutterError(
-                            code: "SET_TEMPERATURE_FAILED",
-                            message: "Failed to set target temperature. Temperature may be outside valid range or probe may not be connected.",
-                            details: [
-                                "identifier": identifier,
-                                "temperatureCelsius": temperatureCelsius
-                            ]
-                        ))
-                    }
-                }
-            }
-
-         // Starts a stream that emits temperature prediction information for the specified probe.
-         // Emits updates whenever the probe's prediction information changes. Note that a
-         // target temperature must be set before the probe will begin making predictions.
-         case "startPredictionStream":
-            guard
-                let args = call.arguments as? [String: Any],
-                let identifier = args["identifier"] as? String,
-                let probe = DeviceManager.shared.getProbes().first(where: { $0.uniqueIdentifier == identifier })
-            else {
-                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Missing or invalid probe identifier (startPredictionStream)", details: nil))
-                return
-            }
-            
-            // Get prediction information from the probe
-            predictionCancellable = probe.$predictionInfo
-                .sink { [weak self] predictionInfo in
-                    guard let sink = self?.predictionSink, let info = predictionInfo else { return }
-
-                    let predictionData: [String: Any] = [
-                        "estimatedTimeSeconds": info.secondsRemaining ?? NSNull(),
-                        "targetTemperatureCelsius": info.predictionSetPointTemperature,
-                        "currentCoreTempCelsius": probe.virtualTemperatures?.coreTemperature ?? NSNull(),
-                        "isReliable": info.predictionState == .probeNotInserted ? false : true,
-                        "timestampMillis": Int64(Date().timeIntervalSince1970 * 1000)
-                    ]
-                    sink(predictionData)
-                }
-            
-            result(nil)
-
         default:
             result(FlutterMethodNotImplemented)
         }
     }
 }
 
-extension FlutterCombustionIncPlugin: FlutterStreamHandler {
-    /// Called when Flutter begins listening to an EventChannel.
-    /// Determines the channel type based on the `type` argument and sets the correct event sink.
-    public func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
-        if let args = arguments as? [String: Any] {
-            switch args["type"] as? String {
-            case "virtualTemps":
-                self.virtualTempEventSink = events
-                return nil
-            case "batteryStatus":
-                self.batteryStatusSink = events
-                return nil
-            case "currentTemperatures":
-                self.currentTempsSink = events
-                return nil
-            case "statusStale":
-                self.statusStaleSink = events
-                return nil
-            case "logSyncPercent":
-                self.logSyncPercentSink = events
-                return nil
-            case "temperatureLog":
-                self.temperatureLogSink = events
-                return nil
-            case "sessionInfo":
-                self.sessionInfoSink = events
-                return nil
-            case "predictions":
-                self.predictionSink = events
-                return nil
-            default:
-                break
-            }
-        }
+// MARK: - Method Handlers
 
-        self.probeListEventSink = events
-        startProbeListStream()
-        return nil
+extension FlutterCombustionIncPlugin {
+    
+    /// Initializes the Bluetooth stack and begins scanning for probes.
+    ///
+    /// This method must be called before any other probe operations.
+    /// It initializes the CombustionBLE SDK and starts scanning for
+    /// nearby temperature probes.
+    ///
+    /// - Parameter result: Flutter result callback (returns nil on success)
+    private func handleInitBluetooth(result: @escaping FlutterResult) {
+        DeviceManager.shared.initBluetooth()
+        result(nil)
     }
     
-    /// Called when Flutter cancels a listener subscription on an EventChannel.
-    /// Cleans up Combine subscriptions and disables any ongoing emissions.
-    public func onCancel(withArguments arguments: Any?) -> FlutterError? {
-        if let args = arguments as? [String: Any] {
-            switch args["type"] as? String {
-            case "virtualTemps":
-                self.virtualTempEventSink = nil
-                self.virtualTempCancellable?.cancel()
-                self.virtualTempCancellable = nil
-                return nil
-            case "batteryStatus":
-                self.batteryStatusSink = nil
-                self.batteryStatusCancellable?.cancel()
-                self.batteryStatusCancellable = nil
-                return nil
-            case "currentTemperatures":
-                self.currentTempsSink = nil
-                self.currentTempsCancellable?.cancel()
-                self.currentTempsCancellable = nil
-                return nil
-            case "statusStale":
-                self.statusStaleSink = nil
-                self.statusStaleCancellable?.cancel()
-                self.statusStaleCancellable = nil
-                return nil
-            case "logSyncPercent":
-                self.logSyncPercentSink = nil
-                self.logSyncPercentCancellable?.cancel()
-                self.logSyncPercentCancellable = nil
-                return nil
-            case "temperatureLog":
-                self.temperatureLogSink = nil
-                self.temperatureLogCancellable?.cancel()
-                self.temperatureLogCancellable = nil
-                return nil
-            case "sessionInfo":
-                self.sessionInfoSink = nil
-                self.sessionInfoCancellable?.cancel()
-                self.sessionInfoCancellable = nil
-                self.sessionInfoProbe = nil
-                return nil
-            case "predictions":
-                self.predictionSink = nil
-                self.predictionCancellable?.cancel()
-                self.predictionCancellable = nil
-                return nil
-            default:
-                break
-            }
-        }
-
-        stopProbeListStream()
-        self.probeListEventSink = nil
-        return nil
+    /// Returns a snapshot of all currently discovered probes.
+    ///
+    /// - Parameter result: Flutter result callback with array of probe dictionaries
+    private func handleGetProbes(result: @escaping FlutterResult) {
+        let probes = discoveryManager.getProbes()
+        result(probes)
     }
     
+    /// Returns the RSSI value for a specific probe.
+    ///
+    /// - Parameters:
+    ///   - call: Method call containing probe identifier
+    ///   - result: Flutter result callback with RSSI value or error
+    private func handleGetRssi(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        guard let args = call.arguments as? [String: Any],
+              let identifier = args["identifier"] as? String else {
+            result(FlutterError(
+                code: "INVALID_ARGUMENTS",
+                message: "Missing or invalid probe identifier",
+                details: nil
+            ))
+            return
+        }
+        
+        if let rssi = discoveryManager.getRssi(for: identifier) {
+            result(rssi)
+        } else {
+            result(FlutterError(
+                code: "PROBE_NOT_FOUND",
+                message: "Probe not found",
+                details: nil
+            ))
+        }
+    }
     
-    /// Periodically polls the DeviceManager for updated probe lists and emits each
-    /// discovered probe individually via `probeListEventSink`.
-    /// Only emits updates when the set of discovered probe identifiers changes.
-    private func startProbeListStream() {
-        self.probeListUpdateTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
-            guard let self = self, let sink = self.probeListEventSink else { return }
-            let probes = DeviceManager.shared.getProbes()
-            let newIdentifiers = Set(probes.map { $0.uniqueIdentifier })
-            
-            if newIdentifiers != self.lastProbeIdentifiers {
-                self.lastProbeIdentifiers = newIdentifiers
-                for probe in probes {
-                    let probeDict: [String: Any] = [
-                        "identifier": probe.uniqueIdentifier,
-                        "serialNumber": probe.serialNumberString,
-                        "name": probe.name,
-                        "macAddress": probe.macAddressString,
-                        "id": probe.id.rawValue,
-                        "color": probe.color.rawValue,
-                        "rssi": probe.rssi
+    /// Returns a one-time reading of virtual temperatures for a probe.
+    ///
+    /// - Parameters:
+    ///   - call: Method call containing probe identifier
+    ///   - result: Flutter result callback with temperature dictionary or error
+    private func handleGetVirtualTemperatures(
+        call: FlutterMethodCall,
+        result: @escaping FlutterResult
+    ) {
+        guard let args = call.arguments as? [String: Any],
+              let identifier = args["identifier"] as? String,
+              let probe = connectionManager.getProbe(identifier: identifier) else {
+            result(FlutterError(
+                code: "INVALID_ARGUMENTS",
+                message: "Missing or invalid probe identifier",
+                details: nil
+            ))
+            return
+        }
+        
+        let temps = temperatureStreamManager.getVirtualTemperatures(for: probe)
+        result(temps)
+    }
+    
+    /// Returns a one-time reading of raw sensor temperatures for a probe.
+    ///
+    /// - Parameters:
+    ///   - call: Method call containing probe identifier
+    ///   - result: Flutter result callback with temperature array or error
+    private func handleGetCurrentTemperatures(
+        call: FlutterMethodCall,
+        result: @escaping FlutterResult
+    ) {
+        guard let args = call.arguments as? [String: Any],
+              let identifier = args["identifier"] as? String,
+              let probe = connectionManager.getProbe(identifier: identifier) else {
+            result(FlutterError(
+                code: "INVALID_ARGUMENTS",
+                message: "Missing or invalid probe identifier",
+                details: nil
+            ))
+            return
+        }
+        
+        if let temps = temperatureStreamManager.getCurrentTemperatures(for: probe) {
+            result(temps)
+        } else {
+            result(FlutterError(
+                code: "NO_TEMPERATURES",
+                message: "Temperature data not available",
+                details: nil
+            ))
+        }
+    }
+    
+    /// Connects to a specific probe.
+    ///
+    /// - Parameters:
+    ///   - call: Method call containing probe identifier
+    ///   - result: Flutter result callback (returns nil on success or error)
+    private func handleConnectToProbe(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        guard let args = call.arguments as? [String: Any],
+              let identifier = args["identifier"] as? String,
+              let probe = connectionManager.getProbe(identifier: identifier) else {
+            result(FlutterError(
+                code: "INVALID_ARGUMENTS",
+                message: "Missing or invalid probe identifier",
+                details: nil
+            ))
+            return
+        }
+        
+        connectionManager.connect(to: probe)
+        result(nil)
+    }
+    
+    /// Starts streaming virtual temperature updates for a probe.
+    ///
+    /// - Parameters:
+    ///   - call: Method call containing probe identifier
+    ///   - result: Flutter result callback (returns nil on success or error)
+    private func handleStartVirtualTemperatureStream(
+        call: FlutterMethodCall,
+        result: @escaping FlutterResult
+    ) {
+        guard let args = call.arguments as? [String: Any],
+              let identifier = args["identifier"] as? String,
+              let _ = connectionManager.getProbe(identifier: identifier) else {
+            result(FlutterError(
+                code: "INVALID_ARGUMENTS",
+                message: "Missing or invalid probe identifier",
+                details: nil
+            ))
+            return
+        }
+        
+        pendingStreamProbes["virtualTemps"] = identifier
+        result(nil)
+    }
+    
+    /// Starts streaming raw sensor temperature updates for a probe.
+    ///
+    /// - Parameters:
+    ///   - call: Method call containing probe identifier
+    ///   - result: Flutter result callback (returns nil on success or error)
+    private func handleStartCurrentTemperaturesStream(
+        call: FlutterMethodCall,
+        result: @escaping FlutterResult
+    ) {
+        guard let args = call.arguments as? [String: Any],
+              let identifier = args["identifier"] as? String,
+              let _ = connectionManager.getProbe(identifier: identifier) else {
+            result(FlutterError(
+                code: "INVALID_ARGUMENTS",
+                message: "Missing or invalid probe identifier",
+                details: nil
+            ))
+            return
+        }
+        
+        pendingStreamProbes["currentTemperatures"] = identifier
+        result(nil)
+    }
+    
+    /// Starts streaming battery status updates for a probe.
+    ///
+    /// - Parameters:
+    ///   - call: Method call containing probe identifier
+    ///   - result: Flutter result callback (returns nil on success or error)
+    private func handleStartBatteryStatusStream(
+        call: FlutterMethodCall,
+        result: @escaping FlutterResult
+    ) {
+        guard let args = call.arguments as? [String: Any],
+              let identifier = args["identifier"] as? String,
+              let _ = connectionManager.getProbe(identifier: identifier) else {
+            result(FlutterError(
+                code: "INVALID_ARGUMENTS",
+                message: "Missing or invalid probe identifier",
+                details: nil
+            ))
+            return
+        }
+        
+        pendingStreamProbes["batteryStatus"] = identifier
+        result(nil)
+    }
+    
+    /// Starts streaming data staleness updates for a probe.
+    ///
+    /// - Parameters:
+    ///   - call: Method call containing probe identifier
+    ///   - result: Flutter result callback (returns nil on success or error)
+    private func handleStartStatusStaleStream(
+        call: FlutterMethodCall,
+        result: @escaping FlutterResult
+    ) {
+        guard let args = call.arguments as? [String: Any],
+              let identifier = args["identifier"] as? String,
+              let _ = connectionManager.getProbe(identifier: identifier) else {
+            result(FlutterError(
+                code: "INVALID_ARGUMENTS",
+                message: "Missing or invalid probe identifier",
+                details: nil
+            ))
+            return
+        }
+        
+        pendingStreamProbes["statusStale"] = identifier
+        result(nil)
+    }
+    
+    /// Starts streaming log synchronization progress for a probe.
+    ///
+    /// - Parameters:
+    ///   - call: Method call containing probe identifier
+    ///   - result: Flutter result callback (returns nil on success or error)
+    private func handleStartLogSyncPercentStream(
+        call: FlutterMethodCall,
+        result: @escaping FlutterResult
+    ) {
+        guard let args = call.arguments as? [String: Any],
+              let identifier = args["identifier"] as? String,
+              let _ = connectionManager.getProbe(identifier: identifier) else {
+            result(FlutterError(
+                code: "INVALID_ARGUMENTS",
+                message: "Missing or invalid probe identifier",
+                details: nil
+            ))
+            return
+        }
+        
+        pendingStreamProbes["logSyncPercent"] = identifier
+        result(nil)
+    }
+    
+    /// Starts streaming session information updates for a probe.
+    ///
+    /// - Parameters:
+    ///   - call: Method call containing probe identifier
+    ///   - result: Flutter result callback (returns nil on success or error)
+    private func handleStartSessionInfoStream(
+        call: FlutterMethodCall,
+        result: @escaping FlutterResult
+    ) {
+        guard let args = call.arguments as? [String: Any],
+              let identifier = args["identifier"] as? String,
+              let _ = connectionManager.getProbe(identifier: identifier) else {
+            result(FlutterError(
+                code: "INVALID_ARGUMENTS",
+                message: "Missing or invalid probe identifier",
+                details: nil
+            ))
+            return
+        }
+        
+        pendingStreamProbes["sessionInfo"] = identifier
+        result(nil)
+    }
+    
+    /// Forces a refresh of session information for a probe.
+    ///
+    /// - Parameters:
+    ///   - call: Method call containing probe identifier
+    ///   - result: Flutter result callback (returns nil on success or error)
+    private func handleRefreshSessionInfo(
+        call: FlutterMethodCall,
+        result: @escaping FlutterResult
+    ) {
+        guard let args = call.arguments as? [String: Any],
+              let identifier = args["identifier"] as? String,
+              let probe = connectionManager.getProbe(identifier: identifier) else {
+            result(FlutterError(
+                code: "INVALID_ARGUMENTS",
+                message: "Missing or invalid probe identifier",
+                details: nil
+            ))
+            return
+        }
+        
+        // Trigger reconnection if not connected to force session info refresh
+        if probe.connectionState != .connected {
+            connectionManager.connect(to: probe)
+        }
+        
+        result(nil)
+    }
+    
+    /// Returns current session information for a probe.
+    ///
+    /// - Parameters:
+    ///   - call: Method call containing probe identifier
+    ///   - result: Flutter result callback with session info or error
+    private func handleGetSessionInfo(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        guard let args = call.arguments as? [String: Any],
+              let identifier = args["identifier"] as? String else {
+            result(FlutterError(
+                code: "INVALID_ARGUMENTS",
+                message: "Missing or invalid probe identifier",
+                details: nil
+            ))
+            return
+        }
+        
+        guard let probe = connectionManager.getProbe(identifier: identifier) else {
+            result(FlutterError(
+                code: "PROBE_NOT_FOUND",
+                message: "Probe with identifier '\(identifier)' not found",
+                details: nil
+            ))
+            return
+        }
+        
+        let sessionInfo = sessionManager.getSessionInfo(for: probe)
+        result(sessionInfo)
+    }
+    
+    /// Retrieves temperature log and starts streaming data points.
+    ///
+    /// - Parameters:
+    ///   - call: Method call containing probe identifier
+    ///   - result: Flutter result callback with log metadata or error
+    private func handleGetTemperatureLog(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        guard let args = call.arguments as? [String: Any],
+              let identifier = args["identifier"] as? String else {
+            result(FlutterError(
+                code: "INVALID_ARGUMENTS",
+                message: "Missing or invalid probe identifier",
+                details: nil
+            ))
+            return
+        }
+        
+        guard let probe = connectionManager.getProbe(identifier: identifier) else {
+            result(FlutterError(
+                code: "PROBE_NOT_FOUND",
+                message: "Probe with identifier '\(identifier)' not found",
+                details: nil
+            ))
+            return
+        }
+        
+        // Event sink will be set when Flutter starts listening
+        // For now, just validate that we can get the log
+        do {
+            // This will throw if there's no session or log
+            _ = try sessionManager.getTemperatureLog(
+                for: probe,
+                eventSink: { _ in }
+            )
+            result(nil)
+        } catch let error as SessionManagerError {
+            result(error.flutterError)
+        } catch {
+            result(FlutterError(
+                code: "UNKNOWN_ERROR",
+                message: error.localizedDescription,
+                details: nil
+            ))
+        }
+    }
+    
+    /// Sets target temperature for prediction calculations.
+    ///
+    /// - Parameters:
+    ///   - call: Method call containing probe identifier and target temperature
+    ///   - result: Flutter result callback (returns nil on success or error)
+    private func handleSetTargetTemperature(
+        call: FlutterMethodCall,
+        result: @escaping FlutterResult
+    ) {
+        guard let args = call.arguments as? [String: Any],
+              let identifier = args["identifier"] as? String,
+              let temperatureCelsius = args["temperatureCelsius"] as? Double else {
+            result(FlutterError(
+                code: "INVALID_ARGUMENTS",
+                message: "Missing or invalid arguments. Expected 'identifier' (String) and 'temperatureCelsius' (Double)",
+                details: nil
+            ))
+            return
+        }
+        
+        guard let probe = connectionManager.getProbe(identifier: identifier) else {
+            result(FlutterError(
+                code: "PROBE_NOT_FOUND",
+                message: "Probe with identifier '\(identifier)' not found",
+                details: nil
+            ))
+            return
+        }
+        
+        predictionManager.setTargetTemperature(
+            for: probe,
+            temperatureCelsius: temperatureCelsius
+        ) { success in
+            if success {
+                result(nil)
+            } else {
+                result(FlutterError(
+                    code: "SET_TEMPERATURE_FAILED",
+                    message: "Failed to set target temperature. Temperature may be outside valid range or probe may not be connected.",
+                    details: [
+                        "identifier": identifier,
+                        "temperatureCelsius": temperatureCelsius
                     ]
-                    sink(probeDict)
-                }
+                ))
             }
         }
     }
     
-    /// Stops the periodic timer for emitting the probe list and clears state.
-    private func stopProbeListStream() {
-        self.probeListUpdateTimer?.invalidate()
-        self.probeListUpdateTimer = nil
-        self.lastProbeIdentifiers.removeAll()
+    /// Starts streaming temperature prediction updates for a probe.
+    ///
+    /// - Parameters:
+    ///   - call: Method call containing probe identifier
+    ///   - result: Flutter result callback (returns nil on success or error)
+    private func handleStartPredictionStream(
+        call: FlutterMethodCall,
+        result: @escaping FlutterResult
+    ) {
+        guard let args = call.arguments as? [String: Any],
+              let identifier = args["identifier"] as? String,
+              let _ = connectionManager.getProbe(identifier: identifier) else {
+            result(FlutterError(
+                code: "INVALID_ARGUMENTS",
+                message: "Missing or invalid probe identifier",
+                details: nil
+            ))
+            return
+        }
+        
+        pendingStreamProbes["predictions"] = identifier
+        result(nil)
+    }
+}
+
+// MARK: - FlutterStreamHandler
+
+extension FlutterCombustionIncPlugin: FlutterStreamHandler {
+    
+    /// Called when Flutter begins listening to an event channel.
+    ///
+    /// This method determines which stream type is being requested based on
+    /// the arguments and activates the appropriate manager with the provided
+    /// event sink.
+    ///
+    /// - Parameters:
+    ///   - arguments: Dictionary containing stream type and probe identifier
+    ///   - events: Flutter event sink for streaming data
+    /// - Returns: FlutterError if setup fails, nil on success
+    public func onListen(
+        withArguments arguments: Any?,
+        eventSink events: @escaping FlutterEventSink
+    ) -> FlutterError? {
+        guard let args = arguments as? [String: Any],
+              let type = args["type"] as? String else {
+            // Default to probe list stream if no type specified
+            discoveryManager.startDiscovery(eventSink: events)
+            return nil
+        }
+        
+        // Get probe identifier from pending streams or arguments
+        let identifier: String? = args["identifier"] as? String ?? pendingStreamProbes[type]
+        
+        guard let probeId = identifier,
+              let probe = connectionManager.getProbe(identifier: probeId) else {
+            return FlutterError(
+                code: "INVALID_ARGUMENTS",
+                message: "Missing or invalid probe identifier for stream type: \(type)",
+                details: nil
+            )
+        }
+        
+        switch type {
+        case "virtualTemps":
+            temperatureStreamManager.startVirtualTemperatureStream(
+                for: probe,
+                eventSink: events
+            )
+            
+        case "currentTemperatures":
+            temperatureStreamManager.startCurrentTemperaturesStream(
+                for: probe,
+                eventSink: events
+            )
+            
+        case "batteryStatus":
+            statusStreamManager.startBatteryStatusStream(
+                for: probe,
+                eventSink: events
+            )
+            
+        case "statusStale":
+            statusStreamManager.startStatusStaleStream(
+                for: probe,
+                eventSink: events
+            )
+            
+        case "logSyncPercent":
+            sessionManager.startLogSyncPercentStream(
+                for: probe,
+                eventSink: events
+            )
+            
+        case "sessionInfo":
+            sessionManager.startSessionInfoStream(
+                for: probe,
+                eventSink: events
+            )
+            
+        case "temperatureLog":
+            do {
+                _ = try sessionManager.getTemperatureLog(
+                    for: probe,
+                    eventSink: events
+                )
+            } catch let error as SessionManagerError {
+                return error.flutterError
+            } catch {
+                return FlutterError(
+                    code: "UNKNOWN_ERROR",
+                    message: error.localizedDescription,
+                    details: nil
+                )
+            }
+            
+        case "predictions":
+            predictionManager.startPredictionStream(
+                for: probe,
+                eventSink: events
+            )
+            
+        default:
+            return FlutterError(
+                code: "UNKNOWN_STREAM_TYPE",
+                message: "Unknown stream type: \(type)",
+                details: nil
+            )
+        }
+        
+        return nil
+    }
+    
+    /// Called when Flutter cancels a listener subscription.
+    ///
+    /// This method determines which stream is being cancelled and deactivates
+    /// the appropriate manager to clean up resources.
+    ///
+    /// - Parameter arguments: Dictionary containing stream type
+    /// - Returns: FlutterError if cleanup fails, nil on success
+    public func onCancel(withArguments arguments: Any?) -> FlutterError? {
+        guard let args = arguments as? [String: Any],
+              let type = args["type"] as? String else {
+            // Default to probe list stream if no type specified
+            discoveryManager.stopDiscovery()
+            return nil
+        }
+        
+        switch type {
+        case "virtualTemps":
+            temperatureStreamManager.stopVirtualTemperatureStream()
+            
+        case "currentTemperatures":
+            temperatureStreamManager.stopCurrentTemperaturesStream()
+            
+        case "batteryStatus":
+            statusStreamManager.stopBatteryStatusStream()
+            
+        case "statusStale":
+            statusStreamManager.stopStatusStaleStream()
+            
+        case "logSyncPercent":
+            sessionManager.stopLogSyncPercentStream()
+            
+        case "sessionInfo":
+            sessionManager.stopSessionInfoStream()
+            
+        case "temperatureLog":
+            sessionManager.stopTemperatureLogStream()
+            
+        case "predictions":
+            predictionManager.stopPredictionStream()
+            
+        default:
+            return FlutterError(
+                code: "UNKNOWN_STREAM_TYPE",
+                message: "Unknown stream type: \(type)",
+                details: nil
+            )
+        }
+        
+        return nil
     }
 }

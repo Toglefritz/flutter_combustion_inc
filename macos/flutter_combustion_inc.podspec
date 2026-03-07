@@ -14,7 +14,7 @@ A Flutter plugin that enables communication between Flutter macOS applications a
   s.author           = { 'Toglefritz' => 'your.email@example.com' }
 
   s.source           = { :path => '.' }
-  s.source_files     = 'Classes/**/*'
+  s.source_files     = 'Classes/**/*.swift'
   s.dependency 'FlutterMacOS'
   
   s.dependency 'CombustionBLE'

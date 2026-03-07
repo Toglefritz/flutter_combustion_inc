@@ -13,7 +13,7 @@ A Flutter plugin that enables communication between Flutter mobile applications 
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Splendid Endeavors' => 'hello@splendidendeavors.com' }
   s.source           = { :path => '.' }
-  s.source_files = 'Classes/**/*'
+  s.source_files = 'Classes/**/*.swift'
   s.dependency 'Flutter'
   s.platform = :ios, '13.0'
 
