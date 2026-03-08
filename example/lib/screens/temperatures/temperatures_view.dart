@@ -14,6 +14,7 @@ import '../components/probe_selector.dart';
 import 'components/stacked_radar_chart_card.dart';
 import 'components/temperature_radar_chart.dart';
 import 'components/temperature_stats_card.dart';
+import 'components/temperature_table_card.dart';
 import 'models/temperatures_display_mode.dart';
 
 /// View for the temperatures tab.
@@ -100,6 +101,12 @@ class _TemperaturesViewState extends State<TemperaturesView> {
                           ),
 
                         if (widget.selectedProbe != null) ...[
+                          // Temperature table
+                          Padding(
+                            padding: const EdgeInsets.all(Inset.medium),
+                            child: TemperatureTableCard(probe: widget.selectedProbe!),
+                          ),
+
                           if (_displayMode == TemperaturesDisplayMode.column) ...[
                             // Column mode: Virtual temperatures radar chart
                             Padding(
