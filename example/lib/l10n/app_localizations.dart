@@ -533,6 +533,56 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to: **'Cross-platform support (iOS, Android, macOS)'**
   String get featureCrossPlatform;
+
+  /// Title for the RSSI tracking screen.
+  ///
+  /// In en, this message translates to: **'RSSI Tracking'**
+  String get rssiTracking;
+
+  /// Label for the current RSSI value.
+  ///
+  /// In en, this message translates to: **'Current RSSI'**
+  String get currentRssi;
+
+  /// Title for the RSSI history graph.
+  ///
+  /// In en, this message translates to: **'RSSI History'**
+  String get rssiHistory;
+
+  /// Description for the RSSI history graph.
+  ///
+  /// In en, this message translates to: **'Last 60 seconds of signal strength readings'**
+  String get rssiHistoryDescription;
+
+  /// Label for RSSI axis in graph.
+  ///
+  /// In en, this message translates to: **'RSSI (dBm)'**
+  String get rssiDbm;
+
+  /// Label for time axis in graph.
+  ///
+  /// In en, this message translates to: **'Time (seconds)'**
+  String get timeSeconds;
+
+  /// Label for excellent RSSI signal quality.
+  ///
+  /// In en, this message translates to: **'Excellent Signal'**
+  String get rssiExcellent;
+
+  /// Label for good RSSI signal quality.
+  ///
+  /// In en, this message translates to: **'Good Signal'**
+  String get rssiGood;
+
+  /// Label for fair RSSI signal quality.
+  ///
+  /// In en, this message translates to: **'Fair Signal'**
+  String get rssiFair;
+
+  /// Label for poor RSSI signal quality.
+  ///
+  /// In en, this message translates to: **'Poor Signal'**
+  String get rssiPoor;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

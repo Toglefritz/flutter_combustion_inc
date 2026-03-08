@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_combustion_inc/models/device_manager.dart';
 import 'package:flutter_combustion_inc/models/probe.dart';
 
+import '../rssi/rssi_route.dart';
 import 'main_navigation_route.dart';
 import 'main_navigation_view.dart';
 
@@ -22,6 +23,9 @@ class MainNavigationController extends State<MainNavigationRoute> {
 
   /// Currently selected probe for detailed viewing.
   Probe? selectedProbe;
+
+  /// Global key for accessing the RSSI route state.
+  final GlobalKey<RssiRouteState> rssiKey = GlobalKey<RssiRouteState>();
 
   @override
   void initState() {
@@ -47,6 +51,9 @@ class MainNavigationController extends State<MainNavigationRoute> {
         // Auto-select first probe
         selectedProbe ??= probe;
       });
+
+      // Update RSSI route with new probes
+      rssiKey.currentState?.updateProbes(probes);
 
       // Connect to the probe
       await probe.connect();

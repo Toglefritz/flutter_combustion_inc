@@ -492,5 +492,55 @@
   "@featureCrossPlatform": {
     "description": "Feature description for cross-platform support.",
     "placeholders": {}
+  },
+  "rssiTracking": "RSSI Tracking",
+  "@rssiTracking": {
+    "description": "Title for the RSSI tracking screen.",
+    "placeholders": {}
+  },
+  "currentRssi": "Current RSSI",
+  "@currentRssi": {
+    "description": "Label for the current RSSI value.",
+    "placeholders": {}
+  },
+  "rssiHistory": "RSSI History",
+  "@rssiHistory": {
+    "description": "Title for the RSSI history graph.",
+    "placeholders": {}
+  },
+  "rssiHistoryDescription": "Last 60 seconds of signal strength readings",
+  "@rssiHistoryDescription": {
+    "description": "Description for the RSSI history graph.",
+    "placeholders": {}
+  },
+  "rssiDbm": "RSSI (dBm)",
+  "@rssiDbm": {
+    "description": "Label for RSSI axis in graph.",
+    "placeholders": {}
+  },
+  "timeSeconds": "Time (seconds)",
+  "@timeSeconds": {
+    "description": "Label for time axis in graph.",
+    "placeholders": {}
+  },
+  "rssiExcellent": "Excellent Signal",
+  "@rssiExcellent": {
+    "description": "Label for excellent RSSI signal quality.",
+    "placeholders": {}
+  },
+  "rssiGood": "Good Signal",
+  "@rssiGood": {
+    "description": "Label for good RSSI signal quality.",
+    "placeholders": {}
+  },
+  "rssiFair": "Fair Signal",
+  "@rssiFair": {
+    "description": "Label for fair RSSI signal quality.",
+    "placeholders": {}
+  },
+  "rssiPoor": "Poor Signal",
+  "@rssiPoor": {
+    "description": "Label for poor RSSI signal quality.",
+    "placeholders": {}
   }
 }

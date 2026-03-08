@@ -7,8 +7,8 @@ class VirtualTemperatureRadar extends StatelessWidget {
   /// The probe to display temperatures for.
   final Probe probe;
 
-  /// Optional color for the radar chart structure (axes, circles, connecting lines).
-  /// If not provided, uses default gray colors.
+  /// Optional color for the radar chart structure (axes, circles, connecting lines). If not provided, uses default gray
+  /// colors.
   final Color? radarColor;
 
   /// Creates an instance of [VirtualTemperatureRadar].

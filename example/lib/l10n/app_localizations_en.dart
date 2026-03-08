@@ -289,4 +289,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get featureCrossPlatform => 'Cross-platform support (iOS, Android, macOS)';
+
+  @override
+  String get rssiTracking => 'RSSI Tracking';
+
+  @override
+  String get currentRssi => 'Current RSSI';
+
+  @override
+  String get rssiHistory => 'RSSI History';
+
+  @override
+  String get rssiHistoryDescription => 'Last 60 seconds of signal strength readings';
+
+  @override
+  String get rssiDbm => 'RSSI (dBm)';
+
+  @override
+  String get timeSeconds => 'Time (seconds)';
+
+  @override
+  String get rssiExcellent => 'Excellent Signal';
+
+  @override
+  String get rssiGood => 'Good Signal';
+
+  @override
+  String get rssiFair => 'Fair Signal';
+
+  @override
+  String get rssiPoor => 'Poor Signal';
 }

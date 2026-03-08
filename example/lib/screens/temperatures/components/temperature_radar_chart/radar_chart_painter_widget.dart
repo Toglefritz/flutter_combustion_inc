@@ -11,8 +11,8 @@ class RadarChartPainterWidget extends StatelessWidget {
   /// Temperature unit string.
   final String unit;
 
-  /// Optional color for the radar chart structure (axes, circles, connecting lines).
-  /// If not provided, uses default gray colors.
+  /// Optional color for the radar chart structure (axes, circles, connecting lines). If not provided, uses default gray
+  /// colors.
   final Color? radarColor;
 
   /// Creates a radar chart painter widget.
