@@ -129,29 +129,36 @@ class _PredictionsViewState extends State<PredictionsView> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        centerTitle: false,
+        centerTitle: true,
       ),
       body:
           widget.probes.isEmpty
               ? const EmptyStateWidget()
-              : SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    // Probe selector
-                    ProbeSelector(
-                      probes: widget.probes,
-                      selectedProbe: widget.selectedProbe,
-                      onProbeSelected: widget.onProbeSelected,
-                    ),
+              : Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(
+                    maxWidth: 800,
+                  ),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        // Probe selector
+                        ProbeSelector(
+                          probes: widget.probes,
+                          selectedProbe: widget.selectedProbe,
+                          onProbeSelected: widget.onProbeSelected,
+                        ),
 
-                    // Target temperature control
-                    TargetTemperatureControl(
-                      onTargetSet: _onTargetTemperatureSet,
-                      enabled: widget.selectedProbe != null,
-                      predictionInfo: _currentPrediction,
+                        // Target temperature control
+                        TargetTemperatureControl(
+                          onTargetSet: _onTargetTemperatureSet,
+                          enabled: widget.selectedProbe != null,
+                          predictionInfo: _currentPrediction,
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
     );

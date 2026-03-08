@@ -93,6 +93,11 @@
     "description": "Label for the virtual temperatures display mode.",
     "placeholders": {}
   },
+  "allTemperatures": "All Temperatures",
+  "@allTemperatures": {
+    "description": "Label for the stacked display mode showing both virtual and physical temperatures.",
+    "placeholders": {}
+  },
   "temperatureGraph": "Temperature Graph",
   "@temperatureGraph": {
     "description": "Title for the temperature graph display.",

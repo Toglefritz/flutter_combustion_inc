@@ -2,8 +2,8 @@ part of '../temperature_radar_chart.dart';
 
 /// Widget wrapper for the radar chart custom painter.
 ///
-/// This widget provides the theme-aware text styles and background color to the custom painter
-/// and manages the CustomPaint widget.
+/// This widget provides the theme-aware text styles and background color to the custom painter and manages the
+/// CustomPaint widget.
 class RadarChartPainterWidget extends StatelessWidget {
   /// Data points to display.
   final List<RadarDataPoint> dataPoints;
@@ -11,10 +11,15 @@ class RadarChartPainterWidget extends StatelessWidget {
   /// Temperature unit string.
   final String unit;
 
+  /// Optional color for the radar chart structure (axes, circles, connecting lines).
+  /// If not provided, uses default gray colors.
+  final Color? radarColor;
+
   /// Creates a radar chart painter widget.
   const RadarChartPainterWidget({
     required this.dataPoints,
     required this.unit,
+    this.radarColor,
     super.key,
   });
 
@@ -38,6 +43,7 @@ class RadarChartPainterWidget extends StatelessWidget {
           fontWeight: FontWeight.bold,
         ),
         labelBackgroundColor: pillBackgroundColor,
+        radarColor: radarColor,
       ),
       child: Container(),
     );

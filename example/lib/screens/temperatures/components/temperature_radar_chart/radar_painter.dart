@@ -2,8 +2,8 @@ part of '../temperature_radar_chart.dart';
 
 /// Custom painter implementation for radar chart.
 ///
-/// Draws the radar chart with concentric circles, axes, data points, labels with pill-shaped backgrounds,
-/// and connecting lines between points.
+/// Draws the radar chart with concentric circles, axes, data points, labels with pill-shaped backgrounds, and
+/// connecting lines between points.
 class RadarPainter extends CustomPainter {
   /// Data points to display.
   final List<RadarDataPoint> dataPoints;
@@ -20,6 +20,10 @@ class RadarPainter extends CustomPainter {
   /// Background color for label pills.
   final Color labelBackgroundColor;
 
+  /// Optional color for the radar chart structure (axes, circles, connecting lines).
+  /// If not provided, uses default gray colors.
+  final Color? radarColor;
+
   /// Creates a radar painter.
   RadarPainter({
     required this.dataPoints,
@@ -27,6 +31,7 @@ class RadarPainter extends CustomPainter {
     required this.textStyle,
     required this.valueStyle,
     required this.labelBackgroundColor,
+    this.radarColor,
   });
 
   @override
@@ -101,9 +106,10 @@ class RadarPainter extends CustomPainter {
 
   /// Draws concentric circles for the radar chart background.
   void _drawConcentricCircles(Canvas canvas, Offset center, double radius) {
+    final Color circleColor = radarColor ?? Colors.grey;
     final Paint circlePaint =
         Paint()
-          ..color = Colors.grey.withValues(alpha: 0.2)
+          ..color = circleColor.withValues(alpha: 0.2)
           ..strokeWidth = 1
           ..style = PaintingStyle.stroke;
 
@@ -114,9 +120,10 @@ class RadarPainter extends CustomPainter {
 
   /// Draws an axis line from center to edge.
   void _drawAxisLine(Canvas canvas, Offset start, Offset end) {
+    final Color axisColor = radarColor ?? Colors.grey;
     final Paint axisPaint =
         Paint()
-          ..color = Colors.grey.withValues(alpha: 0.3)
+          ..color = axisColor.withValues(alpha: 0.3)
           ..strokeWidth = 1;
     canvas.drawLine(start, end, axisPaint);
   }
@@ -157,17 +164,20 @@ class RadarPainter extends CustomPainter {
     }
     path.close();
 
+    // Use radar color if provided, otherwise use first data point's color
+    final Color baseColor = radarColor ?? dataPoints[0].color;
+
     // Draw filled area
     final Paint fillPaint =
         Paint()
-          ..color = dataPoints[0].color.withValues(alpha: 0.1)
+          ..color = baseColor.withValues(alpha: 0.1)
           ..style = PaintingStyle.fill;
     canvas.drawPath(path, fillPaint);
 
     // Draw stroke
     final Paint strokePaint =
         Paint()
-          ..color = dataPoints[0].color.withValues(alpha: 0.5)
+          ..color = baseColor.withValues(alpha: 0.5)
           ..strokeWidth = 2
           ..style = PaintingStyle.stroke;
     canvas.drawPath(path, strokePaint);

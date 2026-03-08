@@ -42,121 +42,128 @@ class GraphsView extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        centerTitle: false,
+        centerTitle: true,
       ),
       body:
           probes.isEmpty
               ? const EmptyStateWidget()
-              : SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    // Probe selector
-                    if (probes.length > 1)
-                      ProbeSelector(
-                        probes: probes,
-                        selectedProbe: selectedProbe,
-                        onProbeSelected: onProbeSelected,
-                      ),
+              : Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(
+                    maxWidth: 800,
+                  ),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        // Probe selector
+                        if (probes.length > 1)
+                          ProbeSelector(
+                            probes: probes,
+                            selectedProbe: selectedProbe,
+                            onProbeSelected: onProbeSelected,
+                          ),
 
-                    if (selectedProbe != null) ...[
-                      // Virtual temperatures graph
-                      Padding(
-                        padding: const EdgeInsets.all(Inset.medium),
-                        child: Card(
-                          elevation: isDark ? 4 : 2,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16.0),
-                              gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors:
-                                    isDark
-                                        ? [
-                                          colorScheme.surfaceContainerHigh,
-                                          colorScheme.surfaceContainer,
-                                        ]
-                                        : [
-                                          colorScheme.surface,
-                                          colorScheme.surfaceContainerLow,
-                                        ],
-                              ),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(Inset.medium),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    AppLocalizations.of(context)!.virtualTemperatures,
-                                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                        if (selectedProbe != null) ...[
+                          // Virtual temperatures graph
+                          Padding(
+                            padding: const EdgeInsets.all(Inset.medium),
+                            child: Card(
+                              elevation: isDark ? 4 : 2,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(16.0),
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors:
+                                        isDark
+                                            ? [
+                                              colorScheme.surfaceContainerHigh,
+                                              colorScheme.surfaceContainer,
+                                            ]
+                                            : [
+                                              colorScheme.surface,
+                                              colorScheme.surfaceContainerLow,
+                                            ],
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: Inset.medium),
-                                    child: TemperatureGraph(
-                                      probe: selectedProbe!,
-                                      displayMode: DisplayMode.virtualTemperatures,
-                                    ),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(Inset.medium),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        AppLocalizations.of(context)!.virtualTemperatures,
+                                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: Inset.medium),
+                                        child: TemperatureGraph(
+                                          probe: selectedProbe!,
+                                          displayMode: DisplayMode.virtualTemperatures,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ),
 
-                      // Physical temperatures graph
-                      Padding(
-                        padding: const EdgeInsets.all(Inset.medium),
-                        child: Card(
-                          elevation: isDark ? 4 : 2,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16.0),
-                              gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors:
-                                    isDark
-                                        ? [
-                                          colorScheme.surfaceContainerHigh,
-                                          colorScheme.surfaceContainer,
-                                        ]
-                                        : [
-                                          colorScheme.surface,
-                                          colorScheme.surfaceContainerLow,
-                                        ],
-                              ),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(Inset.medium),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    AppLocalizations.of(context)!.physicalTemperatures,
-                                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                          // Physical temperatures graph
+                          Padding(
+                            padding: const EdgeInsets.all(Inset.medium),
+                            child: Card(
+                              elevation: isDark ? 4 : 2,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(16.0),
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors:
+                                        isDark
+                                            ? [
+                                              colorScheme.surfaceContainerHigh,
+                                              colorScheme.surfaceContainer,
+                                            ]
+                                            : [
+                                              colorScheme.surface,
+                                              colorScheme.surfaceContainerLow,
+                                            ],
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: Inset.medium),
-                                    child: TemperatureGraph(
-                                      probe: selectedProbe!,
-                                      displayMode: DisplayMode.physicalTemperatures,
-                                    ),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(Inset.medium),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        AppLocalizations.of(context)!.physicalTemperatures,
+                                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: Inset.medium),
+                                        child: TemperatureGraph(
+                                          probe: selectedProbe!,
+                                          displayMode: DisplayMode.physicalTemperatures,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ),
-                    ],
-                  ],
+                        ],
+                      ],
+                    ),
+                  ),
                 ),
               ),
     );

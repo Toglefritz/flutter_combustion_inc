@@ -46,21 +46,28 @@ class AboutView extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        centerTitle: false,
+        centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Plugin information
-            const PluginInfoCard(),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(
+            maxWidth: 800,
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Plugin information
+                const PluginInfoCard(),
 
-            // Probe details (if probe selected)
-            if (selectedProbe != null) ProbeDetailsCard(probe: selectedProbe!),
+                // Probe details (if probe selected)
+                if (selectedProbe != null) ProbeDetailsCard(probe: selectedProbe!),
 
-            // Features list
-            const FeaturesCard(),
-          ],
+                // Features list
+                const FeaturesCard(),
+              ],
+            ),
+          ),
         ),
       ),
     );

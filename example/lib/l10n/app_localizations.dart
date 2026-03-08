@@ -167,6 +167,11 @@ abstract class AppLocalizations {
   /// In en, this message translates to: **'Virtual Temperatures'**
   String get virtualTemperatures;
 
+  /// Label for the stacked display mode showing both virtual and physical temperatures.
+  ///
+  /// In en, this message translates to: **'All Temperatures'**
+  String get allTemperatures;
+
   /// Title for the temperature graph display.
   ///
   /// In en, this message translates to: **'Temperature Graph'**

@@ -47,17 +47,11 @@ class MainNavigationView extends StatelessWidget {
     ];
 
     return Scaffold(
-      body: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(
-            maxWidth: 800,
-          ),
-          child: IndexedStack(
-            index: state.currentTabIndex,
-            children: tabs,
-          ),
-        ),
+      body: IndexedStack(
+        index: state.currentTabIndex,
+        children: tabs,
       ),
+
       bottomNavigationBar: NavigationBar(
         selectedIndex: state.currentTabIndex,
         onDestinationSelected: state.onTabChanged,

@@ -64,6 +64,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get virtualTemperatures => 'Virtual Temperatures';
 
   @override
+  String get allTemperatures => 'All Temperatures';
+
+  @override
   String get temperatureGraph => 'Temperature Graph';
 
   @override

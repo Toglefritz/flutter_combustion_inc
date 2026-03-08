@@ -11,14 +11,16 @@ import '../../l10n/app_localizations.dart';
 import '../../values/inset.dart';
 import '../components/empty_state_widget.dart';
 import '../components/probe_selector.dart';
+import 'components/stacked_radar_chart_card.dart';
 import 'components/temperature_radar_chart.dart';
 import 'components/temperature_stats_card.dart';
+import 'models/temperatures_display_mode.dart';
 
 /// View for the temperatures tab.
 ///
 /// Displays temperature readings using visual radar charts for both virtual temperatures (core, surface, ambient) and
-/// physical sensor readings (T1-T8).
-class TemperaturesView extends StatelessWidget {
+/// physical sensor readings (T1-T8). Supports two display modes: column (separate charts) and stacked (combined chart).
+class TemperaturesView extends StatefulWidget {
   /// List of available probes.
   final List<Probe> probes;
 
@@ -37,6 +39,25 @@ class TemperaturesView extends StatelessWidget {
   });
 
   @override
+  State<TemperaturesView> createState() => _TemperaturesViewState();
+}
+
+/// State for [TemperaturesView].
+class _TemperaturesViewState extends State<TemperaturesView> {
+  /// Current display mode for temperature visualization.
+  TemperaturesDisplayMode _displayMode = TemperaturesDisplayMode.column;
+
+  /// Toggles between column and stacked display modes.
+  void _toggleDisplayMode() {
+    setState(() {
+      _displayMode =
+          _displayMode == TemperaturesDisplayMode.column
+              ? TemperaturesDisplayMode.stacked
+              : TemperaturesDisplayMode.column;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -47,48 +68,73 @@ class TemperaturesView extends StatelessWidget {
           ),
         ),
         centerTitle: false,
+        actions: [
+          IconButton(
+            icon: Icon(
+              _displayMode == TemperaturesDisplayMode.column ? Icons.layers_outlined : Icons.view_column_outlined,
+            ),
+            tooltip:
+                _displayMode == TemperaturesDisplayMode.column ? 'Switch to stacked view' : 'Switch to column view',
+            onPressed: _toggleDisplayMode,
+          ),
+        ],
       ),
       body:
-          probes.isEmpty
+          widget.probes.isEmpty
               ? const EmptyStateWidget()
-              : SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    // Probe selector
-                    if (probes.length > 1)
-                      ProbeSelector(
-                        probes: probes,
-                        selectedProbe: selectedProbe,
-                        onProbeSelected: onProbeSelected,
-                      ),
+              : Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(
+                    maxWidth: 800,
+                  ),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        // Probe selector
+                        if (widget.probes.length > 1)
+                          ProbeSelector(
+                            probes: widget.probes,
+                            selectedProbe: widget.selectedProbe,
+                            onProbeSelected: widget.onProbeSelected,
+                          ),
 
-                    if (selectedProbe != null) ...[
-                      // Virtual temperatures radar chart
-                      Padding(
-                        padding: const EdgeInsets.all(Inset.medium),
-                        child: TemperatureRadarChart(
-                          probe: selectedProbe!,
-                          showVirtual: true,
-                        ),
-                      ),
+                        if (widget.selectedProbe != null) ...[
+                          if (_displayMode == TemperaturesDisplayMode.column) ...[
+                            // Column mode: Virtual temperatures radar chart
+                            Padding(
+                              padding: const EdgeInsets.all(Inset.medium),
+                              child: TemperatureRadarChart(
+                                probe: widget.selectedProbe!,
+                                showVirtual: true,
+                              ),
+                            ),
 
-                      // Physical temperatures radar chart
-                      Padding(
-                        padding: const EdgeInsets.all(Inset.medium),
-                        child: TemperatureRadarChart(
-                          probe: selectedProbe!,
-                          showVirtual: false,
-                        ),
-                      ),
+                            // Column mode: Physical temperatures radar chart
+                            Padding(
+                              padding: const EdgeInsets.all(Inset.medium),
+                              child: TemperatureRadarChart(
+                                probe: widget.selectedProbe!,
+                                showVirtual: false,
+                              ),
+                            ),
+                          ] else ...[
+                            // Stacked mode: Combined radar chart
+                            Padding(
+                              padding: const EdgeInsets.all(Inset.medium),
+                              child: StackedRadarChartCard(probe: widget.selectedProbe!),
+                            ),
+                          ],
 
-                      // Temperature statistics
-                      Padding(
-                        padding: const EdgeInsets.all(Inset.medium),
-                        child: TemperatureStatsCard(probe: selectedProbe!),
-                      ),
-                    ],
-                  ],
+                          // Temperature statistics
+                          Padding(
+                            padding: const EdgeInsets.all(Inset.medium),
+                            child: TemperatureStatsCard(probe: widget.selectedProbe!),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
                 ),
               ),
     );
