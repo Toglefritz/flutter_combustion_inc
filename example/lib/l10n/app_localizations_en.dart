@@ -76,10 +76,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loadingTemperatureLogs => 'Loading temperature logs...';
 
   @override
-  String get errorNoActiveSession => 'No active cooking session found. Start a cooking session to view temperature logs.';
+  String get errorNoActiveSession =>
+      'No active cooking session found. Start a cooking session to view temperature logs.';
 
   @override
-  String get errorNoLogsAvailable => 'No temperature logs available. Ensure the probe is connected and logging temperatures.';
+  String get errorNoLogsAvailable =>
+      'No temperature logs available. Ensure the probe is connected and logging temperatures.';
 
   @override
   String get errorProbeNotFound => 'Probe not found. Please check the connection and try again.';
@@ -191,4 +193,97 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get connectProbeFirst => 'Please connect a probe from the home screen first.';
+
+  @override
+  String get temperatures => 'Temperatures';
+
+  @override
+  String get graphs => 'Graphs';
+
+  @override
+  String get about => 'About';
+
+  @override
+  String get makeProbeVisible => 'Make sure your probe is powered on and nearby.';
+
+  @override
+  String get virtualSensors => 'Virtual Sensors';
+
+  @override
+  String get physicalSensors => 'Physical Sensors';
+
+  @override
+  String get currentReading => 'Current Reading';
+
+  @override
+  String get minTemperature => 'Min';
+
+  @override
+  String get maxTemperature => 'Max';
+
+  @override
+  String get avgTemperature => 'Avg';
+
+  @override
+  String get probeDetails => 'Probe Details';
+
+  @override
+  String get serialNumber => 'Serial Number';
+
+  @override
+  String get macAddress => 'MAC Address';
+
+  @override
+  String get probeId => 'Probe ID';
+
+  @override
+  String get batteryStatus => 'Battery Status';
+
+  @override
+  String get signalStrength => 'Signal Strength';
+
+  @override
+  String get pluginInformation => 'Plugin Information';
+
+  @override
+  String get version => 'Version';
+
+  @override
+  String get features => 'Features';
+
+  @override
+  String get name => 'Name';
+
+  @override
+  String get platform => 'Platform';
+
+  @override
+  String get unknown => 'Unknown';
+
+  @override
+  String get loading => 'Loading...';
+
+  @override
+  String get featureRealtimeMonitoring => 'Real-time temperature monitoring';
+
+  @override
+  String get featureVirtualSensors => 'Virtual temperature sensors (core, surface, ambient)';
+
+  @override
+  String get featurePhysicalSensors => 'Physical sensor readings (T1-T8)';
+
+  @override
+  String get featureHistoricalGraphs => 'Historical temperature graphs';
+
+  @override
+  String get featurePredictions => 'Cooking time predictions';
+
+  @override
+  String get featureBatteryMonitoring => 'Battery status monitoring';
+
+  @override
+  String get featureBluetooth => 'Bluetooth Low Energy connectivity';
+
+  @override
+  String get featureCrossPlatform => 'Cross-platform support (iOS, Android, macOS)';
 }

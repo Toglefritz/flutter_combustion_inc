@@ -24,8 +24,7 @@ abstract class FlutterCombustionIncPlatform extends PlatformInterface {
   static final Object _token = Object();
 
   /// The default instance of [FlutterCombustionIncPlatform] to use.
-  static FlutterCombustionIncPlatform _instance =
-      MethodChannelFlutterCombustionInc();
+  static FlutterCombustionIncPlatform _instance = MethodChannelFlutterCombustionInc();
 
   /// The default instance of [FlutterCombustionIncPlatform] to use.
   ///
@@ -96,24 +95,23 @@ abstract class FlutterCombustionIncPlatform extends PlatformInterface {
   /// once per second.
   Future<ProbeTemperatureLog> getTemperatureLog(String identifier);
 
-  /// Provides a stream of session information availability for the specified probe. This stream emits updates
-  /// whenever the probe's session information becomes available or unavailable, allowing the UI to show or hide
-  /// historical data features accordingly.
+  /// Provides a stream of session information availability for the specified probe. This stream emits updates whenever
+  /// the probe's session information becomes available or unavailable, allowing the UI to show or hide historical data
+  /// features accordingly.
   Stream<Map<String, dynamic>> sessionInfoStream(String identifier);
 
-  /// Retrieves the current session information for the specified probe synchronously.
-  /// Used for debugging session availability issues.
+  /// Retrieves the current session information for the specified probe synchronously. Used for debugging session
+  /// availability issues.
   Future<Map<String, dynamic>> getSessionInfo(String identifier);
 
-  /// Forces the probe to refresh its session information from the device.
-  /// This can help resolve timing issues where session info becomes stale.
+  /// Forces the probe to refresh its session information from the device. This can help resolve timing issues where
+  /// session info becomes stale.
   Future<void> refreshSessionInfo(String identifier);
 
   /// Sets a target temperature for the specified probe to enable temperature predictions.
   ///
-  /// Once a target temperature is set, the probe will begin making predictions
-  /// including an estimated time of arrival (ETA) for when the food will reach
-  /// the target temperature.
+  /// Once a target temperature is set, the probe will begin making predictions including an estimated time of arrival
+  /// (ETA) for when the food will reach the target temperature.
   ///
   /// @param identifier The unique identifier of the probe
   /// @param temperatureCelsius The target temperature in Celsius
@@ -125,9 +123,8 @@ abstract class FlutterCombustionIncPlatform extends PlatformInterface {
 
   /// Provides a stream of temperature prediction information for the specified probe.
   ///
-  /// This stream emits [PredictionInfo] objects containing estimated time to reach target temperature and other
-  /// cooking predictions. Predictions are only available after a target temperature has been set using
-  /// [setTargetTemperature].
+  /// This stream emits [PredictionInfo] objects containing estimated time to reach target temperature and other cooking
+  /// predictions. Predictions are only available after a target temperature has been set using [setTargetTemperature].
   ///
   /// The stream will emit updates whenever the probe's prediction calculations change based on current temperature
   /// trends and cooking conditions.

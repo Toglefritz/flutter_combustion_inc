@@ -5,8 +5,8 @@ import '../flutter_combustion_inc_platform_interface.dart';
 import 'prediction_info.dart';
 import 'probe.dart';
 
-/// A singleton class that provides access to the Combustion Inc. SDK functionality for scanning and managing
-/// discovered temperature probes.
+/// A singleton class that provides access to the Combustion Inc. SDK functionality for scanning and managing discovered
+/// temperature probes.
 ///
 /// This class acts as the Dart-side interface to the native DeviceManager on iOS and Android, using platform channels
 /// to communicate with the underlying SDKs.
@@ -47,9 +47,7 @@ class DeviceManager {
   /// The native platform is expected to return a list of probe maps, each of which will be converted into a [Probe]
   /// instance.
   Future<List<Probe>> getProbes() async {
-    final List<Map<String, dynamic>> result = await FlutterCombustionIncPlatform
-        .instance
-        .getProbes();
+    final List<Map<String, dynamic>> result = await FlutterCombustionIncPlatform.instance.getProbes();
 
     return result.map(Probe.fromMap).toList();
   }
@@ -74,9 +72,8 @@ class DeviceManager {
 
   /// Provides a stream of temperature prediction information for the specified probe.
   ///
-  /// This stream emits [PredictionInfo] objects containing estimated time to reach target temperature and other
-  /// cooking predictions. Predictions are only available after a target temperature has been set using
-  /// [setTargetTemperature].
+  /// This stream emits [PredictionInfo] objects containing estimated time to reach target temperature and other cooking
+  /// predictions. Predictions are only available after a target temperature has been set using [setTargetTemperature].
   ///
   /// The stream will emit updates whenever the probe's prediction calculations change based on current temperature
   /// trends and cooking conditions.

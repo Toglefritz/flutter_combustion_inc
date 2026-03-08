@@ -2,8 +2,8 @@ import 'probe_temperatures.dart';
 
 /// Represents a single logged temperature data point from a Combustion Inc. probe.
 ///
-/// Each data point contains a unique sequence number and a [ProbeTemperatures] instance
-/// representing the temperatures recorded by the eight probe sensors.
+/// Each data point contains a unique sequence number and a [ProbeTemperatures] instance representing the temperatures
+/// recorded by the eight probe sensors.
 class ProbeLogDataPoint {
   /// The sequential index of this data point within the temperature log.
   final int sequence;

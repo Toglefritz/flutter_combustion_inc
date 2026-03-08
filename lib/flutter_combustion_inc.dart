@@ -1,8 +1,8 @@
 /// Flutter plugin for integrating with Combustion Inc. temperature probes.
 ///
 /// This plugin provides a comprehensive interface for discovering, connecting to, and monitoring Combustion Inc.
-/// temperature probes. It supports real-time temperature readings, battery status monitoring, temperature logging,
-/// and cooking predictions.
+/// temperature probes. It supports real-time temperature readings, battery status monitoring, temperature logging, and
+/// cooking predictions.
 ///
 /// Key features:
 /// * Probe discovery and connection management

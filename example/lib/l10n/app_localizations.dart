@@ -9,57 +9,50 @@ import 'app_localizations_en.dart';
 
 // ignore_for_file: type=lint
 
-/// Callers can lookup localized strings with an instance of AppLocalizations
-/// returned by `AppLocalizations.of(context)`.
+/// Callers can lookup localized strings with an instance of AppLocalizations returned by
+/// `AppLocalizations.of(context)`.
 ///
-/// Applications need to include `AppLocalizations.delegate()` in their app's
-/// `localizationDelegates` list, and the locales they support in the app's
-/// `supportedLocales` list. For example:
+/// Applications need to include `AppLocalizations.delegate()` in their app's `localizationDelegates` list, and the
+/// locales they support in the app's `supportedLocales` list. For example:
 ///
 /// ```dart
 /// import 'l10n/app_localizations.dart';
 ///
 /// return MaterialApp(
-///   localizationsDelegates: AppLocalizations.localizationsDelegates,
-///   supportedLocales: AppLocalizations.supportedLocales,
-///   home: MyApplicationHome(),
+/// localizationsDelegates: AppLocalizations.localizationsDelegates,
+/// supportedLocales: AppLocalizations.supportedLocales,
+/// home: MyApplicationHome(),
 /// );
 /// ```
 ///
 /// ## Update pubspec.yaml
 ///
-/// Please make sure to update your pubspec.yaml to include the following
-/// packages:
+/// Please make sure to update your pubspec.yaml to include the following packages:
 ///
 /// ```yaml
 /// dependencies:
-///   # Internationalization support.
-///   flutter_localizations:
-///     sdk: flutter
-///   intl: any # Use the pinned version from flutter_localizations
+/// # Internationalization support.
+/// flutter_localizations:
+/// sdk: flutter
+/// intl: any # Use the pinned version from flutter_localizations
 ///
-///   # Rest of dependencies
+/// # Rest of dependencies
 /// ```
 ///
 /// ## iOS Applications
 ///
-/// iOS applications define key application metadata, including supported
-/// locales, in an Info.plist file that is built into the application bundle.
-/// To configure the locales supported by your app, you’ll need to edit this
-/// file.
+/// iOS applications define key application metadata, including supported locales, in an Info.plist file that is built
+/// into the application bundle. To configure the locales supported by your app, you’ll need to edit this file.
 ///
-/// First, open your project’s ios/Runner.xcworkspace Xcode workspace file.
-/// Then, in the Project Navigator, open the Info.plist file under the Runner
-/// project’s Runner folder.
+/// First, open your project’s ios/Runner.xcworkspace Xcode workspace file. Then, in the Project Navigator, open the
+/// Info.plist file under the Runner project’s Runner folder.
 ///
-/// Next, select the Information Property List item, select Add Item from the
-/// Editor menu, then select Localizations from the pop-up menu.
+/// Next, select the Information Property List item, select Add Item from the Editor menu, then select Localizations
+/// from the pop-up menu.
 ///
-/// Select and expand the newly-created Localizations item then, for each
-/// locale your application supports, add a new item and select the locale
-/// you wish to add from the pop-up menu in the Value field. This list should
-/// be consistent with the languages listed in the AppLocalizations.supportedLocales
-/// property.
+/// Select and expand the newly-created Localizations item then, for each locale your application supports, add a new
+/// item and select the locale you wish to add from the pop-up menu in the Value field. This list should be consistent
+/// with the languages listed in the AppLocalizations.supportedLocales property.
 abstract class AppLocalizations {
   AppLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
@@ -71,16 +64,14 @@ abstract class AppLocalizations {
 
   static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
 
-  /// A list of this localizations delegate along with the default localizations
-  /// delegates.
+  /// A list of this localizations delegate along with the default localizations delegates.
   ///
   /// Returns a list of localizations delegates containing this delegate along with
-  /// GlobalMaterialLocalizations.delegate, GlobalCupertinoLocalizations.delegate,
-  /// and GlobalWidgetsLocalizations.delegate.
+  /// GlobalMaterialLocalizations.delegate, GlobalCupertinoLocalizations.delegate, and
+  /// GlobalWidgetsLocalizations.delegate.
   ///
-  /// Additional delegates can be added by appending to this list in
-  /// MaterialApp. This list does not have to be used at all if a custom list
-  /// of delegates is preferred or required.
+  /// Additional delegates can be added by appending to this list in MaterialApp. This list does not have to be used at
+  /// all if a custom list of delegates is preferred or required.
   static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
     delegate,
     GlobalMaterialLocalizations.delegate,
@@ -89,357 +80,454 @@ abstract class AppLocalizations {
   ];
 
   /// A list of this localizations delegate's supported locales.
-  static const List<Locale> supportedLocales = <Locale>[
-    Locale('en')
-  ];
+  static const List<Locale> supportedLocales = <Locale>[Locale('en')];
 
   /// Label for the ambient temperature of a probe.
   ///
-  /// In en, this message translates to:
-  /// **'Ambient'**
+  /// In en, this message translates to: **'Ambient'**
   String get ambientTemperature;
 
   /// Message indicating that the battery status of a probe is okay.
   ///
-  /// In en, this message translates to:
-  /// **'Battery OK'**
+  /// In en, this message translates to: **'Battery OK'**
   String get batteryStatusOk;
 
   /// Abbreviation for Celsius temperature.
   ///
-  /// In en, this message translates to:
-  /// **'C'**
+  /// In en, this message translates to: **'C'**
   String get celsiusAbbreviation;
 
   /// Label for the core temperature of a probe.
   ///
-  /// In en, this message translates to:
-  /// **'Core'**
+  /// In en, this message translates to: **'Core'**
   String get coreTemperature;
 
   /// Label for the debug information display mode.
   ///
-  /// In en, this message translates to:
-  /// **'Debug Info'**
+  /// In en, this message translates to: **'Debug Info'**
   String get debugInfo;
 
   /// Abbreviation for Fahrenheit temperature.
   ///
-  /// In en, this message translates to:
-  /// **'F'**
+  /// In en, this message translates to: **'F'**
   String get fahrenheitAbbreviation;
 
   /// Button label to hide the graphs in the temperature display.
   ///
-  /// In en, this message translates to:
-  /// **'Hide Graphs'**
+  /// In en, this message translates to: **'Hide Graphs'**
   String get hideGraphs;
 
   /// Warning message displayed when a probe's battery is low.
   ///
-  /// In en, this message translates to:
-  /// **'Battery low'**
+  /// In en, this message translates to: **'Battery low'**
   String get lowBatteryWarning;
 
   /// Label for the physical temperatures display mode.
   ///
-  /// In en, this message translates to:
-  /// **'Physical Temperatures'**
+  /// In en, this message translates to: **'Physical Temperatures'**
   String get physicalTemperatures;
 
   /// A generic label for a probe.
   ///
-  /// In en, this message translates to:
-  /// **'Probe'**
+  /// In en, this message translates to: **'Probe'**
   String get probe;
 
   /// Label for the Received Signal Strength Indicator (RSSI) of a probe.
   ///
-  /// In en, this message translates to:
-  /// **'RSSI'**
+  /// In en, this message translates to: **'RSSI'**
   String get rssi;
 
   /// Message displayed when the app is searching for nearby probes.
   ///
-  /// In en, this message translates to:
-  /// **'Searching for probes...'**
+  /// In en, this message translates to: **'Searching for probes...'**
   String get searchingForProbes;
 
   /// Button label to show the graphs in the temperature display.
   ///
-  /// In en, this message translates to:
-  /// **'Show Graphs'**
+  /// In en, this message translates to: **'Show Graphs'**
   String get showGraphs;
 
   /// Label for the surface temperature of a probe.
   ///
-  /// In en, this message translates to:
-  /// **'Surface'**
+  /// In en, this message translates to: **'Surface'**
   String get surfaceTemperature;
 
   /// Label for a temperature reading, where {number} is the probe number (e.g. T1-T8).
   ///
-  /// In en, this message translates to:
-  /// **'T{number}'**
+  /// In en, this message translates to: **'T{number}'**
   String temperatureTn(int number);
 
   /// Label for the list of thermometers, where {number} is the count of available thermometers.
   ///
-  /// In en, this message translates to:
-  /// **'Thermometers ({number})'**
+  /// In en, this message translates to: **'Thermometers ({number})'**
   String thermometers(int number);
 
   /// Label for the virtual temperatures display mode.
   ///
-  /// In en, this message translates to:
-  /// **'Virtual Temperatures'**
+  /// In en, this message translates to: **'Virtual Temperatures'**
   String get virtualTemperatures;
 
   /// Title for the temperature graph display.
   ///
-  /// In en, this message translates to:
-  /// **'Temperature Graph'**
+  /// In en, this message translates to: **'Temperature Graph'**
   String get temperatureGraph;
 
   /// Message displayed when no temperature data is available for graphing.
   ///
-  /// In en, this message translates to:
-  /// **'No data available'**
+  /// In en, this message translates to: **'No data available'**
   String get noDataAvailable;
 
   /// Message displayed while loading historical temperature data.
   ///
-  /// In en, this message translates to:
-  /// **'Loading historical data...'**
+  /// In en, this message translates to: **'Loading historical data...'**
   String get loadingHistoricalData;
 
   /// Message displayed while loading temperature logs from the probe.
   ///
-  /// In en, this message translates to:
-  /// **'Loading temperature logs...'**
+  /// In en, this message translates to: **'Loading temperature logs...'**
   String get loadingTemperatureLogs;
 
   /// Error message when no active cooking session is available for temperature logs.
   ///
-  /// In en, this message translates to:
-  /// **'No active cooking session found. Start a cooking session to view temperature logs.'**
+  /// In en, this message translates to: **'No active cooking session found. Start a cooking session to view temperature
+  /// logs.'**
   String get errorNoActiveSession;
 
   /// Error message when no temperature logs are available on the probe.
   ///
-  /// In en, this message translates to:
-  /// **'No temperature logs available. Ensure the probe is connected and logging temperatures.'**
+  /// In en, this message translates to: **'No temperature logs available. Ensure the probe is connected and logging
+  /// temperatures.'**
   String get errorNoLogsAvailable;
 
   /// Error message when the specified probe cannot be found.
   ///
-  /// In en, this message translates to:
-  /// **'Probe not found. Please check the connection and try again.'**
+  /// In en, this message translates to: **'Probe not found. Please check the connection and try again.'**
   String get errorProbeNotFound;
 
   /// Error message when no matching temperature log is found for the current session.
   ///
-  /// In en, this message translates to:
-  /// **'No matching temperature log found for the current session.'**
+  /// In en, this message translates to: **'No matching temperature log found for the current session.'**
   String get errorLogNotFound;
 
   /// Generic error message when temperature logs fail to load.
   ///
-  /// In en, this message translates to:
-  /// **'Unable to load temperature logs. Please try again.'**
+  /// In en, this message translates to: **'Unable to load temperature logs. Please try again.'**
   String get errorLoadingLogs;
 
   /// Button label to retry a failed operation.
   ///
-  /// In en, this message translates to:
-  /// **'Retry'**
+  /// In en, this message translates to: **'Retry'**
   String get retryButton;
 
   /// Message shown when historical data is not available because no cooking session has started.
   ///
-  /// In en, this message translates to:
-  /// **'Historical data will be available once cooking session starts'**
+  /// In en, this message translates to: **'Historical data will be available once cooking session starts'**
   String get historicalDataUnavailable;
 
   /// Button label to show only recent temperature data in the historical chart.
   ///
-  /// In en, this message translates to:
-  /// **'Recent'**
+  /// In en, this message translates to: **'Recent'**
   String get showRecentData;
 
   /// Button label to show all available temperature data in the historical chart.
   ///
-  /// In en, this message translates to:
-  /// **'All Data'**
+  /// In en, this message translates to: **'All Data'**
   String get showAllData;
 
   /// Label for the timespan control that lets users choose between recent and all data.
   ///
-  /// In en, this message translates to:
-  /// **'Show:'**
+  /// In en, this message translates to: **'Show:'**
   String get timespanControlLabel;
 
   /// Tooltip for the zoom out button in the temperature chart.
   ///
-  /// In en, this message translates to:
-  /// **'Zoom Out'**
+  /// In en, this message translates to: **'Zoom Out'**
   String get zoomOutTooltip;
 
   /// Tooltip for the zoom in button in the temperature chart.
   ///
-  /// In en, this message translates to:
-  /// **'Zoom In'**
+  /// In en, this message translates to: **'Zoom In'**
   String get zoomInTooltip;
 
   /// Tooltip for the reset view button in the temperature chart.
   ///
-  /// In en, this message translates to:
-  /// **'Reset View (or double-tap chart)'**
+  /// In en, this message translates to: **'Reset View (or double-tap chart)'**
   String get resetViewTooltip;
 
   /// Header for the target temperature control section.
   ///
-  /// In en, this message translates to:
-  /// **'Set Target Temperature'**
+  /// In en, this message translates to: **'Set Target Temperature'**
   String get setTargetTemperature;
 
   /// Instructions for using the target temperature control.
   ///
-  /// In en, this message translates to:
-  /// **'Select a food type for quick setup, or enter a custom temperature below.'**
+  /// In en, this message translates to: **'Select a food type for quick setup, or enter a custom temperature below.'**
   String get selectFoodTypeOrEnterCustom;
 
   /// Conjunction used to separate different options.
   ///
-  /// In en, this message translates to:
-  /// **'OR'**
+  /// In en, this message translates to: **'OR'**
   String get or;
 
   /// Button label to show the custom temperature input field.
   ///
-  /// In en, this message translates to:
-  /// **'Enter Custom Temperature'**
+  /// In en, this message translates to: **'Enter Custom Temperature'**
   String get enterCustomTemperature;
 
   /// Label for temperature input field.
   ///
-  /// In en, this message translates to:
-  /// **'Temperature'**
+  /// In en, this message translates to: **'Temperature'**
   String get temperature;
 
   /// Button label to confirm setting a temperature.
   ///
-  /// In en, this message translates to:
-  /// **'Set'**
+  /// In en, this message translates to: **'Set'**
   String get set;
 
   /// Error message when temperature field is empty.
   ///
-  /// In en, this message translates to:
-  /// **'Temperature is required'**
+  /// In en, this message translates to: **'Temperature is required'**
   String get temperatureRequired;
 
   /// Error message when temperature input is not a valid number.
   ///
-  /// In en, this message translates to:
-  /// **'Please enter a valid number'**
+  /// In en, this message translates to: **'Please enter a valid number'**
   String get invalidTemperature;
 
   /// Error message when temperature is outside valid cooking range.
   ///
-  /// In en, this message translates to:
-  /// **'Temperature must be between {min} and {max} {unit}'**
+  /// In en, this message translates to: **'Temperature must be between {min} and {max} {unit}'**
   String temperatureOutOfRange(int min, int max, String unit);
 
   /// Confirmation message when a food preset target temperature is set.
   ///
-  /// In en, this message translates to:
-  /// **'Target set: {food} at {temperature}{unit}'**
+  /// In en, this message translates to: **'Target set: {food} at {temperature}{unit}'**
   String targetTemperatureSet(String food, int temperature, String unit);
 
   /// Confirmation message when a custom target temperature is set.
   ///
-  /// In en, this message translates to:
-  /// **'Custom target set: {temperature}{unit}'**
+  /// In en, this message translates to: **'Custom target set: {temperature}{unit}'**
   String customTargetTemperatureSet(int temperature, String unit);
 
   /// Button label to clear input.
   ///
-  /// In en, this message translates to:
-  /// **'Clear'**
+  /// In en, this message translates to: **'Clear'**
   String get clear;
 
   /// Header for the food preset selection section.
   ///
-  /// In en, this message translates to:
-  /// **'Quick Presets'**
+  /// In en, this message translates to: **'Quick Presets'**
   String get quickPresets;
 
   /// Label for the currently set target temperature.
   ///
-  /// In en, this message translates to:
-  /// **'Target Temperature'**
+  /// In en, this message translates to: **'Target Temperature'**
   String get targetTemperature;
 
   /// Tooltip for the button to change the target temperature.
   ///
-  /// In en, this message translates to:
-  /// **'Change Target'**
+  /// In en, this message translates to: **'Change Target'**
   String get changeTarget;
 
   /// Header for the prediction information section.
   ///
-  /// In en, this message translates to:
-  /// **'Prediction Information'**
+  /// In en, this message translates to: **'Prediction Information'**
   String get predictionInfo;
 
   /// Label for the estimated time until target temperature is reached.
   ///
-  /// In en, this message translates to:
-  /// **'Estimated time remaining:'**
+  /// In en, this message translates to: **'Estimated time remaining:'**
   String get estimatedTimeRemaining;
 
   /// Placeholder text shown while prediction system is not yet integrated.
   ///
-  /// In en, this message translates to:
-  /// **'Calculating... (Prediction system integration pending)'**
+  /// In en, this message translates to: **'Calculating... (Prediction system integration pending)'**
   String get predictionPlaceholder;
 
   /// Label for the current cooking progress information.
   ///
-  /// In en, this message translates to:
-  /// **'Current progress:'**
+  /// In en, this message translates to: **'Current progress:'**
   String get currentProgress;
 
   /// Placeholder text shown while progress tracking is not yet integrated.
   ///
-  /// In en, this message translates to:
-  /// **'Monitoring temperature... (Progress tracking pending)'**
+  /// In en, this message translates to: **'Monitoring temperature... (Progress tracking pending)'**
   String get progressPlaceholder;
 
   /// Title for the predictions screen.
   ///
-  /// In en, this message translates to:
-  /// **'Predictions'**
+  /// In en, this message translates to: **'Predictions'**
   String get predictions;
 
   /// Label for the probe selection dropdown.
   ///
-  /// In en, this message translates to:
-  /// **'Select Probe'**
+  /// In en, this message translates to: **'Select Probe'**
   String get selectProbe;
 
   /// Message shown when no probes are available for predictions.
   ///
-  /// In en, this message translates to:
-  /// **'No Probes Available'**
+  /// In en, this message translates to: **'No Probes Available'**
   String get noProbesAvailable;
 
   /// Instructions shown when no probes are available.
   ///
-  /// In en, this message translates to:
-  /// **'Please connect a probe from the home screen first.'**
+  /// In en, this message translates to: **'Please connect a probe from the home screen first.'**
   String get connectProbeFirst;
+
+  /// Title for the temperatures tab.
+  ///
+  /// In en, this message translates to: **'Temperatures'**
+  String get temperatures;
+
+  /// Title for the graphs tab.
+  ///
+  /// In en, this message translates to: **'Graphs'**
+  String get graphs;
+
+  /// Title for the about tab.
+  ///
+  /// In en, this message translates to: **'About'**
+  String get about;
+
+  /// Instructions for making probe discoverable.
+  ///
+  /// In en, this message translates to: **'Make sure your probe is powered on and nearby.'**
+  String get makeProbeVisible;
+
+  /// Title for virtual temperature sensors section.
+  ///
+  /// In en, this message translates to: **'Virtual Sensors'**
+  String get virtualSensors;
+
+  /// Title for physical temperature sensors section.
+  ///
+  /// In en, this message translates to: **'Physical Sensors'**
+  String get physicalSensors;
+
+  /// Label for current temperature reading.
+  ///
+  /// In en, this message translates to: **'Current Reading'**
+  String get currentReading;
+
+  /// Label for minimum temperature.
+  ///
+  /// In en, this message translates to: **'Min'**
+  String get minTemperature;
+
+  /// Label for maximum temperature.
+  ///
+  /// In en, this message translates to: **'Max'**
+  String get maxTemperature;
+
+  /// Label for average temperature.
+  ///
+  /// In en, this message translates to: **'Avg'**
+  String get avgTemperature;
+
+  /// Title for probe details section.
+  ///
+  /// In en, this message translates to: **'Probe Details'**
+  String get probeDetails;
+
+  /// Label for probe serial number.
+  ///
+  /// In en, this message translates to: **'Serial Number'**
+  String get serialNumber;
+
+  /// Label for probe MAC address.
+  ///
+  /// In en, this message translates to: **'MAC Address'**
+  String get macAddress;
+
+  /// Label for probe ID.
+  ///
+  /// In en, this message translates to: **'Probe ID'**
+  String get probeId;
+
+  /// Label for battery status.
+  ///
+  /// In en, this message translates to: **'Battery Status'**
+  String get batteryStatus;
+
+  /// Label for signal strength.
+  ///
+  /// In en, this message translates to: **'Signal Strength'**
+  String get signalStrength;
+
+  /// Title for plugin information section.
+  ///
+  /// In en, this message translates to: **'Plugin Information'**
+  String get pluginInformation;
+
+  /// Label for version number.
+  ///
+  /// In en, this message translates to: **'Version'**
+  String get version;
+
+  /// Label for features list.
+  ///
+  /// In en, this message translates to: **'Features'**
+  String get features;
+
+  /// Label for name field.
+  ///
+  /// In en, this message translates to: **'Name'**
+  String get name;
+
+  /// Label for platform field.
+  ///
+  /// In en, this message translates to: **'Platform'**
+  String get platform;
+
+  /// Label for unknown or unavailable values.
+  ///
+  /// In en, this message translates to: **'Unknown'**
+  String get unknown;
+
+  /// Label shown while data is loading.
+  ///
+  /// In en, this message translates to: **'Loading...'**
+  String get loading;
+
+  /// Feature description for real-time monitoring.
+  ///
+  /// In en, this message translates to: **'Real-time temperature monitoring'**
+  String get featureRealtimeMonitoring;
+
+  /// Feature description for virtual sensors.
+  ///
+  /// In en, this message translates to: **'Virtual temperature sensors (core, surface, ambient)'**
+  String get featureVirtualSensors;
+
+  /// Feature description for physical sensors.
+  ///
+  /// In en, this message translates to: **'Physical sensor readings (T1-T8)'**
+  String get featurePhysicalSensors;
+
+  /// Feature description for historical graphs.
+  ///
+  /// In en, this message translates to: **'Historical temperature graphs'**
+  String get featureHistoricalGraphs;
+
+  /// Feature description for predictions.
+  ///
+  /// In en, this message translates to: **'Cooking time predictions'**
+  String get featurePredictions;
+
+  /// Feature description for battery monitoring.
+  ///
+  /// In en, this message translates to: **'Battery status monitoring'**
+  String get featureBatteryMonitoring;
+
+  /// Feature description for Bluetooth.
+  ///
+  /// In en, this message translates to: **'Bluetooth Low Energy connectivity'**
+  String get featureBluetooth;
+
+  /// Feature description for cross-platform support.
+  ///
+  /// In en, this message translates to: **'Cross-platform support (iOS, Android, macOS)'**
+  String get featureCrossPlatform;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
@@ -458,17 +546,16 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
-
-
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'en': return AppLocalizationsEn();
+    case 'en':
+      return AppLocalizationsEn();
   }
 
   throw FlutterError(
     'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
     'an issue with the localizations generation tool. Please file an issue '
     'on GitHub with a reproducible sample app and the gen-l10n configuration '
-    'that was used.'
+    'that was used.',
   );
 }

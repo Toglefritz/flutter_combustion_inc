@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/widgets.dart';
 
+import 'ripple_loader_item.dart';
+
 /// A Flutter widget that displays a ripple loader animation.
 class RippleLoader extends StatefulWidget {
   /// Creates a [RippleLoader] widget.
@@ -80,25 +82,6 @@ class RippleLoaderState extends State<RippleLoader> with SingleTickerProviderSta
     );
   }
 
-  /// Builds the item widget for the ripple loader.
-  Widget _itemBuilder(int index) {
-    return SizedBox.fromSize(
-      size: Size.square(widget.size),
-      child:
-          widget.itemBuilder != null
-              ? widget.itemBuilder!(context, index)
-              : DecoratedBox(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: widget.color!,
-                    width: widget.borderWidth,
-                  ),
-                ),
-              ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -108,14 +91,26 @@ class RippleLoaderState extends State<RippleLoader> with SingleTickerProviderSta
             opacity: 1.0 - _animation1.value,
             child: Transform.scale(
               scale: _animation1.value,
-              child: _itemBuilder(0),
+              child: RippleLoaderItem(
+                size: widget.size,
+                color: widget.color,
+                borderWidth: widget.borderWidth,
+                itemBuilder: widget.itemBuilder,
+                index: 0,
+              ),
             ),
           ),
           Opacity(
             opacity: 1.0 - _animation2.value,
             child: Transform.scale(
               scale: _animation2.value,
-              child: _itemBuilder(1),
+              child: RippleLoaderItem(
+                size: widget.size,
+                color: widget.color,
+                borderWidth: widget.borderWidth,
+                itemBuilder: widget.itemBuilder,
+                index: 1,
+              ),
             ),
           ),
         ],

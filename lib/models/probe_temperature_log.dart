@@ -13,12 +13,10 @@ class ProbeTemperatureLog {
 
   /// Creates a [ProbeTemperatureLog] from a [startTime] and a stream of raw data batches.
   ///
-  /// The [rawStream] should emit lists of maps, where each map represents a temperature data point.
-  /// The [startTime] is provided separately from the stream.
+  /// The [rawStream] should emit lists of maps, where each map represents a temperature data point. The [startTime] is
+  /// provided separately from the stream.
   ProbeTemperatureLog({
     required Stream<List<Map<String, dynamic>>> rawStream,
     required this.startTime,
-  }) : dataStream = rawStream
-           .expand((batch) => batch)
-           .map(ProbeLogDataPoint.fromMap);
+  }) : dataStream = rawStream.expand((batch) => batch).map(ProbeLogDataPoint.fromMap);
 }

@@ -180,7 +180,19 @@ class MethodChannelFlutterCombustionInc extends FlutterCombustionIncPlatform {
 
     return batteryStatusEventChannel
         .receiveBroadcastStream({'type': 'batteryStatus'})
-        .map((event) => BatteryStatus.fromInt(event as int));
+        .map((event) => BatteryStatus.fromInt(event as int))
+        .handleError((Object error) {
+          // Suppress "No active stream to cancel" errors during hot reload
+          if (error is PlatformException &&
+              error.code == 'error' &&
+              error.message?.contains('No active stream') == true) {
+            debugPrint(
+              'Ignoring stream cancellation error during hot reload: ${error.message}',
+            );
+            return;
+          }
+          throw error;
+        });
   }
 
   @override
@@ -193,8 +205,8 @@ class MethodChannelFlutterCombustionInc extends FlutterCombustionIncPlatform {
     // Convert the result to a list of doubles
     final List<double> values = List<double>.from(result as Iterable);
 
-    // Convert the list to a ProbeTemperatures object. This assumes the list has exactly 8 elements and that they
-    // are in the correct order as per the ProbeTemperatures class.
+    // Convert the list to a ProbeTemperatures object. This assumes the list has exactly 8 elements and that they are in
+    // the correct order as per the ProbeTemperatures class.
     return ProbeTemperatures(
       t1: values[0],
       t2: values[1],
@@ -280,6 +292,14 @@ class MethodChannelFlutterCombustionInc extends FlutterCombustionIncPlatform {
       'getTemperatureLog',
       {'identifier': identifier},
     );
+
+    // Handle null result (no log available)
+    if (rawResult == null) {
+      return ProbeTemperatureLog(
+        startTime: null,
+        rawStream: const Stream<List<Map<String, dynamic>>>.empty(),
+      );
+    }
 
     final Map<String, dynamic> result = Map<String, dynamic>.from(
       rawResult as Map,

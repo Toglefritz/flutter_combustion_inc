@@ -332,5 +332,160 @@
   "@connectProbeFirst": {
     "description": "Instructions shown when no probes are available.",
     "placeholders": {}
+  },
+  "temperatures": "Temperatures",
+  "@temperatures": {
+    "description": "Title for the temperatures tab.",
+    "placeholders": {}
+  },
+  "graphs": "Graphs",
+  "@graphs": {
+    "description": "Title for the graphs tab.",
+    "placeholders": {}
+  },
+  "about": "About",
+  "@about": {
+    "description": "Title for the about tab.",
+    "placeholders": {}
+  },
+  "makeProbeVisible": "Make sure your probe is powered on and nearby.",
+  "@makeProbeVisible": {
+    "description": "Instructions for making probe discoverable.",
+    "placeholders": {}
+  },
+  "virtualSensors": "Virtual Sensors",
+  "@virtualSensors": {
+    "description": "Title for virtual temperature sensors section.",
+    "placeholders": {}
+  },
+  "physicalSensors": "Physical Sensors",
+  "@physicalSensors": {
+    "description": "Title for physical temperature sensors section.",
+    "placeholders": {}
+  },
+  "currentReading": "Current Reading",
+  "@currentReading": {
+    "description": "Label for current temperature reading.",
+    "placeholders": {}
+  },
+  "minTemperature": "Min",
+  "@minTemperature": {
+    "description": "Label for minimum temperature.",
+    "placeholders": {}
+  },
+  "maxTemperature": "Max",
+  "@maxTemperature": {
+    "description": "Label for maximum temperature.",
+    "placeholders": {}
+  },
+  "avgTemperature": "Avg",
+  "@avgTemperature": {
+    "description": "Label for average temperature.",
+    "placeholders": {}
+  },
+  "probeDetails": "Probe Details",
+  "@probeDetails": {
+    "description": "Title for probe details section.",
+    "placeholders": {}
+  },
+  "serialNumber": "Serial Number",
+  "@serialNumber": {
+    "description": "Label for probe serial number.",
+    "placeholders": {}
+  },
+  "macAddress": "MAC Address",
+  "@macAddress": {
+    "description": "Label for probe MAC address.",
+    "placeholders": {}
+  },
+  "probeId": "Probe ID",
+  "@probeId": {
+    "description": "Label for probe ID.",
+    "placeholders": {}
+  },
+  "batteryStatus": "Battery Status",
+  "@batteryStatus": {
+    "description": "Label for battery status.",
+    "placeholders": {}
+  },
+  "signalStrength": "Signal Strength",
+  "@signalStrength": {
+    "description": "Label for signal strength.",
+    "placeholders": {}
+  },
+  "pluginInformation": "Plugin Information",
+  "@pluginInformation": {
+    "description": "Title for plugin information section.",
+    "placeholders": {}
+  },
+  "version": "Version",
+  "@version": {
+    "description": "Label for version number.",
+    "placeholders": {}
+  },
+  "features": "Features",
+  "@features": {
+    "description": "Label for features list.",
+    "placeholders": {}
+  },
+  "name": "Name",
+  "@name": {
+    "description": "Label for name field.",
+    "placeholders": {}
+  },
+  "platform": "Platform",
+  "@platform": {
+    "description": "Label for platform field.",
+    "placeholders": {}
+  },
+  "unknown": "Unknown",
+  "@unknown": {
+    "description": "Label for unknown or unavailable values.",
+    "placeholders": {}
+  },
+  "loading": "Loading...",
+  "@loading": {
+    "description": "Label shown while data is loading.",
+    "placeholders": {}
+  },
+  "featureRealtimeMonitoring": "Real-time temperature monitoring",
+  "@featureRealtimeMonitoring": {
+    "description": "Feature description for real-time monitoring.",
+    "placeholders": {}
+  },
+  "featureVirtualSensors": "Virtual temperature sensors (core, surface, ambient)",
+  "@featureVirtualSensors": {
+    "description": "Feature description for virtual sensors.",
+    "placeholders": {}
+  },
+  "featurePhysicalSensors": "Physical sensor readings (T1-T8)",
+  "@featurePhysicalSensors": {
+    "description": "Feature description for physical sensors.",
+    "placeholders": {}
+  },
+  "featureHistoricalGraphs": "Historical temperature graphs",
+  "@featureHistoricalGraphs": {
+    "description": "Feature description for historical graphs.",
+    "placeholders": {}
+  },
+  "featurePredictions": "Cooking time predictions",
+  "@featurePredictions": {
+    "description": "Feature description for predictions.",
+    "placeholders": {}
+  },
+  "featureBatteryMonitoring": "Battery status monitoring",
+  "@featureBatteryMonitoring": {
+    "description": "Feature description for battery monitoring.",
+    "placeholders": {}
+  },
+  "featureBluetooth": "Bluetooth Low Energy connectivity",
+  "@featureBluetooth": {
+    "description": "Feature description for Bluetooth.",
+    "placeholders": {}
+  },
+  "featureCrossPlatform": "Cross-platform support (iOS, Android, macOS)",
+  "@featureCrossPlatform": {
+    "description": "Feature description for cross-platform support.",
+    "placeholders": {}
   }
 }

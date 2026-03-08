@@ -94,9 +94,7 @@ class Probe {
   ///
   /// Throws a `PlatformException` if retrieval fails.
   Future<VirtualTemperatures> get virtualTemperatures async {
-    final Map<String, double> result = await FlutterCombustionIncPlatform
-        .instance
-        .getVirtualTemperatures(identifier);
+    final Map<String, double> result = await FlutterCombustionIncPlatform.instance.getVirtualTemperatures(identifier);
 
     return VirtualTemperatures.fromMap(result);
   }
@@ -107,9 +105,7 @@ class Probe {
   ///
   /// Throws a `PlatformException` if the stream cannot be established.
   Stream<VirtualTemperatures> get virtualTemperatureStream {
-    return FlutterCombustionIncPlatform.instance
-        .virtualTemperatureStream(identifier)
-        .map(VirtualTemperatures.fromMap);
+    return FlutterCombustionIncPlatform.instance.virtualTemperatureStream(identifier).map(VirtualTemperatures.fromMap);
   }
 
   /// Gets the battery status of the probe.
@@ -118,8 +114,7 @@ class Probe {
   ///
   /// Throws a `PlatformException` if retrieval fails.
   Future<BatteryStatus> get batteryStatus async {
-    final String status = await FlutterCombustionIncPlatform.instance
-        .getBatteryStatus(identifier);
+    final String status = await FlutterCombustionIncPlatform.instance.getBatteryStatus(identifier);
 
     return BatteryStatus.values.firstWhere(
       (e) => e.name.toLowerCase() == status.toLowerCase(),
@@ -163,8 +158,8 @@ class Probe {
 
   /// Provides a stream of the percentage of temperature logs that have been synced from the probe.
   ///
-  /// The stream emits an [int] value between 0 and 100 indicating the percentage of log data that has been
-  /// successfully synced from the probe to the app.
+  /// The stream emits an [int] value between 0 and 100 indicating the percentage of log data that has been successfully
+  /// synced from the probe to the app.
   ///
   /// Throws a `PlatformException` if the stream cannot be established.
   Stream<double> get logSyncPercentageStream {
@@ -173,8 +168,8 @@ class Probe {
     );
   }
 
-  /// Get a temperature log for the probe. The [ProbeTemperatureLog] will contain a stream of data points within the
-  /// log session.
+  /// Get a temperature log for the probe. The [ProbeTemperatureLog] will contain a stream of data points within the log
+  /// session.
   Future<ProbeTemperatureLog> get temperatureLog async {
     return FlutterCombustionIncPlatform.instance.getTemperatureLog(identifier);
   }
@@ -188,20 +183,19 @@ class Probe {
     return FlutterCombustionIncPlatform.instance.sessionInfoStream(identifier);
   }
 
-  /// Gets the current session information for this probe synchronously.
-  /// Used for debugging session availability issues.
+  /// Gets the current session information for this probe synchronously. Used for debugging session availability issues.
   Future<Map<String, dynamic>> get sessionInfo async {
     return FlutterCombustionIncPlatform.instance.getSessionInfo(identifier);
   }
 
   /// Provides a stream of temperature prediction information for this probe.
   ///
-  /// This stream emits [PredictionInfo] objects containing estimated time to reach
-  /// target temperature and other cooking predictions. Predictions are only available
-  /// after a target temperature has been set using DeviceManager.setTargetTemperature.
+  /// This stream emits [PredictionInfo] objects containing estimated time to reach target temperature and other cooking
+  /// predictions. Predictions are only available after a target temperature has been set using
+  /// DeviceManager.setTargetTemperature.
   ///
-  /// The stream will emit updates whenever the probe's prediction calculations
-  /// change based on current temperature trends and cooking conditions.
+  /// The stream will emit updates whenever the probe's prediction calculations change based on current temperature
+  /// trends and cooking conditions.
   ///
   /// Returns Stream of prediction information updates
   Stream<PredictionInfo> get predictionStream {
