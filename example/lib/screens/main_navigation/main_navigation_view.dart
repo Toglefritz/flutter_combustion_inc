@@ -16,7 +16,7 @@ import 'main_navigation_route.dart';
 /// * Graphs - Historical temperature data visualization
 /// * Predictions - Cooking time predictions and target temperature
 /// * RSSI - Bluetooth signal strength tracking and testing
-/// * About - Plugin information and probe details
+/// * Settings - App settings and plugin information
 class MainNavigationView extends StatelessWidget {
   /// Reference to the controller.
   final MainNavigationController state;
@@ -43,7 +43,7 @@ class MainNavigationView extends StatelessWidget {
         onProbeSelected: state.onProbeSelected,
       ),
       RssiRoute(key: state.rssiKey),
-      AboutView(
+      SettingsView(
         probes: state.probes,
         selectedProbe: state.selectedProbe,
       ),
@@ -80,9 +80,9 @@ class MainNavigationView extends StatelessWidget {
             label: AppLocalizations.of(context)!.rssiTracking,
           ),
           NavigationDestination(
-            icon: const Icon(Icons.info_outlined),
-            selectedIcon: const Icon(Icons.info),
-            label: AppLocalizations.of(context)!.about,
+            icon: const Icon(Icons.settings_outlined),
+            selectedIcon: const Icon(Icons.settings),
+            label: AppLocalizations.of(context)!.settings,
           ),
         ],
       ),

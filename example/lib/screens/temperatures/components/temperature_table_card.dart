@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_combustion_inc/models/probe.dart';
 
 import '../../../l10n/app_localizations.dart';
+import '../../../services/temperature_unit_setting/models/temperature_unit.dart';
+import '../../../services/temperature_unit_setting/temperature_unit_setting.dart';
 import '../../../values/inset.dart';
 import '../models/temperatures_table_mode.dart';
 
@@ -174,6 +176,9 @@ class _VirtualTemperaturesTable extends StatelessWidget {
     final TextStyle? textStyle =
         isHeader ? theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold) : theme.textTheme.bodyLarge;
 
+    final double displayTemp = _convertTemperature(temperature);
+    final String unit = _getUnitSymbol();
+
     return TableRow(
       children: [
         Padding(
@@ -186,13 +191,23 @@ class _VirtualTemperaturesTable extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(Inset.small),
           child: Text(
-            '${temperature.toStringAsFixed(1)}°C',
+            '${displayTemp.toStringAsFixed(1)}$unit',
             style: textStyle,
             textAlign: TextAlign.right,
           ),
         ),
       ],
     );
+  }
+
+  /// Converts temperature from Celsius to the user's preferred unit.
+  double _convertTemperature(double celsius) {
+    return TemperatureUnitSetting.currentUnit == TemperatureUnit.celsius ? celsius : (celsius * 9 / 5) + 32;
+  }
+
+  /// Gets the temperature unit symbol.
+  String _getUnitSymbol() {
+    return TemperatureUnitSetting.currentUnit == TemperatureUnit.celsius ? '°C' : '°F';
   }
 }
 
@@ -264,6 +279,9 @@ class _PhysicalTemperaturesTable extends StatelessWidget {
     final TextStyle? textStyle =
         isHeader ? theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold) : theme.textTheme.bodyLarge;
 
+    final double displayTemp = _convertTemperature(temperature);
+    final String unit = _getUnitSymbol();
+
     return TableRow(
       children: [
         Padding(
@@ -276,12 +294,22 @@ class _PhysicalTemperaturesTable extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(Inset.small),
           child: Text(
-            '${temperature.toStringAsFixed(1)}°C',
+            '${displayTemp.toStringAsFixed(1)}$unit',
             style: textStyle,
             textAlign: TextAlign.right,
           ),
         ),
       ],
     );
+  }
+
+  /// Converts temperature from Celsius to the user's preferred unit.
+  double _convertTemperature(double celsius) {
+    return TemperatureUnitSetting.currentUnit == TemperatureUnit.celsius ? celsius : (celsius * 9 / 5) + 32;
+  }
+
+  /// Gets the temperature unit symbol.
+  String _getUnitSymbol() {
+    return TemperatureUnitSetting.currentUnit == TemperatureUnit.celsius ? '°C' : '°F';
   }
 }

@@ -79,12 +79,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loadingTemperatureLogs => 'Loading temperature logs...';
 
   @override
-  String get errorNoActiveSession =>
-      'No active cooking session found. Start a cooking session to view temperature logs.';
+  String get errorNoActiveSession => 'No active cooking session found. Start a cooking session to view temperature logs.';
 
   @override
-  String get errorNoLogsAvailable =>
-      'No temperature logs available. Ensure the probe is connected and logging temperatures.';
+  String get errorNoLogsAvailable => 'No temperature logs available. Ensure the probe is connected and logging temperatures.';
 
   @override
   String get errorProbeNotFound => 'Probe not found. Please check the connection and try again.';
@@ -205,6 +203,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get about => 'About';
+
+  @override
+  String get settings => 'Settings';
+
+  @override
+  String get temperatureUnit => 'Temperature Unit';
+
+  @override
+  String get celsius => 'Celsius (°C)';
+
+  @override
+  String get fahrenheit => 'Fahrenheit (°F)';
 
   @override
   String get makeProbeVisible => 'Make sure your probe is powered on and nearby.';

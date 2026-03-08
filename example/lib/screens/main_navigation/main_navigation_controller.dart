@@ -61,6 +61,8 @@ class MainNavigationController extends State<MainNavigationRoute> {
   }
 
   /// Handles tab selection changes.
+  ///
+  /// Triggers a rebuild to ensure all views reflect current settings (e.g., temperature unit).
   void onTabChanged(int index) {
     setState(() {
       currentTabIndex = index;

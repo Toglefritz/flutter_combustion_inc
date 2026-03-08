@@ -353,6 +353,26 @@
     "description": "Title for the about tab.",
     "placeholders": {}
   },
+  "settings": "Settings",
+  "@settings": {
+    "description": "Title for the settings screen.",
+    "placeholders": {}
+  },
+  "temperatureUnit": "Temperature Unit",
+  "@temperatureUnit": {
+    "description": "Label for temperature unit setting.",
+    "placeholders": {}
+  },
+  "celsius": "Celsius (°C)",
+  "@celsius": {
+    "description": "Label for Celsius temperature unit option.",
+    "placeholders": {}
+  },
+  "fahrenheit": "Fahrenheit (°F)",
+  "@fahrenheit": {
+    "description": "Label for Fahrenheit temperature unit option.",
+    "placeholders": {}
+  },
   "makeProbeVisible": "Make sure your probe is powered on and nearby.",
   "@makeProbeVisible": {
     "description": "Instructions for making probe discoverable.",
