@@ -86,9 +86,14 @@ public class ProbePredictionManager {
     /// an update is sent to Flutter with the latest prediction data.
     ///
     /// Prediction data includes:
-    /// * estimatedTimeSeconds - Seconds remaining until target temperature
+    /// * estimatedTimeSeconds - Seconds remaining until target temperature (nullable)
     /// * targetTemperatureCelsius - The configured target temperature
-    /// * currentCoreTempCelsius - Current core temperature reading
+    /// * currentCoreTempCelsius - Current core temperature reading from virtual sensors
+    /// * estimatedCoreTemperature - SDK's estimated core temperature for prediction
+    /// * percentThroughCook - Integer percentage of cooking progress (0-100)
+    /// * predictionState - Current state (probeNotInserted, probeInserted, cooking, predicting, etc.)
+    /// * predictionMode - Prediction mode (none, timeToRemoval, removalAndResting, reserved)
+    /// * predictionType - Type of prediction (none, removal, resting, reserved)
     /// * isReliable - Whether the prediction is considered reliable
     /// * timestampMillis - Timestamp of the prediction in milliseconds
     ///
@@ -122,6 +127,14 @@ public class ProbePredictionManager {
                     "estimatedTimeSeconds": info.secondsRemaining ?? NSNull(),
                     "targetTemperatureCelsius": info.predictionSetPointTemperature,
                     "currentCoreTempCelsius": probe.virtualTemperatures?.coreTemperature ?? NSNull(),
+                    "estimatedCoreTemperature": info.estimatedCoreTemperature,
+                    "percentThroughCook": info.percentThroughCook,
+                    "predictionState": info.predictionState.toString(),
+                    "predictionStateRaw": info.predictionState.rawValue,
+                    "predictionMode": info.predictionMode.toString(),
+                    "predictionModeRaw": info.predictionMode.rawValue,
+                    "predictionType": info.predictionType.toString(),
+                    "predictionTypeRaw": info.predictionType.rawValue,
                     "isReliable": isReliable,
                     "timestampMillis": Int64(Date().timeIntervalSince1970 * 1000)
                 ]
