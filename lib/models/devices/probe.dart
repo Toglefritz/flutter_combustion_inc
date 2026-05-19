@@ -4,6 +4,7 @@ import '../ble_data/probe_temperature_log.dart';
 import '../ble_data/probe_temperatures.dart';
 import '../ble_data/virtual_temperatures.dart';
 import '../prediction/prediction_info.dart';
+import 'connection_state.dart';
 import 'device.dart';
 
 /// Represents a Combustion Inc. temperature probe.
@@ -78,6 +79,17 @@ class Probe extends Device {
     await FlutterCombustionIncPlatform.instance.disconnectFromProbe(identifier);
   }
 
+  /// Emits [DeviceConnectionState] values whenever the probe's BLE connection
+  /// state transitions (disconnected, connecting, connected, failed).
+  Stream<DeviceConnectionState> get connectionStateStream {
+    return FlutterCombustionIncPlatform.instance
+        .connectionStateStream(identifier)
+        .map((state) {
+          connectionState = state;
+          return state;
+        });
+  }
+
   /// Fetches the current RSSI value from the native layer and updates [rssi].
   Future<int> getRssi() async {
     final int result = await FlutterCombustionIncPlatform.instance.getRssi(
@@ -127,7 +139,7 @@ class Probe extends Device {
   Future<BatteryStatus> get batteryStatus async {
     final String status = await FlutterCombustionIncPlatform.instance
         .getBatteryStatus(identifier);
-        
+
     return BatteryStatus.values.firstWhere(
       (e) => e.name.toLowerCase() == status.toLowerCase(),
     );

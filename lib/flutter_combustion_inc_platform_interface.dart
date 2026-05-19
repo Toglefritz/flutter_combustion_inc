@@ -4,6 +4,7 @@ import 'flutter_combustion_inc_method_channel.dart';
 import 'models/ble_data/battery_status.dart';
 import 'models/ble_data/probe_temperature_log.dart';
 import 'models/ble_data/probe_temperatures.dart';
+import 'models/devices/connection_state.dart';
 import 'models/prediction/prediction_info.dart';
 
 /// The platform interface that defines the contract for all communication between Dart and the native platforms in the
@@ -133,4 +134,10 @@ abstract class FlutterCombustionIncPlatform extends PlatformInterface {
   /// @param identifier The unique identifier of the probe
   /// @returns Stream of prediction information updates
   Stream<PredictionInfo> predictionStream(String identifier);
+
+  /// Provides a stream of connection state changes for the specified probe.
+  ///
+  /// Emits [DeviceConnectionState] values whenever the probe's BLE connection
+  /// state transitions (disconnected, connecting, connected, failed).
+  Stream<DeviceConnectionState> connectionStateStream(String identifier);
 }

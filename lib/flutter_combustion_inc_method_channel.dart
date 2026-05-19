@@ -7,6 +7,7 @@ import 'flutter_combustion_inc_platform_interface.dart';
 import 'models/ble_data/battery_status.dart';
 import 'models/ble_data/probe_temperature_log.dart';
 import 'models/ble_data/probe_temperatures.dart';
+import 'models/devices/connection_state.dart';
 import 'models/prediction/prediction_info.dart';
 
 /// An implementation of [FlutterCombustionIncPlatform] that uses method channels.
@@ -69,6 +70,12 @@ class MethodChannelFlutterCombustionInc extends FlutterCombustionIncPlatform {
     'flutter_combustion_inc_predictions',
   );
 
+  /// The event channel used to stream connection state changes.
+  @visibleForTesting
+  final EventChannel connectionStateEventChannel = const EventChannel(
+    'flutter_combustion_inc_connection_state',
+  );
+
   /// A stream that emits a list of discovered probes.
   Stream<List<Map<String, dynamic>>>? _probeListStream;
 
@@ -86,6 +93,9 @@ class MethodChannelFlutterCombustionInc extends FlutterCombustionIncPlatform {
 
   /// A map of streams for prediction updates, keyed by probe identifier.
   final Map<String, Stream<PredictionInfo>> _predictionStreams = {};
+
+  /// A map of streams for connection state updates, keyed by probe identifier.
+  final Map<String, Stream<DeviceConnectionState>> _connectionStateStreams = {};
 
   @override
   Future<void> initBluetooth() async {
@@ -391,6 +401,21 @@ class MethodChannelFlutterCombustionInc extends FlutterCombustionIncPlatform {
             );
             return PredictionInfo.fromMap(data);
           });
+    });
+  }
+
+  @override
+  Stream<DeviceConnectionState> connectionStateStream(String identifier) {
+    return _connectionStateStreams.putIfAbsent(identifier, () {
+      unawaited(
+        methodChannel.invokeMethod('startConnectionStateStream', {
+          'identifier': identifier,
+        }),
+      );
+
+      return connectionStateEventChannel
+          .receiveBroadcastStream({'type': 'connectionState'})
+          .map((event) => DeviceConnectionState.fromInt(event as int));
     });
   }
 }

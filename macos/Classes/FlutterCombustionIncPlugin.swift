@@ -66,6 +66,12 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
     /// Handles setting target temperatures and streaming prediction
     /// information including estimated time to target.
     private let predictionManager = ProbePredictionManager()
+
+    /// Manager for connection state streaming.
+    ///
+    /// Observes probe connection state changes via Combine and streams
+    /// updates to Flutter.
+    private let connectionStateManager = ProbeConnectionStateManager()
     
     /// Cached probe identifiers for stream operations.
     ///
@@ -166,6 +172,13 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
             binaryMessenger: registrar.messenger
         )
         predictionChannel.setStreamHandler(instance)
+
+        // Event channel for connection state changes
+        let connectionStateChannel = FlutterEventChannel(
+            name: "flutter_combustion_inc_connection_state",
+            binaryMessenger: registrar.messenger
+        )
+        connectionStateChannel.setStreamHandler(instance)
     }
     
     /// Handles method channel calls from Flutter.
@@ -215,6 +228,12 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
             
         case "connectToProbe":
             handleConnectToProbe(call: call, result: result)
+
+        case "disconnectFromProbe":
+            handleDisconnectFromProbe(call: call, result: result)
+
+        case "startConnectionStateStream":
+            handleStartConnectionStateStream(call: call, result: result)
             
         case "startVirtualTemperatureStream":
             handleStartVirtualTemperatureStream(call: call, result: result)
@@ -379,6 +398,51 @@ extension FlutterCombustionIncPlugin {
         }
         
         connectionManager.connect(to: probe)
+        result(nil)
+    }
+
+    /// Disconnects from a specific probe.
+    ///
+    /// - Parameters:
+    ///   - call: Method call containing probe identifier
+    ///   - result: Flutter result callback (returns nil on success or error)
+    private func handleDisconnectFromProbe(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        guard let args = call.arguments as? [String: Any],
+              let identifier = args["identifier"] as? String,
+              let probe = connectionManager.getProbe(identifier: identifier) else {
+            result(FlutterError(
+                code: "INVALID_ARGUMENTS",
+                message: "Missing or invalid probe identifier",
+                details: nil
+            ))
+            return
+        }
+
+        probe.disconnect()
+        result(nil)
+    }
+
+    /// Starts streaming connection state updates for a probe.
+    ///
+    /// - Parameters:
+    ///   - call: Method call containing probe identifier
+    ///   - result: Flutter result callback (returns nil on success or error)
+    private func handleStartConnectionStateStream(
+        call: FlutterMethodCall,
+        result: @escaping FlutterResult
+    ) {
+        guard let args = call.arguments as? [String: Any],
+              let identifier = args["identifier"] as? String,
+              let _ = connectionManager.getProbe(identifier: identifier) else {
+            result(FlutterError(
+                code: "INVALID_ARGUMENTS",
+                message: "Missing or invalid probe identifier",
+                details: nil
+            ))
+            return
+        }
+
+        pendingStreamProbes["connectionState"] = identifier
         result(nil)
     }
     
@@ -796,6 +860,12 @@ extension FlutterCombustionIncPlugin: FlutterStreamHandler {
                 for: probe,
                 eventSink: events
             )
+
+        case "connectionState":
+            connectionStateManager.startConnectionStateStream(
+                for: probe,
+                eventSink: events
+            )
             
         default:
             return FlutterError(
@@ -847,6 +917,9 @@ extension FlutterCombustionIncPlugin: FlutterStreamHandler {
             
         case "predictions":
             predictionManager.stopPredictionStream()
+
+        case "connectionState":
+            connectionStateManager.stopConnectionStateStream()
             
         default:
             return FlutterError(
