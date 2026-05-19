@@ -203,8 +203,8 @@ class RadarPainter extends CustomPainter {
     );
 
     // Draw pill-shaped background
-    final double horizontalPadding = 8.0;
-    final double verticalPadding = 4.0;
+    const double horizontalPadding = 8.0;
+    const double verticalPadding = 4.0;
     final RRect pillRect = RRect.fromRectAndRadius(
       Rect.fromLTRB(
         textOffset.dx - horizontalPadding,

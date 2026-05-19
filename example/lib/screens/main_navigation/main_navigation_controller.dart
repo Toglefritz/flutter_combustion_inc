@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_combustion_inc/models/device_manager.dart';
-import 'package:flutter_combustion_inc/models/probe.dart';
+import 'package:flutter_combustion_inc/models/devices/probe.dart';
 
 import '../rssi/rssi_route.dart';
 import 'main_navigation_route.dart';

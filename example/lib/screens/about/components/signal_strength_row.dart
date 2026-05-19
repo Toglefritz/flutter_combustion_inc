@@ -16,7 +16,7 @@ class SignalStrength extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<int>(
-      future: probe.rssi,
+      future: probe.getRssi(),
       builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
         final String rssi = snapshot.hasData ? '${snapshot.data} dBm' : AppLocalizations.of(context)!.loading;
         return InfoRow(

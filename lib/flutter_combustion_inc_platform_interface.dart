@@ -1,10 +1,10 @@
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'flutter_combustion_inc_method_channel.dart';
-import 'models/battery_status.dart';
-import 'models/prediction_info.dart';
-import 'models/probe_temperature_log.dart';
-import 'models/probe_temperatures.dart';
+import 'models/ble_data/battery_status.dart';
+import 'models/ble_data/probe_temperature_log.dart';
+import 'models/ble_data/probe_temperatures.dart';
+import 'models/prediction/prediction_info.dart';
 
 /// The platform interface that defines the contract for all communication between Dart and the native platforms in the
 /// _flutter_combustion_inc_ plugin.
@@ -24,7 +24,8 @@ abstract class FlutterCombustionIncPlatform extends PlatformInterface {
   static final Object _token = Object();
 
   /// The default instance of [FlutterCombustionIncPlatform] to use.
-  static FlutterCombustionIncPlatform _instance = MethodChannelFlutterCombustionInc();
+  static FlutterCombustionIncPlatform _instance =
+      MethodChannelFlutterCombustionInc();
 
   /// The default instance of [FlutterCombustionIncPlatform] to use.
   ///

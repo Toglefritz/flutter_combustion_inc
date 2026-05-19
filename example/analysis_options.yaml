@@ -11,6 +11,7 @@ linter:
     prefer_int_literals: false
     require_trailing_commas: true
     avoid_types_on_closure_parameters: false
+    no_default_cases: false
 
 formatter:
   trailing_commas: preserve

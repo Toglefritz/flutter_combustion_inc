@@ -7,9 +7,9 @@ library;
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:flutter_combustion_inc/models/probe.dart';
-import 'package:flutter_combustion_inc/models/probe_temperatures.dart';
-import 'package:flutter_combustion_inc/models/virtual_temperatures.dart';
+import 'package:flutter_combustion_inc/models/ble_data/probe_temperatures.dart';
+import 'package:flutter_combustion_inc/models/ble_data/virtual_temperatures.dart';
+import 'package:flutter_combustion_inc/models/devices/probe.dart';
 
 import '../../../l10n/app_localizations.dart';
 import '../../../services/temperature_unit_setting/models/temperature_unit.dart';

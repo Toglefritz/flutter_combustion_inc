@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_combustion_inc/models/prediction_info.dart';
-import 'package:flutter_combustion_inc/models/prediction_mode.dart';
-import 'package:flutter_combustion_inc/models/prediction_state.dart';
-import 'package:flutter_combustion_inc/models/prediction_type.dart';
+import 'package:flutter_combustion_inc/models/prediction/prediction_info.dart';
+import 'package:flutter_combustion_inc/models/prediction/prediction_mode.dart';
+import 'package:flutter_combustion_inc/models/prediction/prediction_state.dart';
+import 'package:flutter_combustion_inc/models/prediction/prediction_type.dart';
 
 import '../../../l10n/app_localizations.dart';
 import '../../../services/temperature_unit_setting/models/temperature_unit.dart';
@@ -183,7 +183,7 @@ class PredictionDisplayWidget extends StatelessWidget {
                     vertical: Inset.xSmall,
                   ),
                   decoration: BoxDecoration(
-                    color: _getStateColor(context, predictionInfo!.predictionState).withOpacity(0.1),
+                    color: _getStateColor(context, predictionInfo!.predictionState).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
                       color: _getStateColor(context, predictionInfo!.predictionState),

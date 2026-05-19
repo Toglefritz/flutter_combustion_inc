@@ -1,11 +1,7 @@
-/// Temperature table card component.
-///
-/// This library provides a card widget that displays temperature readings in a tabular format, with the ability to
-/// switch between virtual and physical temperature displays.
-library;
-
 import 'package:flutter/material.dart';
-import 'package:flutter_combustion_inc/models/probe.dart';
+import 'package:flutter_combustion_inc/models/ble_data/probe_temperatures.dart';
+import 'package:flutter_combustion_inc/models/ble_data/virtual_temperatures.dart';
+import 'package:flutter_combustion_inc/models/devices/probe.dart';
 
 import '../../../l10n/app_localizations.dart';
 import '../../../services/temperature_unit_setting/models/temperature_unit.dart';
@@ -118,46 +114,43 @@ class _VirtualTemperaturesTable extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
 
-    return StreamBuilder(
+    return StreamBuilder<VirtualTemperatures>(
       stream: probe.virtualTemperatureStream,
-      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+      builder: (BuildContext context, AsyncSnapshot<VirtualTemperatures> snapshot) {
         if (!snapshot.hasData) {
           return const Center(
             child: CircularProgressIndicator(),
           );
         }
 
-        final double core = (snapshot.data.core as num).toDouble();
-        final double surface = (snapshot.data.surface as num).toDouble();
-        final double ambient = (snapshot.data.ambient as num).toDouble();
+        final VirtualTemperatures data = snapshot.data!;
+        final double core = data.core;
+        final double surface = data.surface;
+        final double ambient = data.ambient;
 
         return Table(
           border: TableBorder.all(
             color: theme.dividerColor,
-            width: 1,
           ),
           columnWidths: const {
             0: FlexColumnWidth(2),
-            1: FlexColumnWidth(1),
+            1: FlexColumnWidth(),
           },
           children: [
             _buildTableRow(
               context,
               'Core',
               core,
-              isHeader: false,
             ),
             _buildTableRow(
               context,
               'Surface',
               surface,
-              isHeader: false,
             ),
             _buildTableRow(
               context,
               'Ambient',
               ambient,
-              isHeader: false,
             ),
           ],
         );
@@ -170,7 +163,7 @@ class _VirtualTemperaturesTable extends StatelessWidget {
     BuildContext context,
     String label,
     double temperature, {
-    required bool isHeader,
+    bool isHeader = false,
   }) {
     final ThemeData theme = Theme.of(context);
     final TextStyle? textStyle =
@@ -225,34 +218,34 @@ class _PhysicalTemperaturesTable extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
 
-    return StreamBuilder(
+    return StreamBuilder<ProbeTemperatures>(
       stream: probe.currentTemperaturesStream,
-      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+      builder: (BuildContext context, AsyncSnapshot<ProbeTemperatures> snapshot) {
         if (!snapshot.hasData) {
           return const Center(
             child: CircularProgressIndicator(),
           );
         }
 
+        final ProbeTemperatures data = snapshot.data!;
         final List<double> temperatures = <double>[
-          (snapshot.data.t1 as num).toDouble(),
-          (snapshot.data.t2 as num).toDouble(),
-          (snapshot.data.t3 as num).toDouble(),
-          (snapshot.data.t4 as num).toDouble(),
-          (snapshot.data.t5 as num).toDouble(),
-          (snapshot.data.t6 as num).toDouble(),
-          (snapshot.data.t7 as num).toDouble(),
-          (snapshot.data.t8 as num).toDouble(),
+          data.t1,
+          data.t2,
+          data.t3,
+          data.t4,
+          data.t5,
+          data.t6,
+          data.t7,
+          data.t8,
         ];
 
         return Table(
           border: TableBorder.all(
             color: theme.dividerColor,
-            width: 1,
           ),
           columnWidths: const {
             0: FlexColumnWidth(2),
-            1: FlexColumnWidth(1),
+            1: FlexColumnWidth(),
           },
           children: List<TableRow>.generate(
             8,
@@ -260,7 +253,6 @@ class _PhysicalTemperaturesTable extends StatelessWidget {
               context,
               'T${index + 1}',
               temperatures[index],
-              isHeader: false,
             ),
           ),
         );
@@ -273,7 +265,7 @@ class _PhysicalTemperaturesTable extends StatelessWidget {
     BuildContext context,
     String label,
     double temperature, {
-    required bool isHeader,
+    bool isHeader = false,
   }) {
     final ThemeData theme = Theme.of(context);
     final TextStyle? textStyle =

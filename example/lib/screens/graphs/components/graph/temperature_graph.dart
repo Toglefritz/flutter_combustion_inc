@@ -6,11 +6,11 @@ import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_combustion_inc/flutter_combustion_inc_platform_interface.dart';
-import 'package:flutter_combustion_inc/models/probe.dart';
-import 'package:flutter_combustion_inc/models/probe_log_data_point.dart';
-import 'package:flutter_combustion_inc/models/probe_temperature_log.dart';
-import 'package:flutter_combustion_inc/models/probe_temperatures.dart';
-import 'package:flutter_combustion_inc/models/virtual_temperatures.dart';
+import 'package:flutter_combustion_inc/models/ble_data/probe_log_data_point.dart';
+import 'package:flutter_combustion_inc/models/ble_data/probe_temperature_log.dart';
+import 'package:flutter_combustion_inc/models/ble_data/probe_temperatures.dart';
+import 'package:flutter_combustion_inc/models/ble_data/virtual_temperatures.dart';
+import 'package:flutter_combustion_inc/models/devices/probe.dart';
 
 import '../../../../../l10n/app_localizations.dart';
 import '../../../../../services/temperature_unit_setting/models/temperature_unit.dart';
@@ -21,11 +21,11 @@ import '../../models/display_mode.dart';
 // Parts
 part 'historical_temperature_chart.dart';
 part 'legend_item.dart';
+part 'legend_item_widget.dart';
 part 'real_time_temperature_chart.dart';
 part 'temperature_chart.dart';
 part 'temperature_graph_header.dart';
 part 'temperature_legend.dart';
-part 'legend_item_widget.dart';
 
 /// A widget that displays temperature data from a Combustion Inc. probe in a line chart format.
 ///

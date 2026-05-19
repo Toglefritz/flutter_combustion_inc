@@ -5,8 +5,8 @@
 library;
 
 import 'package:flutter/material.dart';
-import 'package:flutter_combustion_inc/models/battery_status.dart';
-import 'package:flutter_combustion_inc/models/probe.dart';
+import 'package:flutter_combustion_inc/models/ble_data/battery_status.dart';
+import 'package:flutter_combustion_inc/models/devices/probe.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../services/temperature_unit_setting/models/temperature_unit.dart';

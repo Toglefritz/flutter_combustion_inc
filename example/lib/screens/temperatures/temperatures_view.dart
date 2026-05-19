@@ -5,7 +5,7 @@
 library;
 
 import 'package:flutter/material.dart';
-import 'package:flutter_combustion_inc/models/probe.dart';
+import 'package:flutter_combustion_inc/models/devices/probe.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../values/inset.dart';

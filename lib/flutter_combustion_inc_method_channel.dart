@@ -4,10 +4,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import 'flutter_combustion_inc_platform_interface.dart';
-import 'models/battery_status.dart';
-import 'models/prediction_info.dart';
-import 'models/probe_temperature_log.dart';
-import 'models/probe_temperatures.dart';
+import 'models/ble_data/battery_status.dart';
+import 'models/ble_data/probe_temperature_log.dart';
+import 'models/ble_data/probe_temperatures.dart';
+import 'models/prediction/prediction_info.dart';
 
 /// An implementation of [FlutterCombustionIncPlatform] that uses method channels.
 class MethodChannelFlutterCombustionInc extends FlutterCombustionIncPlatform {
@@ -105,7 +105,8 @@ class MethodChannelFlutterCombustionInc extends FlutterCombustionIncPlatform {
 
   @override
   Future<List<Map<String, dynamic>>> getProbes() async {
-    final List<dynamic> result = await methodChannel.invokeMethod('getProbes') as List<dynamic>;
+    final List<dynamic> result =
+        await methodChannel.invokeMethod('getProbes') as List<dynamic>;
 
     return result.map((e) => Map<String, dynamic>.from(e as Map)).toList();
   }
@@ -139,7 +140,9 @@ class MethodChannelFlutterCombustionInc extends FlutterCombustionIncPlatform {
       }),
     );
 
-    return statusStaleEventChannel.receiveBroadcastStream({'type': 'statusStale'}).map((event) => event as bool);
+    return statusStaleEventChannel
+        .receiveBroadcastStream({'type': 'statusStale'})
+        .map((event) => event as bool);
   }
 
   @override
@@ -188,7 +191,10 @@ class MethodChannelFlutterCombustionInc extends FlutterCombustionIncPlatform {
             );
             return;
           }
-          throw error;
+          Error.throwWithStackTrace(
+            error is Exception ? error : Exception(error.toString()),
+            StackTrace.current,
+          );
         });
   }
 
@@ -226,15 +232,17 @@ class MethodChannelFlutterCombustionInc extends FlutterCombustionIncPlatform {
         }),
       );
 
-      return virtualTempEventChannel.receiveBroadcastStream({'type': 'virtualTemps'}).map((event) {
-        final Map<String, dynamic> data = Map<String, dynamic>.from(
-          event as Map,
-        );
+      return virtualTempEventChannel
+          .receiveBroadcastStream({'type': 'virtualTemps'})
+          .map((event) {
+            final Map<String, dynamic> data = Map<String, dynamic>.from(
+              event as Map,
+            );
 
-        return data.map(
-          (key, value) => MapEntry(key, (value as num).toDouble()),
-        );
-      });
+            return data.map(
+              (key, value) => MapEntry(key, (value as num).toDouble()),
+            );
+          });
     });
   }
 
@@ -247,19 +255,21 @@ class MethodChannelFlutterCombustionInc extends FlutterCombustionIncPlatform {
         }),
       );
 
-      return currentTempsEventChannel.receiveBroadcastStream({'type': 'currentTemperatures'}).map((event) {
-        final List<double> values = List<double>.from(event as List);
-        return ProbeTemperatures(
-          t1: values[0],
-          t2: values[1],
-          t3: values[2],
-          t4: values[3],
-          t5: values[4],
-          t6: values[5],
-          t7: values[6],
-          t8: values[7],
-        );
-      });
+      return currentTempsEventChannel
+          .receiveBroadcastStream({'type': 'currentTemperatures'})
+          .map((event) {
+            final List<double> values = List<double>.from(event as List);
+            return ProbeTemperatures(
+              t1: values[0],
+              t2: values[1],
+              t3: values[2],
+              t4: values[3],
+              t5: values[4],
+              t6: values[5],
+              t7: values[6],
+              t8: values[7],
+            );
+          });
     });
   }
 
@@ -298,16 +308,23 @@ class MethodChannelFlutterCombustionInc extends FlutterCombustionIncPlatform {
       rawResult as Map,
     );
 
-    final int? startTimeMillis = result['startTime'] is int ? result['startTime'] as int : null;
-    final DateTime? startTime = startTimeMillis != null ? DateTime.fromMillisecondsSinceEpoch(startTimeMillis) : null;
+    final int? startTimeMillis = result['startTime'] is int
+        ? result['startTime'] as int
+        : null;
+    final DateTime? startTime = startTimeMillis != null
+        ? DateTime.fromMillisecondsSinceEpoch(startTimeMillis)
+        : null;
 
     // Subscribe to the EventChannel for streaming data points
-    final Stream<List<Map<String, dynamic>>> rawStream = temperatureLogEventChannel
-        .receiveBroadcastStream({'type': 'temperatureLog'})
-        .map((event) {
-          final List<dynamic> rawList = event as List<dynamic>;
-          return rawList.map((item) => Map<String, dynamic>.from(item as Map)).toList();
-        });
+    final Stream<List<Map<String, dynamic>>> rawStream =
+        temperatureLogEventChannel
+            .receiveBroadcastStream({'type': 'temperatureLog'})
+            .map((event) {
+              final List<dynamic> rawList = event as List<dynamic>;
+              return rawList
+                  .map((item) => Map<String, dynamic>.from(item as Map))
+                  .toList();
+            });
 
     return ProbeTemperatureLog(startTime: startTime, rawStream: rawStream);
   }
@@ -366,12 +383,14 @@ class MethodChannelFlutterCombustionInc extends FlutterCombustionIncPlatform {
         }),
       );
 
-      return predictionEventChannel.receiveBroadcastStream({'type': 'predictions'}).map((event) {
-        final Map<String, dynamic> data = Map<String, dynamic>.from(
-          event as Map,
-        );
-        return PredictionInfo.fromMap(data);
-      });
+      return predictionEventChannel
+          .receiveBroadcastStream({'type': 'predictions'})
+          .map((event) {
+            final Map<String, dynamic> data = Map<String, dynamic>.from(
+              event as Map,
+            );
+            return PredictionInfo.fromMap(data);
+          });
     });
   }
 }

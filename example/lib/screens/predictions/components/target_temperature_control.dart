@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_combustion_inc/models/prediction_info.dart';
+import 'package:flutter_combustion_inc/models/prediction/prediction_info.dart';
 
 import '../../../l10n/app_localizations.dart';
+import '../../../models/food_preset.dart';
 import '../../../services/temperature_unit_setting/models/temperature_unit.dart';
 import '../../../services/temperature_unit_setting/temperature_unit_setting.dart';
 import '../../../values/inset.dart';
-import '../../../models/food_preset.dart';
 import 'prediction_display_widget.dart';
 import 'temperature_keypad_widget.dart';
 import 'temperature_presets_widget.dart';

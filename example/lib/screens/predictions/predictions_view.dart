@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_combustion_inc/models/device_manager.dart';
-import 'package:flutter_combustion_inc/models/prediction_info.dart';
-import 'package:flutter_combustion_inc/models/probe.dart';
+import 'package:flutter_combustion_inc/models/devices/probe.dart';
+import 'package:flutter_combustion_inc/models/prediction/prediction_info.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../components/empty_state_widget.dart';

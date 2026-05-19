@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_combustion_inc/models/probe.dart';
+import 'package:flutter_combustion_inc/models/devices/probe.dart';
 
 import 'rssi_route.dart';
 import 'rssi_view.dart';
@@ -60,7 +60,7 @@ class RssiController extends RssiRouteState {
     _pollTimer = Timer.periodic(const Duration(milliseconds: 500), (_) async {
       if (selectedProbe != null) {
         try {
-          final int rssi = await selectedProbe!.rssi;
+          final int rssi = await selectedProbe!.getRssi();
           if (mounted) {
             setState(() {
               currentRssi = rssi;

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_combustion_inc/models/prediction_info.dart';
+import 'package:flutter_combustion_inc/models/prediction/prediction_info.dart';
 
 import '../../../l10n/app_localizations.dart';
 

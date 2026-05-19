@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../../../l10n/app_localizations.dart';
+import '../../../models/food_preset.dart';
 import '../../../services/temperature_unit_setting/models/temperature_unit.dart';
 import '../../../services/temperature_unit_setting/temperature_unit_setting.dart';
 import '../../../values/inset.dart';
-import '../../../models/food_preset.dart';
 
 /// A widget that displays preset temperature options as action chips.
 ///

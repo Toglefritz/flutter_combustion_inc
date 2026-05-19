@@ -53,7 +53,6 @@ class RssiGraph extends StatelessWidget {
       child: LineChart(
         LineChartData(
           gridData: FlGridData(
-            drawVerticalLine: true,
             horizontalInterval: 10,
             verticalInterval: 10,
             getDrawingHorizontalLine: (value) {
@@ -123,7 +122,6 @@ class RssiGraph extends StatelessWidget {
               color: colorScheme.primary,
               barWidth: 3,
               isStrokeCapRound: true,
-              dotData: const FlDotData(),
               belowBarData: BarAreaData(
                 color: colorScheme.primary.withValues(alpha: 0.1),
               ),

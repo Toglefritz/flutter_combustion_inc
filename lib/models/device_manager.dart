@@ -2,8 +2,8 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 
 import '../flutter_combustion_inc_platform_interface.dart';
-import 'prediction_info.dart';
-import 'probe.dart';
+import 'devices/probe.dart';
+import 'prediction/prediction_info.dart';
 
 /// A singleton class that provides access to the Combustion Inc. SDK functionality for scanning and managing discovered
 /// temperature probes.
@@ -22,7 +22,7 @@ class DeviceManager {
     'flutter_combustion_inc_scan',
   );
 
-  /// A stream od [Probe] devies discovered during the Bluetooth scan.
+  /// A stream of [Probe] devices discovered during the Bluetooth scan.
   Stream<Probe>? _scanResults;
 
   /// A stream of [Probe]s discovered while scanning.
@@ -32,6 +32,7 @@ class DeviceManager {
     _scanResults ??= _scanChannel.receiveBroadcastStream().map(
       (dynamic event) => Probe.fromMap(Map<String, dynamic>.from(event as Map)),
     );
+    
     return _scanResults!;
   }
 
@@ -47,7 +48,9 @@ class DeviceManager {
   /// The native platform is expected to return a list of probe maps, each of which will be converted into a [Probe]
   /// instance.
   Future<List<Probe>> getProbes() async {
-    final List<Map<String, dynamic>> result = await FlutterCombustionIncPlatform.instance.getProbes();
+    final List<Map<String, dynamic>> result = await FlutterCombustionIncPlatform
+        .instance
+        .getProbes();
 
     return result.map(Probe.fromMap).toList();
   }
