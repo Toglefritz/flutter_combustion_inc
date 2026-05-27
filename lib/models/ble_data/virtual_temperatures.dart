@@ -1,8 +1,7 @@
 /// Computed temperature readings derived from the probe's eight physical sensors.
 ///
-/// The SDK calculates core, surface, and ambient temperatures by selecting the
-/// most appropriate physical sensors based on the current virtual sensor
-/// configuration.
+/// The SDK calculates core, surface, and ambient temperatures by selecting the most appropriate physical sensors based
+/// on the current virtual sensor configuration.
 class VirtualTemperatures {
   /// Estimated core temperature of the food, in Celsius.
   final double core;

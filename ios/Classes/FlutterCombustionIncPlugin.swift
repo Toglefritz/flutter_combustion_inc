@@ -20,6 +20,7 @@ import CombustionBLE
 /// a specific domain of functionality:
 /// * ProbeDiscoveryManager - Probe scanning and discovery
 /// * ProbeConnectionManager - Connection lifecycle management
+/// * ProbeConnectionStateStreamManager - Connection state streaming
 /// * ProbeTemperatureStreamManager - Temperature data streaming
 /// * ProbeStatusStreamManager - Battery and staleness status
 /// * ProbeSessionManager - Session info and temperature logs
@@ -48,7 +49,13 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
     ///
     /// Handles establishing and maintaining connections to specific probes.
     private let connectionManager = ProbeConnectionManager()
-    
+
+    /// Manager for connection state streaming.
+    ///
+    /// Observes the probe's `$connectionState` Combine publisher and streams
+    /// integer-encoded state transitions to Flutter in real time.
+    private let connectionStateManager = ProbeConnectionStateStreamManager()
+
     /// Manager for temperature data streaming.
     ///
     /// Handles both virtual temperatures (core, surface, ambient) and
@@ -98,6 +105,7 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
     /// * flutter_combustion_inc_temperature_log - Temperature log data stream
     /// * flutter_combustion_inc_session_info - Session information stream
     /// * flutter_combustion_inc_predictions - Temperature prediction stream
+    /// * flutter_combustion_inc_connection_state - Connection state stream
     ///
     /// - Parameter registrar: Flutter plugin registrar provided by the engine
     public static func register(with registrar: FlutterPluginRegistrar) {
@@ -172,6 +180,13 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
             binaryMessenger: registrar.messenger()
         )
         predictionChannel.setStreamHandler(instance)
+
+        // Event channel for connection state changes
+        let connectionStateChannel = FlutterEventChannel(
+            name: "flutter_combustion_inc_connection_state",
+            binaryMessenger: registrar.messenger()
+        )
+        connectionStateChannel.setStreamHandler(instance)
     }
     
     /// Handles method channel calls from Flutter.
@@ -187,6 +202,7 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
     /// * getVirtualTemperatures - Get one-time virtual temperature reading
     /// * getCurrentTemperatures - Get one-time raw sensor reading
     /// * connectToProbe - Connect to specific probe
+    /// * startConnectionStateStream - Begin connection state streaming
     /// * startVirtualTemperatureStream - Begin virtual temp streaming
     /// * startCurrentTemperaturesStream - Begin raw sensor streaming
     /// * startBatteryStatusStream - Begin battery status streaming
@@ -222,6 +238,9 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
         case "connectToProbe":
             handleConnectToProbe(call: call, result: result)
             
+        case "startConnectionStateStream":
+            handleStartConnectionStateStream(call: call, result: result)
+
         case "startVirtualTemperatureStream":
             handleStartVirtualTemperatureStream(call: call, result: result)
             
@@ -387,7 +406,36 @@ extension FlutterCombustionIncPlugin {
         connectionManager.connect(to: probe)
         result(nil)
     }
-    
+
+    /// Stores the probe identifier so the connection state stream can be
+    /// activated when Flutter begins listening to the event channel.
+    ///
+    /// The actual Combine subscription is established in `onListen` once Flutter
+    /// provides an event sink. This two-step handshake matches the pattern used
+    /// by the other probe streams.
+    ///
+    /// - Parameters:
+    ///   - call: Method call containing probe identifier
+    ///   - result: Flutter result callback (returns nil on success or error)
+    private func handleStartConnectionStateStream(
+        call: FlutterMethodCall,
+        result: @escaping FlutterResult
+    ) {
+        guard let args = call.arguments as? [String: Any],
+              let identifier = args["identifier"] as? String,
+              let _ = connectionManager.getProbe(identifier: identifier) else {
+            result(FlutterError(
+                code: "INVALID_ARGUMENTS",
+                message: "Missing or invalid probe identifier",
+                details: nil
+            ))
+            return
+        }
+
+        pendingStreamProbes["connectionState"] = identifier
+        result(nil)
+    }
+
     /// Starts streaming virtual temperature updates for a probe.
     ///
     /// - Parameters:
@@ -802,7 +850,13 @@ extension FlutterCombustionIncPlugin: FlutterStreamHandler {
                 for: probe,
                 eventSink: events
             )
-            
+
+        case "connectionState":
+            connectionStateManager.startConnectionStateStream(
+                for: probe,
+                eventSink: events
+            )
+
         default:
             return FlutterError(
                 code: "UNKNOWN_STREAM_TYPE",
@@ -854,6 +908,9 @@ extension FlutterCombustionIncPlugin: FlutterStreamHandler {
         case "predictions":
             predictionManager.stopPredictionStream()
             
+        case "connectionState":
+            connectionStateManager.stopConnectionStateStream()
+
         default:
             return FlutterError(
                 code: "UNKNOWN_STREAM_TYPE",

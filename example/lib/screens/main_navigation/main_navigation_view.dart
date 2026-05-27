@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_combustion_inc/models/devices/connection_state.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../about/about_view.dart';
+import '../components/connection_status_banner.dart';
 import '../graphs/graphs_view.dart';
 import '../predictions/predictions_view.dart';
 import '../rssi/rssi_route.dart';
@@ -17,6 +19,9 @@ import 'main_navigation_route.dart';
 /// * Predictions - Cooking time predictions and target temperature
 /// * RSSI - Bluetooth signal strength tracking and testing
 /// * Settings - App settings and plugin information
+///
+/// A [ConnectionStatusBanner] is rendered above the tab content whenever the selected probe is not connected, giving
+/// the user a non-disruptive signal that the connection has been lost without navigating away from the current screen.
 class MainNavigationView extends StatelessWidget {
   /// Reference to the controller.
   final MainNavigationController state;
@@ -49,10 +54,27 @@ class MainNavigationView extends StatelessWidget {
       ),
     ];
 
+    // The banner is visible only after the probe has connected at least once, so the initial connecting state does not
+    // trigger a false alarm.
+    final bool bannerVisible =
+        state.selectedProbe != null &&
+        state.hadSuccessfulConnection &&
+        state.probeConnectionState != DeviceConnectionState.connected;
+
     return Scaffold(
-      body: IndexedStack(
-        index: state.currentTabIndex,
-        children: tabs,
+      body: Column(
+        children: [
+          ConnectionStatusBanner(
+            connectionState: state.probeConnectionState ?? DeviceConnectionState.disconnected,
+            visible: bannerVisible,
+          ),
+          Expanded(
+            child: IndexedStack(
+              index: state.currentTabIndex,
+              children: tabs,
+            ),
+          ),
+        ],
       ),
 
       bottomNavigationBar: NavigationBar(

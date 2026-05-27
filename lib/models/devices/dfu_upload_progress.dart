@@ -1,8 +1,7 @@
 /// Tracks the progress of a DFU firmware upload.
 ///
-/// For multi-part firmware packages, [part] and [totalParts] indicate which
-/// segment is currently being transferred. [progress] is the percentage
-/// complete (0-100) for the current part.
+/// For multi-part firmware packages, [part] and [totalParts] indicate which segment is currently being transferred.
+/// [progress] is the percentage complete (0-100) for the current part.
 class DfuUploadProgress {
   /// The current part being uploaded (1-indexed).
   final int part;

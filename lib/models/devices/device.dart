@@ -4,19 +4,16 @@ import 'dfu_upload_progress.dart';
 
 /// Base class for all Combustion BLE devices.
 ///
-/// Contains the properties shared across device types: identity, connection
-/// state, signal strength, staleness tracking, device info, and DFU state.
-/// Subclasses include `Probe` (identified by serial number) and `MeatNetNode`
-/// (identified by BLE peripheral UUID).
+/// Contains the properties shared across device types: identity, connection state, signal strength, staleness tracking,
+/// device info, and DFU state. Subclasses include `Probe` (identified by serial number) and `MeatNetNode` (identified
+/// by BLE peripheral UUID).
 abstract class Device {
   /// Stable identifier for this device.
   ///
-  /// For probes this is the serial number string. For MeatNet nodes this is
-  /// the BLE peripheral UUID string.
+  /// For probes this is the serial number string. For MeatNet nodes this is the BLE peripheral UUID string.
   final String uniqueIdentifier;
 
-  /// BLE peripheral identifier (UUID string), present when the device's
-  /// advertising packets are visible directly.
+  /// BLE peripheral identifier (UUID string), present when the device's advertising packets are visible directly.
   String? bleIdentifier;
 
   /// Firmware version string, populated after connection.
@@ -75,8 +72,7 @@ abstract class Device {
 
   /// Creates a [Device] from a platform channel map.
   ///
-  /// Subclasses should use their own factory constructors that delegate here
-  /// for the shared fields.
+  /// Subclasses should use their own factory constructors that delegate here for the shared fields.
   Device.fromMap(Map<String, dynamic> map)
     : uniqueIdentifier =
           map['uniqueIdentifier'] as String? ?? map['identifier'] as String,
@@ -112,8 +108,8 @@ abstract class Device {
 
   /// Recalculates [stale] based on elapsed time since [lastUpdateTime].
   ///
-  /// Also clears [isConnectable] when the device goes stale, since we can no
-  /// longer confirm the advertising packet is still being received.
+  /// Also clears [isConnectable] when the device goes stale, since we can no longer confirm the advertising packet is
+  /// still being received.
   void updateDeviceStale() {
     stale = DateTime.now().difference(lastUpdateTime).inSeconds > staleTimeout;
     if (stale) {

@@ -1,7 +1,6 @@
 /// Raw temperature readings from all eight sensors on a Combustion probe.
 ///
-/// Sensors are numbered T1 (tip) through T8 (handle). Values are in Celsius.
-/// The physical arrangement is documented at:
+/// Sensors are numbered T1 (tip) through T8 (handle). Values are in Celsius. The physical arrangement is documented at:
 /// https://combustion.inc/cdn/shop/files/thermometer-features-sm.jpg
 class ProbeTemperatures {
   /// Sensor at the tip of the probe (T1).

@@ -1,96 +1,7 @@
 {
-  "ambientTemperature": "Ambient",
-  "@ambientTemperature": {
-    "description": "Label for the ambient temperature of a probe.",
-    "placeholders": {}
-  },
-  "batteryStatusOk": "Battery OK",
-  "@batteryStatusOk": {
-    "description": "Message indicating that the battery status of a probe is okay.",
-    "placeholders": {}
-  },
-  "celsiusAbbreviation": "C",
-  "@celsiusAbbreviation": {
-    "description": "Abbreviation for Celsius temperature.",
-    "placeholders": {}
-  },
-  "coreTemperature": "Core",
-  "@coreTemperature": {
-    "description": "Label for the core temperature of a probe.",
-    "placeholders": {}
-  },
-  "debugInfo": "Debug Info",
-  "@debugInfo": {
-    "description": "Label for the debug information display mode.",
-    "placeholders": {}
-  },
-  "fahrenheitAbbreviation": "F",
-  "@fahrenheitAbbreviation": {
-    "description": "Abbreviation for Fahrenheit temperature.",
-    "placeholders": {}
-  },
-  "hideGraphs": "Hide Graphs",
-  "@hideGraphs": {
-    "description": "Button label to hide the graphs in the temperature display.",
-    "placeholders": {}
-  },
-  "lowBatteryWarning": "Battery low",
-  "@lowBatteryWarning": {
-    "description": "Warning message displayed when a probe's battery is low.",
-    "placeholders": {}
-  },
-  "physicalTemperatures": "Physical Temperatures",
-  "@physicalTemperatures": {
-    "description": "Label for the physical temperatures display mode.",
-    "placeholders": {}
-  },
-  "probe": "Probe",
-  "@probe": {
-    "description": "A generic label for a probe.",
-    "placeholders": {}
-  },
-  "rssi": "RSSI",
-  "@rssi": {
-    "description": "Label for the Received Signal Strength Indicator (RSSI) of a probe.",
-    "placeholders": {}
-  },
-  "searchingForProbes": "Searching for probes...",
-  "@searchingForProbes": {
-    "description": "Message displayed when the app is searching for nearby probes."
-  },
-  "showGraphs": "Show Graphs",
-  "@showGraphs": {
-    "description": "Button label to show the graphs in the temperature display.",
-    "placeholders": {}
-  },
-  "surfaceTemperature": "Surface",
-  "@surfaceTemperature": {
-    "description": "Label for the surface temperature of a probe.",
-    "placeholders": {}
-  },
-  "temperatureTn": "T{number}",
-  "@temperatureTn": {
-    "description": "Label for a temperature reading, where {number} is the probe number (e.g. T1-T8).",
-    "placeholders": {
-      "number": {
-        "type": "int",
-        "description": "The number of the probe."
-      }
-    }
-  },
-  "thermometers": "Thermometers ({number})",
-  "@thermometers": {
-    "description": "Label for the list of thermometers, where {number} is the count of available thermometers.",
-    "placeholders": {
-      "number": {
-        "type": "int",
-        "description": "The number of thermometers found."
-      }
-    }
-  },
-  "virtualTemperatures": "Virtual Temperatures",
-  "@virtualTemperatures": {
-    "description": "Label for the virtual temperatures display mode.",
+  "about": "About",
+  "@about": {
+    "description": "Title for the about tab.",
     "placeholders": {}
   },
   "allTemperatures": "All Temperatures",
@@ -98,24 +9,103 @@
     "description": "Label for the stacked display mode showing both virtual and physical temperatures.",
     "placeholders": {}
   },
-  "temperatureGraph": "Temperature Graph",
-  "@temperatureGraph": {
-    "description": "Title for the temperature graph display.",
+  "ambientTemperature": "Ambient",
+  "@ambientTemperature": {
+    "description": "Label for the ambient temperature of a probe.",
     "placeholders": {}
   },
-  "noDataAvailable": "No data available",
-  "@noDataAvailable": {
-    "description": "Message displayed when no temperature data is available for graphing.",
+  "avgTemperature": "Avg",
+  "@avgTemperature": {
+    "description": "Label for average temperature.",
     "placeholders": {}
   },
-  "loadingHistoricalData": "Loading historical data...",
-  "@loadingHistoricalData": {
-    "description": "Message displayed while loading historical temperature data.",
+  "batteryStatus": "Battery Status",
+  "@batteryStatus": {
+    "description": "Label for battery status.",
     "placeholders": {}
   },
-  "loadingTemperatureLogs": "Loading temperature logs...",
-  "@loadingTemperatureLogs": {
-    "description": "Message displayed while loading temperature logs from the probe.",
+  "batteryStatusOk": "Battery OK",
+  "@batteryStatusOk": {
+    "description": "Message indicating that the battery status of a probe is okay.",
+    "placeholders": {}
+  },
+  "celsius": "Celsius (°C)",
+  "@celsius": {
+    "description": "Label for Celsius temperature unit option.",
+    "placeholders": {}
+  },
+  "celsiusAbbreviation": "C",
+  "@celsiusAbbreviation": {
+    "description": "Abbreviation for Celsius temperature.",
+    "placeholders": {}
+  },
+  "changeTarget": "Change Target",
+  "@changeTarget": {
+    "description": "Tooltip for the button to change the target temperature.",
+    "placeholders": {}
+  },
+  "clear": "Clear",
+  "@clear": {
+    "description": "Button label to clear input.",
+    "placeholders": {}
+  },
+  "connectProbeFirst": "Please connect a probe from the home screen first.",
+  "@connectProbeFirst": {
+    "description": "Instructions shown when no probes are available.",
+    "placeholders": {}
+  },
+  "coreTemperature": "Core",
+  "@coreTemperature": {
+    "description": "Label for the core temperature of a probe.",
+    "placeholders": {}
+  },
+  "currentProgress": "Current progress:",
+  "@currentProgress": {
+    "description": "Label for the current cooking progress information.",
+    "placeholders": {}
+  },
+  "currentReading": "Current Reading",
+  "@currentReading": {
+    "description": "Label for current temperature reading.",
+    "placeholders": {}
+  },
+  "currentRssi": "Current RSSI",
+  "@currentRssi": {
+    "description": "Label for the current RSSI value.",
+    "placeholders": {}
+  },
+  "customTargetTemperatureSet": "Custom target set: {temperature}{unit}",
+  "@customTargetTemperatureSet": {
+    "description": "Confirmation message when a custom target temperature is set.",
+    "placeholders": {
+      "temperature": {
+        "type": "int",
+        "description": "Target temperature value"
+      },
+      "unit": {
+        "type": "String",
+        "description": "Temperature unit (°C or °F)"
+      }
+    }
+  },
+  "debugInfo": "Debug Info",
+  "@debugInfo": {
+    "description": "Label for the debug information display mode.",
+    "placeholders": {}
+  },
+  "enterCustomTemperature": "Enter Custom Temperature",
+  "@enterCustomTemperature": {
+    "description": "Button label to show the custom temperature input field.",
+    "placeholders": {}
+  },
+  "errorLoadingLogs": "Unable to load temperature logs. Please try again.",
+  "@errorLoadingLogs": {
+    "description": "Generic error message when temperature logs fail to load.",
+    "placeholders": {}
+  },
+  "errorLogNotFound": "No matching temperature log found for the current session.",
+  "@errorLogNotFound": {
+    "description": "Error message when no matching temperature log is found for the current session.",
     "placeholders": {}
   },
   "errorNoActiveSession": "No active cooking session found. Start a cooking session to view temperature logs.",
@@ -133,19 +123,74 @@
     "description": "Error message when the specified probe cannot be found.",
     "placeholders": {}
   },
-  "errorLogNotFound": "No matching temperature log found for the current session.",
-  "@errorLogNotFound": {
-    "description": "Error message when no matching temperature log is found for the current session.",
+  "estimatedTimeRemaining": "Estimated time remaining:",
+  "@estimatedTimeRemaining": {
+    "description": "Label for the estimated time until target temperature is reached.",
     "placeholders": {}
   },
-  "errorLoadingLogs": "Unable to load temperature logs. Please try again.",
-  "@errorLoadingLogs": {
-    "description": "Generic error message when temperature logs fail to load.",
+  "fahrenheit": "Fahrenheit (°F)",
+  "@fahrenheit": {
+    "description": "Label for Fahrenheit temperature unit option.",
     "placeholders": {}
   },
-  "retryButton": "Retry",
-  "@retryButton": {
-    "description": "Button label to retry a failed operation.",
+  "fahrenheitAbbreviation": "F",
+  "@fahrenheitAbbreviation": {
+    "description": "Abbreviation for Fahrenheit temperature.",
+    "placeholders": {}
+  },
+  "featureBatteryMonitoring": "Battery status monitoring",
+  "@featureBatteryMonitoring": {
+    "description": "Feature description for battery monitoring.",
+    "placeholders": {}
+  },
+  "featureBluetooth": "Bluetooth Low Energy connectivity",
+  "@featureBluetooth": {
+    "description": "Feature description for Bluetooth.",
+    "placeholders": {}
+  },
+  "featureCrossPlatform": "Cross-platform support (iOS, Android, macOS)",
+  "@featureCrossPlatform": {
+    "description": "Feature description for cross-platform support.",
+    "placeholders": {}
+  },
+  "featureHistoricalGraphs": "Historical temperature graphs",
+  "@featureHistoricalGraphs": {
+    "description": "Feature description for historical graphs.",
+    "placeholders": {}
+  },
+  "featurePhysicalSensors": "Physical sensor readings (T1-T8)",
+  "@featurePhysicalSensors": {
+    "description": "Feature description for physical sensors.",
+    "placeholders": {}
+  },
+  "featurePredictions": "Cooking time predictions",
+  "@featurePredictions": {
+    "description": "Feature description for predictions.",
+    "placeholders": {}
+  },
+  "featureRealtimeMonitoring": "Real-time temperature monitoring",
+  "@featureRealtimeMonitoring": {
+    "description": "Feature description for real-time monitoring.",
+    "placeholders": {}
+  },
+  "featureVirtualSensors": "Virtual temperature sensors (core, surface, ambient)",
+  "@featureVirtualSensors": {
+    "description": "Feature description for virtual sensors.",
+    "placeholders": {}
+  },
+  "features": "Features",
+  "@features": {
+    "description": "Label for features list.",
+    "placeholders": {}
+  },
+  "graphs": "Graphs",
+  "@graphs": {
+    "description": "Title for the graphs tab.",
+    "placeholders": {}
+  },
+  "hideGraphs": "Hide Graphs",
+  "@hideGraphs": {
+    "description": "Button label to hide the graphs in the temperature display.",
     "placeholders": {}
   },
   "historicalDataUnavailable": "Historical data will be available once cooking session starts",
@@ -153,44 +198,64 @@
     "description": "Message shown when historical data is not available because no cooking session has started.",
     "placeholders": {}
   },
-  "showRecentData": "Recent",
-  "@showRecentData": {
-    "description": "Button label to show only recent temperature data in the historical chart.",
+  "invalidTemperature": "Please enter a valid number",
+  "@invalidTemperature": {
+    "description": "Error message when temperature input is not a valid number.",
     "placeholders": {}
   },
-  "showAllData": "All Data",
-  "@showAllData": {
-    "description": "Button label to show all available temperature data in the historical chart.",
+  "loading": "Loading...",
+  "@loading": {
+    "description": "Label shown while data is loading.",
     "placeholders": {}
   },
-  "timespanControlLabel": "Show:",
-  "@timespanControlLabel": {
-    "description": "Label for the timespan control that lets users choose between recent and all data.",
+  "loadingHistoricalData": "Loading historical data...",
+  "@loadingHistoricalData": {
+    "description": "Message displayed while loading historical temperature data.",
     "placeholders": {}
   },
-  "zoomOutTooltip": "Zoom Out",
-  "@zoomOutTooltip": {
-    "description": "Tooltip for the zoom out button in the temperature chart.",
+  "loadingTemperatureLogs": "Loading temperature logs...",
+  "@loadingTemperatureLogs": {
+    "description": "Message displayed while loading temperature logs from the probe.",
     "placeholders": {}
   },
-  "zoomInTooltip": "Zoom In",
-  "@zoomInTooltip": {
-    "description": "Tooltip for the zoom in button in the temperature chart.",
+  "lowBatteryWarning": "Battery low",
+  "@lowBatteryWarning": {
+    "description": "Warning message displayed when a probe's battery is low.",
     "placeholders": {}
   },
-  "resetViewTooltip": "Reset View (or double-tap chart)",
-  "@resetViewTooltip": {
-    "description": "Tooltip for the reset view button in the temperature chart.",
+  "macAddress": "MAC Address",
+  "@macAddress": {
+    "description": "Label for probe MAC address.",
     "placeholders": {}
   },
-  "setTargetTemperature": "Set Target Temperature",
-  "@setTargetTemperature": {
-    "description": "Header for the target temperature control section.",
+  "makeProbeVisible": "Make sure your probe is powered on and nearby.",
+  "@makeProbeVisible": {
+    "description": "Instructions for making probe discoverable.",
     "placeholders": {}
   },
-  "selectFoodTypeOrEnterCustom": "Select a food type for quick setup, or enter a custom temperature below.",
-  "@selectFoodTypeOrEnterCustom": {
-    "description": "Instructions for using the target temperature control.",
+  "maxTemperature": "Max",
+  "@maxTemperature": {
+    "description": "Label for maximum temperature.",
+    "placeholders": {}
+  },
+  "minTemperature": "Min",
+  "@minTemperature": {
+    "description": "Label for minimum temperature.",
+    "placeholders": {}
+  },
+  "name": "Name",
+  "@name": {
+    "description": "Label for name field.",
+    "placeholders": {}
+  },
+  "noDataAvailable": "No data available",
+  "@noDataAvailable": {
+    "description": "Message displayed when no temperature data is available for graphing.",
+    "placeholders": {}
+  },
+  "noProbesAvailable": "No Probes Available",
+  "@noProbesAvailable": {
+    "description": "Message shown when no probes are available for predictions.",
     "placeholders": {}
   },
   "or": "OR",
@@ -198,14 +263,146 @@
     "description": "Conjunction used to separate different options.",
     "placeholders": {}
   },
-  "enterCustomTemperature": "Enter Custom Temperature",
-  "@enterCustomTemperature": {
-    "description": "Button label to show the custom temperature input field.",
+  "physicalSensors": "Physical Sensors",
+  "@physicalSensors": {
+    "description": "Title for physical temperature sensors section.",
     "placeholders": {}
   },
-  "temperature": "Temperature",
-  "@temperature": {
-    "description": "Label for temperature input field.",
+  "physicalTemperatures": "Physical Temperatures",
+  "@physicalTemperatures": {
+    "description": "Label for the physical temperatures display mode.",
+    "placeholders": {}
+  },
+  "platform": "Platform",
+  "@platform": {
+    "description": "Label for platform field.",
+    "placeholders": {}
+  },
+  "pluginInformation": "Plugin Information",
+  "@pluginInformation": {
+    "description": "Title for plugin information section.",
+    "placeholders": {}
+  },
+  "predictionInfo": "Prediction Information",
+  "@predictionInfo": {
+    "description": "Header for the prediction information section.",
+    "placeholders": {}
+  },
+  "predictionPlaceholder": "Calculating... (Prediction system integration pending)",
+  "@predictionPlaceholder": {
+    "description": "Placeholder text shown while prediction system is not yet integrated.",
+    "placeholders": {}
+  },
+  "predictions": "Predictions",
+  "@predictions": {
+    "description": "Title for the predictions screen.",
+    "placeholders": {}
+  },
+  "probe": "Probe",
+  "@probe": {
+    "description": "A generic label for a probe.",
+    "placeholders": {}
+  },
+  "probeDetails": "Probe Details",
+  "@probeDetails": {
+    "description": "Title for probe details section.",
+    "placeholders": {}
+  },
+  "probeDisconnected": "Probe disconnected",
+  "@probeDisconnected": {
+    "description": "Banner message shown when the selected probe loses its BLE connection."
+  },
+  "probeId": "Probe ID",
+  "@probeId": {
+    "description": "Label for probe ID.",
+    "placeholders": {}
+  },
+  "probeReconnecting": "Reconnecting to probe...",
+  "@probeReconnecting": {
+    "description": "Banner message shown while the app is attempting to re-establish a lost BLE connection."
+  },
+  "progressPlaceholder": "Monitoring temperature... (Progress tracking pending)",
+  "@progressPlaceholder": {
+    "description": "Placeholder text shown while progress tracking is not yet integrated.",
+    "placeholders": {}
+  },
+  "quickPresets": "Quick Presets",
+  "@quickPresets": {
+    "description": "Header for the food preset selection section.",
+    "placeholders": {}
+  },
+  "resetViewTooltip": "Reset View (or double-tap chart)",
+  "@resetViewTooltip": {
+    "description": "Tooltip for the reset view button in the temperature chart.",
+    "placeholders": {}
+  },
+  "retryButton": "Retry",
+  "@retryButton": {
+    "description": "Button label to retry a failed operation.",
+    "placeholders": {}
+  },
+  "rssi": "RSSI",
+  "@rssi": {
+    "description": "Label for the Received Signal Strength Indicator (RSSI) of a probe.",
+    "placeholders": {}
+  },
+  "rssiDbm": "RSSI (dBm)",
+  "@rssiDbm": {
+    "description": "Label for RSSI axis in graph.",
+    "placeholders": {}
+  },
+  "rssiExcellent": "Excellent Signal",
+  "@rssiExcellent": {
+    "description": "Label for excellent RSSI signal quality.",
+    "placeholders": {}
+  },
+  "rssiFair": "Fair Signal",
+  "@rssiFair": {
+    "description": "Label for fair RSSI signal quality.",
+    "placeholders": {}
+  },
+  "rssiGood": "Good Signal",
+  "@rssiGood": {
+    "description": "Label for good RSSI signal quality.",
+    "placeholders": {}
+  },
+  "rssiHistory": "RSSI History",
+  "@rssiHistory": {
+    "description": "Title for the RSSI history graph.",
+    "placeholders": {}
+  },
+  "rssiHistoryDescription": "Last 60 seconds of signal strength readings",
+  "@rssiHistoryDescription": {
+    "description": "Description for the RSSI history graph.",
+    "placeholders": {}
+  },
+  "rssiPoor": "Poor Signal",
+  "@rssiPoor": {
+    "description": "Label for poor RSSI signal quality.",
+    "placeholders": {}
+  },
+  "rssiTracking": "RSSI Tracking",
+  "@rssiTracking": {
+    "description": "Title for the RSSI tracking screen.",
+    "placeholders": {}
+  },
+  "searchingForProbes": "Searching for probes...",
+  "@searchingForProbes": {
+    "description": "Message displayed when the app is searching for nearby probes."
+  },
+  "selectFoodTypeOrEnterCustom": "Select a food type for quick setup, or enter a custom temperature below.",
+  "@selectFoodTypeOrEnterCustom": {
+    "description": "Instructions for using the target temperature control.",
+    "placeholders": {}
+  },
+  "selectProbe": "Select Probe",
+  "@selectProbe": {
+    "description": "Label for the probe selection dropdown.",
+    "placeholders": {}
+  },
+  "serialNumber": "Serial Number",
+  "@serialNumber": {
+    "description": "Label for probe serial number.",
     "placeholders": {}
   },
   "set": "Set",
@@ -213,14 +410,72 @@
     "description": "Button label to confirm setting a temperature.",
     "placeholders": {}
   },
-  "temperatureRequired": "Temperature is required",
-  "@temperatureRequired": {
-    "description": "Error message when temperature field is empty.",
+  "setTargetTemperature": "Set Target Temperature",
+  "@setTargetTemperature": {
+    "description": "Header for the target temperature control section.",
     "placeholders": {}
   },
-  "invalidTemperature": "Please enter a valid number",
-  "@invalidTemperature": {
-    "description": "Error message when temperature input is not a valid number.",
+  "settings": "Settings",
+  "@settings": {
+    "description": "Title for the settings screen.",
+    "placeholders": {}
+  },
+  "showAllData": "All Data",
+  "@showAllData": {
+    "description": "Button label to show all available temperature data in the historical chart.",
+    "placeholders": {}
+  },
+  "showGraphs": "Show Graphs",
+  "@showGraphs": {
+    "description": "Button label to show the graphs in the temperature display.",
+    "placeholders": {}
+  },
+  "showRecentData": "Recent",
+  "@showRecentData": {
+    "description": "Button label to show only recent temperature data in the historical chart.",
+    "placeholders": {}
+  },
+  "signalStrength": "Signal Strength",
+  "@signalStrength": {
+    "description": "Label for signal strength.",
+    "placeholders": {}
+  },
+  "surfaceTemperature": "Surface",
+  "@surfaceTemperature": {
+    "description": "Label for the surface temperature of a probe.",
+    "placeholders": {}
+  },
+  "targetTemperature": "Target Temperature",
+  "@targetTemperature": {
+    "description": "Label for the currently set target temperature.",
+    "placeholders": {}
+  },
+  "targetTemperatureSet": "Target set: {food} at {temperature}{unit}",
+  "@targetTemperatureSet": {
+    "description": "Confirmation message when a food preset target temperature is set.",
+    "placeholders": {
+      "food": {
+        "type": "String",
+        "description": "Name of the food type"
+      },
+      "temperature": {
+        "type": "int",
+        "description": "Target temperature value"
+      },
+      "unit": {
+        "type": "String",
+        "description": "Temperature unit (°C or °F)"
+      }
+    }
+  },
+  "temperature": "Temperature",
+  "@temperature": {
+    "description": "Label for temperature input field.",
+    "placeholders": {}
+  },
+  "temperatureGraph": "Temperature Graph",
+  "@temperatureGraph": {
+    "description": "Title for the temperature graph display.",
     "placeholders": {}
   },
   "temperatureOutOfRange": "Temperature must be between {min} and {max} {unit}",
@@ -241,101 +496,24 @@
       }
     }
   },
-  "targetTemperatureSet": "Target set: {food} at {temperature}{unit}",
-  "@targetTemperatureSet": {
-    "description": "Confirmation message when a food preset target temperature is set.",
+  "temperatureRequired": "Temperature is required",
+  "@temperatureRequired": {
+    "description": "Error message when temperature field is empty.",
+    "placeholders": {}
+  },
+  "temperatureTn": "T{number}",
+  "@temperatureTn": {
+    "description": "Label for a temperature reading, where {number} is the probe number (e.g. T1-T8).",
     "placeholders": {
-      "food": {
-        "type": "String",
-        "description": "Name of the food type"
-      },
-      "temperature": {
+      "number": {
         "type": "int",
-        "description": "Target temperature value"
-      },
-      "unit": {
-        "type": "String",
-        "description": "Temperature unit (°C or °F)"
+        "description": "The number of the probe."
       }
     }
   },
-  "customTargetTemperatureSet": "Custom target set: {temperature}{unit}",
-  "@customTargetTemperatureSet": {
-    "description": "Confirmation message when a custom target temperature is set.",
-    "placeholders": {
-      "temperature": {
-        "type": "int",
-        "description": "Target temperature value"
-      },
-      "unit": {
-        "type": "String",
-        "description": "Temperature unit (°C or °F)"
-      }
-    }
-  },
-  "clear": "Clear",
-  "@clear": {
-    "description": "Button label to clear input.",
-    "placeholders": {}
-  },
-  "quickPresets": "Quick Presets",
-  "@quickPresets": {
-    "description": "Header for the food preset selection section.",
-    "placeholders": {}
-  },
-  "targetTemperature": "Target Temperature",
-  "@targetTemperature": {
-    "description": "Label for the currently set target temperature.",
-    "placeholders": {}
-  },
-  "changeTarget": "Change Target",
-  "@changeTarget": {
-    "description": "Tooltip for the button to change the target temperature.",
-    "placeholders": {}
-  },
-  "predictionInfo": "Prediction Information",
-  "@predictionInfo": {
-    "description": "Header for the prediction information section.",
-    "placeholders": {}
-  },
-  "estimatedTimeRemaining": "Estimated time remaining:",
-  "@estimatedTimeRemaining": {
-    "description": "Label for the estimated time until target temperature is reached.",
-    "placeholders": {}
-  },
-  "predictionPlaceholder": "Calculating... (Prediction system integration pending)",
-  "@predictionPlaceholder": {
-    "description": "Placeholder text shown while prediction system is not yet integrated.",
-    "placeholders": {}
-  },
-  "currentProgress": "Current progress:",
-  "@currentProgress": {
-    "description": "Label for the current cooking progress information.",
-    "placeholders": {}
-  },
-  "progressPlaceholder": "Monitoring temperature... (Progress tracking pending)",
-  "@progressPlaceholder": {
-    "description": "Placeholder text shown while progress tracking is not yet integrated.",
-    "placeholders": {}
-  },
-  "predictions": "Predictions",
-  "@predictions": {
-    "description": "Title for the predictions screen.",
-    "placeholders": {}
-  },
-  "selectProbe": "Select Probe",
-  "@selectProbe": {
-    "description": "Label for the probe selection dropdown.",
-    "placeholders": {}
-  },
-  "noProbesAvailable": "No Probes Available",
-  "@noProbesAvailable": {
-    "description": "Message shown when no probes are available for predictions.",
-    "placeholders": {}
-  },
-  "connectProbeFirst": "Please connect a probe from the home screen first.",
-  "@connectProbeFirst": {
-    "description": "Instructions shown when no probes are available.",
+  "temperatureUnit": "Temperature Unit",
+  "@temperatureUnit": {
+    "description": "Label for temperature unit setting.",
     "placeholders": {}
   },
   "temperatures": "Temperatures",
@@ -343,124 +521,24 @@
     "description": "Title for the temperatures tab.",
     "placeholders": {}
   },
-  "graphs": "Graphs",
-  "@graphs": {
-    "description": "Title for the graphs tab.",
+  "thermometers": "Thermometers ({number})",
+  "@thermometers": {
+    "description": "Label for the list of thermometers, where {number} is the count of available thermometers.",
+    "placeholders": {
+      "number": {
+        "type": "int",
+        "description": "The number of thermometers found."
+      }
+    }
+  },
+  "timeSeconds": "Time (seconds)",
+  "@timeSeconds": {
+    "description": "Label for time axis in graph.",
     "placeholders": {}
   },
-  "about": "About",
-  "@about": {
-    "description": "Title for the about tab.",
-    "placeholders": {}
-  },
-  "settings": "Settings",
-  "@settings": {
-    "description": "Title for the settings screen.",
-    "placeholders": {}
-  },
-  "temperatureUnit": "Temperature Unit",
-  "@temperatureUnit": {
-    "description": "Label for temperature unit setting.",
-    "placeholders": {}
-  },
-  "celsius": "Celsius (°C)",
-  "@celsius": {
-    "description": "Label for Celsius temperature unit option.",
-    "placeholders": {}
-  },
-  "fahrenheit": "Fahrenheit (°F)",
-  "@fahrenheit": {
-    "description": "Label for Fahrenheit temperature unit option.",
-    "placeholders": {}
-  },
-  "makeProbeVisible": "Make sure your probe is powered on and nearby.",
-  "@makeProbeVisible": {
-    "description": "Instructions for making probe discoverable.",
-    "placeholders": {}
-  },
-  "virtualSensors": "Virtual Sensors",
-  "@virtualSensors": {
-    "description": "Title for virtual temperature sensors section.",
-    "placeholders": {}
-  },
-  "physicalSensors": "Physical Sensors",
-  "@physicalSensors": {
-    "description": "Title for physical temperature sensors section.",
-    "placeholders": {}
-  },
-  "currentReading": "Current Reading",
-  "@currentReading": {
-    "description": "Label for current temperature reading.",
-    "placeholders": {}
-  },
-  "minTemperature": "Min",
-  "@minTemperature": {
-    "description": "Label for minimum temperature.",
-    "placeholders": {}
-  },
-  "maxTemperature": "Max",
-  "@maxTemperature": {
-    "description": "Label for maximum temperature.",
-    "placeholders": {}
-  },
-  "avgTemperature": "Avg",
-  "@avgTemperature": {
-    "description": "Label for average temperature.",
-    "placeholders": {}
-  },
-  "probeDetails": "Probe Details",
-  "@probeDetails": {
-    "description": "Title for probe details section.",
-    "placeholders": {}
-  },
-  "serialNumber": "Serial Number",
-  "@serialNumber": {
-    "description": "Label for probe serial number.",
-    "placeholders": {}
-  },
-  "macAddress": "MAC Address",
-  "@macAddress": {
-    "description": "Label for probe MAC address.",
-    "placeholders": {}
-  },
-  "probeId": "Probe ID",
-  "@probeId": {
-    "description": "Label for probe ID.",
-    "placeholders": {}
-  },
-  "batteryStatus": "Battery Status",
-  "@batteryStatus": {
-    "description": "Label for battery status.",
-    "placeholders": {}
-  },
-  "signalStrength": "Signal Strength",
-  "@signalStrength": {
-    "description": "Label for signal strength.",
-    "placeholders": {}
-  },
-  "pluginInformation": "Plugin Information",
-  "@pluginInformation": {
-    "description": "Title for plugin information section.",
-    "placeholders": {}
-  },
-  "version": "Version",
-  "@version": {
-    "description": "Label for version number.",
-    "placeholders": {}
-  },
-  "features": "Features",
-  "@features": {
-    "description": "Label for features list.",
-    "placeholders": {}
-  },
-  "name": "Name",
-  "@name": {
-    "description": "Label for name field.",
-    "placeholders": {}
-  },
-  "platform": "Platform",
-  "@platform": {
-    "description": "Label for platform field.",
+  "timespanControlLabel": "Show:",
+  "@timespanControlLabel": {
+    "description": "Label for the timespan control that lets users choose between recent and all data.",
     "placeholders": {}
   },
   "unknown": "Unknown",
@@ -468,99 +546,29 @@
     "description": "Label for unknown or unavailable values.",
     "placeholders": {}
   },
-  "loading": "Loading...",
-  "@loading": {
-    "description": "Label shown while data is loading.",
+  "version": "Version",
+  "@version": {
+    "description": "Label for version number.",
     "placeholders": {}
   },
-  "featureRealtimeMonitoring": "Real-time temperature monitoring",
-  "@featureRealtimeMonitoring": {
-    "description": "Feature description for real-time monitoring.",
+  "virtualSensors": "Virtual Sensors",
+  "@virtualSensors": {
+    "description": "Title for virtual temperature sensors section.",
     "placeholders": {}
   },
-  "featureVirtualSensors": "Virtual temperature sensors (core, surface, ambient)",
-  "@featureVirtualSensors": {
-    "description": "Feature description for virtual sensors.",
+  "virtualTemperatures": "Virtual Temperatures",
+  "@virtualTemperatures": {
+    "description": "Label for the virtual temperatures display mode.",
     "placeholders": {}
   },
-  "featurePhysicalSensors": "Physical sensor readings (T1-T8)",
-  "@featurePhysicalSensors": {
-    "description": "Feature description for physical sensors.",
+  "zoomInTooltip": "Zoom In",
+  "@zoomInTooltip": {
+    "description": "Tooltip for the zoom in button in the temperature chart.",
     "placeholders": {}
   },
-  "featureHistoricalGraphs": "Historical temperature graphs",
-  "@featureHistoricalGraphs": {
-    "description": "Feature description for historical graphs.",
-    "placeholders": {}
-  },
-  "featurePredictions": "Cooking time predictions",
-  "@featurePredictions": {
-    "description": "Feature description for predictions.",
-    "placeholders": {}
-  },
-  "featureBatteryMonitoring": "Battery status monitoring",
-  "@featureBatteryMonitoring": {
-    "description": "Feature description for battery monitoring.",
-    "placeholders": {}
-  },
-  "featureBluetooth": "Bluetooth Low Energy connectivity",
-  "@featureBluetooth": {
-    "description": "Feature description for Bluetooth.",
-    "placeholders": {}
-  },
-  "featureCrossPlatform": "Cross-platform support (iOS, Android, macOS)",
-  "@featureCrossPlatform": {
-    "description": "Feature description for cross-platform support.",
-    "placeholders": {}
-  },
-  "rssiTracking": "RSSI Tracking",
-  "@rssiTracking": {
-    "description": "Title for the RSSI tracking screen.",
-    "placeholders": {}
-  },
-  "currentRssi": "Current RSSI",
-  "@currentRssi": {
-    "description": "Label for the current RSSI value.",
-    "placeholders": {}
-  },
-  "rssiHistory": "RSSI History",
-  "@rssiHistory": {
-    "description": "Title for the RSSI history graph.",
-    "placeholders": {}
-  },
-  "rssiHistoryDescription": "Last 60 seconds of signal strength readings",
-  "@rssiHistoryDescription": {
-    "description": "Description for the RSSI history graph.",
-    "placeholders": {}
-  },
-  "rssiDbm": "RSSI (dBm)",
-  "@rssiDbm": {
-    "description": "Label for RSSI axis in graph.",
-    "placeholders": {}
-  },
-  "timeSeconds": "Time (seconds)",
-  "@timeSeconds": {
-    "description": "Label for time axis in graph.",
-    "placeholders": {}
-  },
-  "rssiExcellent": "Excellent Signal",
-  "@rssiExcellent": {
-    "description": "Label for excellent RSSI signal quality.",
-    "placeholders": {}
-  },
-  "rssiGood": "Good Signal",
-  "@rssiGood": {
-    "description": "Label for good RSSI signal quality.",
-    "placeholders": {}
-  },
-  "rssiFair": "Fair Signal",
-  "@rssiFair": {
-    "description": "Label for fair RSSI signal quality.",
-    "placeholders": {}
-  },
-  "rssiPoor": "Poor Signal",
-  "@rssiPoor": {
-    "description": "Label for poor RSSI signal quality.",
+  "zoomOutTooltip": "Zoom Out",
+  "@zoomOutTooltip": {
+    "description": "Tooltip for the zoom out button in the temperature chart.",
     "placeholders": {}
   }
 }

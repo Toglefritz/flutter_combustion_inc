@@ -47,8 +47,8 @@ class PredictionInfo {
 
   /// The current state of the probe's prediction system.
   ///
-  /// This indicates what phase of cooking the probe is in (e.g., probeNotInserted, cooking, predicting) and affects
-  /// the reliability and availability of predictions.
+  /// This indicates what phase of cooking the probe is in (e.g., probeNotInserted, cooking, predicting) and affects the
+  /// reliability and availability of predictions.
   final PredictionState predictionState;
 
   /// The prediction mode configured for the probe.
@@ -63,8 +63,8 @@ class PredictionInfo {
 
   /// Whether the prediction is considered reliable based on current data quality.
   ///
-  /// Predictions may be unreliable during the initial cooking phase when temperature trends are not yet established,
-  /// if the probe is not inserted, or if the probe is experiencing connectivity issues.
+  /// Predictions may be unreliable during the initial cooking phase when temperature trends are not yet established, if
+  /// the probe is not inserted, or if the probe is experiencing connectivity issues.
   final bool isReliable;
 
   /// The timestamp when this prediction was generated.
@@ -99,19 +99,19 @@ class PredictionInfo {
   ///
   /// ```json
   /// {
-  ///   "estimatedTimeSeconds": 1800,
-  ///   "targetTemperatureCelsius": 65.0,
-  ///   "currentCoreTempCelsius": 45.0,
-  ///   "estimatedCoreTemperature": 45.5,
-  ///   "percentThroughCook": 60,
-  ///   "predictionState": "Cooking",
-  ///   "predictionStateRaw": 2,
-  ///   "predictionMode": "Time to Removal",
-  ///   "predictionModeRaw": 1,
-  ///   "predictionType": "Removal",
-  ///   "predictionTypeRaw": 1,
-  ///   "isReliable": true,
-  ///   "timestampMillis": 1640995200000
+  /// "estimatedTimeSeconds": 1800,
+  /// "targetTemperatureCelsius": 65.0,
+  /// "currentCoreTempCelsius": 45.0,
+  /// "estimatedCoreTemperature": 45.5,
+  /// "percentThroughCook": 60,
+  /// "predictionState": "Cooking",
+  /// "predictionStateRaw": 2,
+  /// "predictionMode": "Time to Removal",
+  /// "predictionModeRaw": 1,
+  /// "predictionType": "Removal",
+  /// "predictionTypeRaw": 1,
+  /// "isReliable": true,
+  /// "timestampMillis": 1640995200000
   /// }
   /// ```
   factory PredictionInfo.fromMap(Map<String, dynamic> map) {

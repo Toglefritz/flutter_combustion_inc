@@ -9,10 +9,9 @@ import 'device.dart';
 
 /// Represents a Combustion Inc. temperature probe.
 ///
-/// Extends [Device] with probe-specific functionality: temperature readings,
-/// predictions, session management, and log syncing. The probe is uniquely
-/// identified by its serial number (used as [uniqueIdentifier]), matching the
-/// iOS SDK's `Probe` class behavior.
+/// Extends [Device] with probe-specific functionality: temperature readings, predictions, session management, and log
+/// syncing. The probe is uniquely identified by its serial number (used as [uniqueIdentifier]), matching the iOS SDK's
+/// `Probe` class behavior.
 class Probe extends Device {
   /// The probe's serial number.
   final String serialNumber;
@@ -31,8 +30,8 @@ class Probe extends Device {
 
   /// Creates a new [Probe].
   ///
-  /// The [identifier] is the BLE peripheral UUID, while [serialNumber] is the
-  /// probe's unique serial used as [uniqueIdentifier] on the base [Device].
+  /// The [identifier] is the BLE peripheral UUID, while [serialNumber] is the probe's unique serial used as
+  /// [uniqueIdentifier] on the base [Device].
   Probe({
     required String identifier,
     required this.serialNumber,
@@ -48,8 +47,7 @@ class Probe extends Device {
 
   /// Creates a [Probe] from a platform channel map.
   ///
-  /// Expected keys: 'identifier', 'serialNumber', 'name', 'macAddress', 'id',
-  /// 'color', and optionally 'rssi'.
+  /// Expected keys: 'identifier', 'serialNumber', 'name', 'macAddress', 'id', 'color', and optionally 'rssi'.
   factory Probe.fromMap(Map<String, dynamic> map) {
     return Probe(
       identifier: map['identifier'] as String,
@@ -79,8 +77,8 @@ class Probe extends Device {
     await FlutterCombustionIncPlatform.instance.disconnectFromProbe(identifier);
   }
 
-  /// Emits [DeviceConnectionState] values whenever the probe's BLE connection
-  /// state transitions (disconnected, connecting, connected, failed).
+  /// Emits [DeviceConnectionState] values whenever the probe's BLE connection state transitions (disconnected,
+  /// connecting, connected, failed).
   Stream<DeviceConnectionState> get connectionStateStream {
     return FlutterCombustionIncPlatform.instance
         .connectionStateStream(identifier)
@@ -180,8 +178,7 @@ class Probe extends Device {
 
   /// Emits [PredictionInfo] updates for this probe.
   ///
-  /// Predictions are only available after a target temperature has been set
-  /// via `DeviceManager.setTargetTemperature`.
+  /// Predictions are only available after a target temperature has been set via `DeviceManager.setTargetTemperature`.
   Stream<PredictionInfo> get predictionStream {
     return FlutterCombustionIncPlatform.instance.predictionStream(identifier);
   }

@@ -79,10 +79,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loadingTemperatureLogs => 'Loading temperature logs...';
 
   @override
-  String get errorNoActiveSession => 'No active cooking session found. Start a cooking session to view temperature logs.';
+  String get errorNoActiveSession =>
+      'No active cooking session found. Start a cooking session to view temperature logs.';
 
   @override
-  String get errorNoLogsAvailable => 'No temperature logs available. Ensure the probe is connected and logging temperatures.';
+  String get errorNoLogsAvailable =>
+      'No temperature logs available. Ensure the probe is connected and logging temperatures.';
 
   @override
   String get errorProbeNotFound => 'Probe not found. Please check the connection and try again.';
@@ -329,4 +331,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get rssiPoor => 'Poor Signal';
+
+  @override
+  String get probeDisconnected => 'Probe disconnected';
+
+  @override
+  String get probeReconnecting => 'Reconnecting to probe...';
 }

@@ -1,37 +1,35 @@
 /// Represents the current state of the probe's prediction system.
 ///
-/// This enum corresponds to the PredictionState enum in the Combustion Inc
-/// iOS/macOS BLE SDK. The state indicates what phase of cooking the probe
-/// is currently in and affects the reliability of predictions.
+/// This enum corresponds to the PredictionState enum in the Combustion Inc iOS/macOS BLE SDK. The state indicates what
+/// phase of cooking the probe is currently in and affects the reliability of predictions.
 enum PredictionState {
   /// Probe is not inserted into food.
   ///
-  /// Predictions are not available in this state as the probe cannot
-  /// detect food temperature trends.
+  /// Predictions are not available in this state as the probe cannot detect food temperature trends.
   probeNotInserted,
 
   /// Probe has been inserted into food but cooking has not started.
   ///
-  /// The probe is detecting food temperature but predictions may not
-  /// yet be reliable as temperature trends have not been established.
+  /// The probe is detecting food temperature but predictions may not yet be reliable as temperature trends have not
+  /// been established.
   probeInserted,
 
   /// Food is actively cooking and temperature is rising.
   ///
-  /// The probe is tracking temperature trends and generating predictions
-  /// based on the current rate of temperature change.
+  /// The probe is tracking temperature trends and generating predictions based on the current rate of temperature
+  /// change.
   cooking,
 
   /// Probe is actively generating time-to-target predictions.
   ///
-  /// This state indicates that the probe has sufficient data to make
-  /// reliable predictions about when the food will reach target temperature.
+  /// This state indicates that the probe has sufficient data to make reliable predictions about when the food will
+  /// reach target temperature.
   predicting,
 
   /// Target temperature has been reached and removal prediction is complete.
   ///
-  /// The food has reached the target temperature. If resting predictions
-  /// are enabled, the probe may continue tracking temperature during rest.
+  /// The food has reached the target temperature. If resting predictions are enabled, the probe may continue tracking
+  /// temperature during rest.
   removalPredictionDone,
 
   /// Reserved state for future use (state 5).
@@ -66,14 +64,12 @@ enum PredictionState {
 
   /// Unknown or unrecognized prediction state.
   ///
-  /// This state indicates that the probe reported a state value that
-  /// is not recognized by this version of the SDK.
+  /// This state indicates that the probe reported a state value that is not recognized by this version of the SDK.
   unknown;
 
   /// Converts a raw integer value from the native SDK to [PredictionState].
   ///
-  /// The raw value corresponds to the UInt8 rawValue from the iOS/macOS
-  /// SDK's PredictionState enum.
+  /// The raw value corresponds to the UInt8 rawValue from the iOS/macOS SDK's PredictionState enum.
   ///
   /// Throws [ArgumentError] if the raw value is not recognized.
   static PredictionState fromInt(int raw) {
@@ -117,8 +113,7 @@ enum PredictionState {
 
   /// Converts a string representation from the native SDK to [PredictionState].
   ///
-  /// This method handles the human-readable string values returned by
-  /// the iOS/macOS SDK's toString() method.
+  /// This method handles the human-readable string values returned by the iOS/macOS SDK's toString() method.
   ///
   /// Throws [ArgumentError] if the string is not recognized.
   static PredictionState fromString(String value) {

@@ -10,9 +10,8 @@ import 'prediction/prediction_info.dart';
 
 /// Central registry and coordinator for all Combustion BLE devices.
 ///
-/// Mirrors the iOS SDK's `DeviceManager` singleton. Maintains a local registry
-/// of discovered devices (probes and MeatNet nodes), provides reactive streams
-/// for device discovery, and routes commands to the appropriate device.
+/// Mirrors the iOS SDK's `DeviceManager` singleton. Maintains a local registry of discovered devices (probes and
+/// MeatNet nodes), provides reactive streams for device discovery, and routes commands to the appropriate device.
 class DeviceManager {
   /// The singleton instance.
   static final DeviceManager instance = DeviceManager._internal();
@@ -26,8 +25,7 @@ class DeviceManager {
 
   /// Local registry of all known devices, keyed by [Device.uniqueIdentifier].
   ///
-  /// For probes the key is the serial number string. For MeatNet nodes the key
-  /// is the BLE peripheral UUID string.
+  /// For probes the key is the serial number string. For MeatNet nodes the key is the BLE peripheral UUID string.
   final Map<String, Device> devices = <String, Device>{};
 
   /// Controller for broadcasting device list changes.
@@ -49,8 +47,8 @@ class DeviceManager {
 
   /// A stream of [Probe]s discovered while scanning.
   ///
-  /// Each emission represents a single probe that was discovered or updated.
-  /// Probes are also added to the [devices] registry automatically.
+  /// Each emission represents a single probe that was discovered or updated. Probes are also added to the [devices]
+  /// registry automatically.
   Stream<Probe>? _scanResults;
 
   /// Stream of individual probe discovery events.
@@ -76,8 +74,7 @@ class DeviceManager {
     await FlutterCombustionIncPlatform.instance.initBluetooth();
   }
 
-  /// Retrieves a snapshot of all currently known probes from the native SDK
-  /// and updates the local registry.
+  /// Retrieves a snapshot of all currently known probes from the native SDK and updates the local registry.
   Future<List<Probe>> getProbes() async {
     final List<Map<String, dynamic>> result = await FlutterCombustionIncPlatform
         .instance

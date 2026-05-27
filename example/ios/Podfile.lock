@@ -5,6 +5,8 @@ PODS:
   - flutter_combustion_inc (0.0.1):
     - CombustionBLE
     - Flutter
+  - integration_test (0.0.1):
+    - Flutter
   - NordicDFU (4.16.0):
     - ZIPFoundation (= 0.9.19)
   - ZIPFoundation (0.9.19)
@@ -13,6 +15,7 @@ DEPENDENCIES:
   - CombustionBLE (from `https://github.com/Toglefritz/combustion-ios-ble.git`, branch `main`)
   - Flutter (from `Flutter`)
   - flutter_combustion_inc (from `.symlinks/plugins/flutter_combustion_inc/ios`)
+  - integration_test (from `.symlinks/plugins/integration_test/ios`)
 
 SPEC REPOS:
   trunk:
@@ -27,6 +30,8 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_combustion_inc:
     :path: ".symlinks/plugins/flutter_combustion_inc/ios"
+  integration_test:
+    :path: ".symlinks/plugins/integration_test/ios"
 
 CHECKOUT OPTIONS:
   CombustionBLE:
@@ -36,7 +41,8 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   CombustionBLE: ce712f2720bfb104e8b4d137dc4a0db45759db68
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
-  flutter_combustion_inc: 31d6db5fb9cb90c36ef49699a8cb4481ef4681dd
+  flutter_combustion_inc: 1fbcc516acc422f4a909f8328df8f34910c1c3ee
+  integration_test: 4a889634ef21a45d28d50d622cf412dc6d9f586e
   NordicDFU: 116a4ec458945889f8e0e71759e03b23c39c3482
   ZIPFoundation: b8c29ea7ae353b309bc810586181fd073cb3312c
 

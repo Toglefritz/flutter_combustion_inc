@@ -1,7 +1,7 @@
 /// Represents the state of a Device Firmware Update (DFU) operation.
 ///
-/// These states track the DFU lifecycle from initial connection through
-/// firmware transfer and validation to completion or abort.
+/// These states track the DFU lifecycle from initial connection through firmware transfer and validation to completion
+/// or abort.
 enum DfuState {
   /// DFU process is connecting to the device.
   connecting,
