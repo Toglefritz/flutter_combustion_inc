@@ -93,107 +93,11 @@ abstract class AppLocalizations {
     Locale('en')
   ];
 
-  /// Label for the ambient temperature of a probe.
+  /// Title for the about tab.
   ///
   /// In en, this message translates to:
-  /// **'Ambient'**
-  String get ambientTemperature;
-
-  /// Message indicating that the battery status of a probe is okay.
-  ///
-  /// In en, this message translates to:
-  /// **'Battery OK'**
-  String get batteryStatusOk;
-
-  /// Abbreviation for Celsius temperature.
-  ///
-  /// In en, this message translates to:
-  /// **'C'**
-  String get celsiusAbbreviation;
-
-  /// Label for the core temperature of a probe.
-  ///
-  /// In en, this message translates to:
-  /// **'Core'**
-  String get coreTemperature;
-
-  /// Label for the debug information display mode.
-  ///
-  /// In en, this message translates to:
-  /// **'Debug Info'**
-  String get debugInfo;
-
-  /// Abbreviation for Fahrenheit temperature.
-  ///
-  /// In en, this message translates to:
-  /// **'F'**
-  String get fahrenheitAbbreviation;
-
-  /// Button label to hide the graphs in the temperature display.
-  ///
-  /// In en, this message translates to:
-  /// **'Hide Graphs'**
-  String get hideGraphs;
-
-  /// Warning message displayed when a probe's battery is low.
-  ///
-  /// In en, this message translates to:
-  /// **'Battery low'**
-  String get lowBatteryWarning;
-
-  /// Label for the physical temperatures display mode.
-  ///
-  /// In en, this message translates to:
-  /// **'Physical Temperatures'**
-  String get physicalTemperatures;
-
-  /// A generic label for a probe.
-  ///
-  /// In en, this message translates to:
-  /// **'Probe'**
-  String get probe;
-
-  /// Label for the Received Signal Strength Indicator (RSSI) of a probe.
-  ///
-  /// In en, this message translates to:
-  /// **'RSSI'**
-  String get rssi;
-
-  /// Message displayed when the app is searching for nearby probes.
-  ///
-  /// In en, this message translates to:
-  /// **'Searching for probes...'**
-  String get searchingForProbes;
-
-  /// Button label to show the graphs in the temperature display.
-  ///
-  /// In en, this message translates to:
-  /// **'Show Graphs'**
-  String get showGraphs;
-
-  /// Label for the surface temperature of a probe.
-  ///
-  /// In en, this message translates to:
-  /// **'Surface'**
-  String get surfaceTemperature;
-
-  /// Label for a temperature reading, where {number} is the probe number (e.g. T1-T8).
-  ///
-  /// In en, this message translates to:
-  /// **'T{number}'**
-  String temperatureTn(int number);
-
-  /// Label for the list of thermometers, where {number} is the count of available thermometers.
-  ///
-  /// In en, this message translates to:
-  /// **'Thermometers ({number})'**
-  String thermometers(int number);
-
-  /// Label for the virtual temperatures display mode.
-  ///
-  /// In en, this message translates to:
-  /// **'Virtual Temperatures'**
-  String get virtualTemperatures;
+  /// **'About'**
+  String get about;
 
   /// Label for the stacked display mode showing both virtual and physical temperatures.
   ///
@@ -201,29 +105,173 @@ abstract class AppLocalizations {
   /// **'All Temperatures'**
   String get allTemperatures;
 
-  /// Title for the temperature graph display.
+  /// Label for the ambient temperature of a probe.
   ///
   /// In en, this message translates to:
-  /// **'Temperature Graph'**
-  String get temperatureGraph;
+  /// **'Ambient'**
+  String get ambientTemperature;
 
-  /// Message displayed when no temperature data is available for graphing.
+  /// Label for average temperature.
   ///
   /// In en, this message translates to:
-  /// **'No data available'**
-  String get noDataAvailable;
+  /// **'Avg'**
+  String get avgTemperature;
 
-  /// Message displayed while loading historical temperature data.
+  /// Label for battery status.
   ///
   /// In en, this message translates to:
-  /// **'Loading historical data...'**
-  String get loadingHistoricalData;
+  /// **'Battery Status'**
+  String get batteryStatus;
 
-  /// Message displayed while loading temperature logs from the probe.
+  /// Message indicating that the battery status of a probe is okay.
   ///
   /// In en, this message translates to:
-  /// **'Loading temperature logs...'**
-  String get loadingTemperatureLogs;
+  /// **'Battery OK'**
+  String get batteryStatusOk;
+
+  /// Label for Celsius temperature unit option.
+  ///
+  /// In en, this message translates to:
+  /// **'Celsius (°C)'**
+  String get celsius;
+
+  /// Abbreviation for Celsius temperature.
+  ///
+  /// In en, this message translates to:
+  /// **'C'**
+  String get celsiusAbbreviation;
+
+  /// Tooltip for the button to change the target temperature.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Target'**
+  String get changeTarget;
+
+  /// Button label to clear input.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get clear;
+
+  /// Tooltip for the connect button.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect'**
+  String get connect;
+
+  /// Instructions shown when no probes are available.
+  ///
+  /// In en, this message translates to:
+  /// **'Please connect a probe from the home screen first.'**
+  String get connectProbeFirst;
+
+  /// Label for connected connection state.
+  ///
+  /// In en, this message translates to:
+  /// **'Connected'**
+  String get connectionStateConnected;
+
+  /// Label for connecting connection state.
+  ///
+  /// In en, this message translates to:
+  /// **'Connecting...'**
+  String get connectionStateConnecting;
+
+  /// Label for disconnected connection state.
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnected'**
+  String get connectionStateDisconnected;
+
+  /// Label for failed connection state.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed'**
+  String get connectionStateFailed;
+
+  /// Label for the core temperature of a probe.
+  ///
+  /// In en, this message translates to:
+  /// **'Core'**
+  String get coreTemperature;
+
+  /// Label for current core temperature in predictions.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Core'**
+  String get currentCore;
+
+  /// Label for the current cooking progress information.
+  ///
+  /// In en, this message translates to:
+  /// **'Current progress:'**
+  String get currentProgress;
+
+  /// Label for current temperature reading.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Reading'**
+  String get currentReading;
+
+  /// Displays the current route information.
+  ///
+  /// In en, this message translates to:
+  /// **'Current route: {route}'**
+  String currentRouteLabel(String route);
+
+  /// Label for the current RSSI value.
+  ///
+  /// In en, this message translates to:
+  /// **'Current RSSI'**
+  String get currentRssi;
+
+  /// Confirmation message when a custom target temperature is set.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom target set: {temperature}{unit}'**
+  String customTargetTemperatureSet(int temperature, String unit);
+
+  /// Label for the debug information display mode.
+  ///
+  /// In en, this message translates to:
+  /// **'Debug Info'**
+  String get debugInfo;
+
+  /// Section header for the device list.
+  ///
+  /// In en, this message translates to:
+  /// **'Devices'**
+  String get devices;
+
+  /// Label for direct BLE connection route option.
+  ///
+  /// In en, this message translates to:
+  /// **'Direct (probe BLE)'**
+  String get directProbeBle;
+
+  /// Tooltip for the disconnect button.
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnect'**
+  String get disconnect;
+
+  /// Button label to show the custom temperature input field.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Custom Temperature'**
+  String get enterCustomTemperature;
+
+  /// Generic error message when temperature logs fail to load.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to load temperature logs. Please try again.'**
+  String get errorLoadingLogs;
+
+  /// Error message when no matching temperature log is found for the current session.
+  ///
+  /// In en, this message translates to:
+  /// **'No matching temperature log found for the current session.'**
+  String get errorLogNotFound;
 
   /// Error message when no active cooking session is available for temperature logs.
   ///
@@ -243,161 +291,11 @@ abstract class AppLocalizations {
   /// **'Probe not found. Please check the connection and try again.'**
   String get errorProbeNotFound;
 
-  /// Error message when no matching temperature log is found for the current session.
+  /// Label for estimated core temperature in predictions.
   ///
   /// In en, this message translates to:
-  /// **'No matching temperature log found for the current session.'**
-  String get errorLogNotFound;
-
-  /// Generic error message when temperature logs fail to load.
-  ///
-  /// In en, this message translates to:
-  /// **'Unable to load temperature logs. Please try again.'**
-  String get errorLoadingLogs;
-
-  /// Button label to retry a failed operation.
-  ///
-  /// In en, this message translates to:
-  /// **'Retry'**
-  String get retryButton;
-
-  /// Message shown when historical data is not available because no cooking session has started.
-  ///
-  /// In en, this message translates to:
-  /// **'Historical data will be available once cooking session starts'**
-  String get historicalDataUnavailable;
-
-  /// Button label to show only recent temperature data in the historical chart.
-  ///
-  /// In en, this message translates to:
-  /// **'Recent'**
-  String get showRecentData;
-
-  /// Button label to show all available temperature data in the historical chart.
-  ///
-  /// In en, this message translates to:
-  /// **'All Data'**
-  String get showAllData;
-
-  /// Label for the timespan control that lets users choose between recent and all data.
-  ///
-  /// In en, this message translates to:
-  /// **'Show:'**
-  String get timespanControlLabel;
-
-  /// Tooltip for the zoom out button in the temperature chart.
-  ///
-  /// In en, this message translates to:
-  /// **'Zoom Out'**
-  String get zoomOutTooltip;
-
-  /// Tooltip for the zoom in button in the temperature chart.
-  ///
-  /// In en, this message translates to:
-  /// **'Zoom In'**
-  String get zoomInTooltip;
-
-  /// Tooltip for the reset view button in the temperature chart.
-  ///
-  /// In en, this message translates to:
-  /// **'Reset View (or double-tap chart)'**
-  String get resetViewTooltip;
-
-  /// Header for the target temperature control section.
-  ///
-  /// In en, this message translates to:
-  /// **'Set Target Temperature'**
-  String get setTargetTemperature;
-
-  /// Instructions for using the target temperature control.
-  ///
-  /// In en, this message translates to:
-  /// **'Select a food type for quick setup, or enter a custom temperature below.'**
-  String get selectFoodTypeOrEnterCustom;
-
-  /// Conjunction used to separate different options.
-  ///
-  /// In en, this message translates to:
-  /// **'OR'**
-  String get or;
-
-  /// Button label to show the custom temperature input field.
-  ///
-  /// In en, this message translates to:
-  /// **'Enter Custom Temperature'**
-  String get enterCustomTemperature;
-
-  /// Label for temperature input field.
-  ///
-  /// In en, this message translates to:
-  /// **'Temperature'**
-  String get temperature;
-
-  /// Button label to confirm setting a temperature.
-  ///
-  /// In en, this message translates to:
-  /// **'Set'**
-  String get set;
-
-  /// Error message when temperature field is empty.
-  ///
-  /// In en, this message translates to:
-  /// **'Temperature is required'**
-  String get temperatureRequired;
-
-  /// Error message when temperature input is not a valid number.
-  ///
-  /// In en, this message translates to:
-  /// **'Please enter a valid number'**
-  String get invalidTemperature;
-
-  /// Error message when temperature is outside valid cooking range.
-  ///
-  /// In en, this message translates to:
-  /// **'Temperature must be between {min} and {max} {unit}'**
-  String temperatureOutOfRange(int min, int max, String unit);
-
-  /// Confirmation message when a food preset target temperature is set.
-  ///
-  /// In en, this message translates to:
-  /// **'Target set: {food} at {temperature}{unit}'**
-  String targetTemperatureSet(String food, int temperature, String unit);
-
-  /// Confirmation message when a custom target temperature is set.
-  ///
-  /// In en, this message translates to:
-  /// **'Custom target set: {temperature}{unit}'**
-  String customTargetTemperatureSet(int temperature, String unit);
-
-  /// Button label to clear input.
-  ///
-  /// In en, this message translates to:
-  /// **'Clear'**
-  String get clear;
-
-  /// Header for the food preset selection section.
-  ///
-  /// In en, this message translates to:
-  /// **'Quick Presets'**
-  String get quickPresets;
-
-  /// Label for the currently set target temperature.
-  ///
-  /// In en, this message translates to:
-  /// **'Target Temperature'**
-  String get targetTemperature;
-
-  /// Tooltip for the button to change the target temperature.
-  ///
-  /// In en, this message translates to:
-  /// **'Change Target'**
-  String get changeTarget;
-
-  /// Header for the prediction information section.
-  ///
-  /// In en, this message translates to:
-  /// **'Prediction Information'**
-  String get predictionInfo;
+  /// **'Estimated Core'**
+  String get estimatedCore;
 
   /// Label for the estimated time until target temperature is reached.
   ///
@@ -405,245 +303,23 @@ abstract class AppLocalizations {
   /// **'Estimated time remaining:'**
   String get estimatedTimeRemaining;
 
-  /// Placeholder text shown while prediction system is not yet integrated.
-  ///
-  /// In en, this message translates to:
-  /// **'Calculating... (Prediction system integration pending)'**
-  String get predictionPlaceholder;
-
-  /// Label for the current cooking progress information.
-  ///
-  /// In en, this message translates to:
-  /// **'Current progress:'**
-  String get currentProgress;
-
-  /// Placeholder text shown while progress tracking is not yet integrated.
-  ///
-  /// In en, this message translates to:
-  /// **'Monitoring temperature... (Progress tracking pending)'**
-  String get progressPlaceholder;
-
-  /// Title for the predictions screen.
-  ///
-  /// In en, this message translates to:
-  /// **'Predictions'**
-  String get predictions;
-
-  /// Label for the probe selection dropdown.
-  ///
-  /// In en, this message translates to:
-  /// **'Select Probe'**
-  String get selectProbe;
-
-  /// Message shown when no probes are available for predictions.
-  ///
-  /// In en, this message translates to:
-  /// **'No Probes Available'**
-  String get noProbesAvailable;
-
-  /// Instructions shown when no probes are available.
-  ///
-  /// In en, this message translates to:
-  /// **'Please connect a probe from the home screen first.'**
-  String get connectProbeFirst;
-
-  /// Title for the temperatures tab.
-  ///
-  /// In en, this message translates to:
-  /// **'Temperatures'**
-  String get temperatures;
-
-  /// Title for the network topology tab.
-  ///
-  /// In en, this message translates to:
-  /// **'Network'**
-  String get network;
-
-  /// Title for the graphs tab.
-  ///
-  /// In en, this message translates to:
-  /// **'Graphs'**
-  String get graphs;
-
-  /// Title for the about tab.
-  ///
-  /// In en, this message translates to:
-  /// **'About'**
-  String get about;
-
-  /// Title for the settings screen.
-  ///
-  /// In en, this message translates to:
-  /// **'Settings'**
-  String get settings;
-
-  /// Label for temperature unit setting.
-  ///
-  /// In en, this message translates to:
-  /// **'Temperature Unit'**
-  String get temperatureUnit;
-
-  /// Label for Celsius temperature unit option.
-  ///
-  /// In en, this message translates to:
-  /// **'Celsius (°C)'**
-  String get celsius;
-
   /// Label for Fahrenheit temperature unit option.
   ///
   /// In en, this message translates to:
   /// **'Fahrenheit (°F)'**
   String get fahrenheit;
 
-  /// Instructions for making probe discoverable.
+  /// Abbreviation for Fahrenheit temperature.
   ///
   /// In en, this message translates to:
-  /// **'Make sure your probe is powered on and nearby.'**
-  String get makeProbeVisible;
+  /// **'F'**
+  String get fahrenheitAbbreviation;
 
-  /// Title for virtual temperature sensors section.
+  /// Error message when setting target temperature fails.
   ///
   /// In en, this message translates to:
-  /// **'Virtual Sensors'**
-  String get virtualSensors;
-
-  /// Title for physical temperature sensors section.
-  ///
-  /// In en, this message translates to:
-  /// **'Physical Sensors'**
-  String get physicalSensors;
-
-  /// Label for current temperature reading.
-  ///
-  /// In en, this message translates to:
-  /// **'Current Reading'**
-  String get currentReading;
-
-  /// Label for minimum temperature.
-  ///
-  /// In en, this message translates to:
-  /// **'Min'**
-  String get minTemperature;
-
-  /// Label for maximum temperature.
-  ///
-  /// In en, this message translates to:
-  /// **'Max'**
-  String get maxTemperature;
-
-  /// Label for average temperature.
-  ///
-  /// In en, this message translates to:
-  /// **'Avg'**
-  String get avgTemperature;
-
-  /// Title for probe details section.
-  ///
-  /// In en, this message translates to:
-  /// **'Probe Details'**
-  String get probeDetails;
-
-  /// Label for probe serial number.
-  ///
-  /// In en, this message translates to:
-  /// **'Serial Number'**
-  String get serialNumber;
-
-  /// Label for probe MAC address.
-  ///
-  /// In en, this message translates to:
-  /// **'MAC Address'**
-  String get macAddress;
-
-  /// Label for probe ID.
-  ///
-  /// In en, this message translates to:
-  /// **'Probe ID'**
-  String get probeId;
-
-  /// Label for battery status.
-  ///
-  /// In en, this message translates to:
-  /// **'Battery Status'**
-  String get batteryStatus;
-
-  /// Label for signal strength.
-  ///
-  /// In en, this message translates to:
-  /// **'Signal Strength'**
-  String get signalStrength;
-
-  /// Title for plugin information section.
-  ///
-  /// In en, this message translates to:
-  /// **'Plugin Information'**
-  String get pluginInformation;
-
-  /// Label for version number.
-  ///
-  /// In en, this message translates to:
-  /// **'Version'**
-  String get version;
-
-  /// Label for features list.
-  ///
-  /// In en, this message translates to:
-  /// **'Features'**
-  String get features;
-
-  /// Label for name field.
-  ///
-  /// In en, this message translates to:
-  /// **'Name'**
-  String get name;
-
-  /// Label for platform field.
-  ///
-  /// In en, this message translates to:
-  /// **'Platform'**
-  String get platform;
-
-  /// Label for unknown or unavailable values.
-  ///
-  /// In en, this message translates to:
-  /// **'Unknown'**
-  String get unknown;
-
-  /// Label shown while data is loading.
-  ///
-  /// In en, this message translates to:
-  /// **'Loading...'**
-  String get loading;
-
-  /// Feature description for real-time monitoring.
-  ///
-  /// In en, this message translates to:
-  /// **'Real-time temperature monitoring'**
-  String get featureRealtimeMonitoring;
-
-  /// Feature description for virtual sensors.
-  ///
-  /// In en, this message translates to:
-  /// **'Virtual temperature sensors (core, surface, ambient)'**
-  String get featureVirtualSensors;
-
-  /// Feature description for physical sensors.
-  ///
-  /// In en, this message translates to:
-  /// **'Physical sensor readings (T1-T8)'**
-  String get featurePhysicalSensors;
-
-  /// Feature description for historical graphs.
-  ///
-  /// In en, this message translates to:
-  /// **'Historical temperature graphs'**
-  String get featureHistoricalGraphs;
-
-  /// Feature description for predictions.
-  ///
-  /// In en, this message translates to:
-  /// **'Cooking time predictions'**
-  String get featurePredictions;
+  /// **'Failed to set target temperature: {error}'**
+  String failedToSetTargetTemperature(String error);
 
   /// Feature description for battery monitoring.
   ///
@@ -663,113 +339,125 @@ abstract class AppLocalizations {
   /// **'Cross-platform support (iOS, Android, macOS)'**
   String get featureCrossPlatform;
 
-  /// Title for the RSSI tracking screen.
+  /// Feature description for historical graphs.
   ///
   /// In en, this message translates to:
-  /// **'RSSI Tracking'**
-  String get rssiTracking;
+  /// **'Historical temperature graphs'**
+  String get featureHistoricalGraphs;
 
-  /// Label for the current RSSI value.
+  /// Feature description for physical sensors.
   ///
   /// In en, this message translates to:
-  /// **'Current RSSI'**
-  String get currentRssi;
+  /// **'Physical sensor readings (T1-T8)'**
+  String get featurePhysicalSensors;
 
-  /// Title for the RSSI history graph.
+  /// Feature description for predictions.
   ///
   /// In en, this message translates to:
-  /// **'RSSI History'**
-  String get rssiHistory;
+  /// **'Cooking time predictions'**
+  String get featurePredictions;
 
-  /// Description for the RSSI history graph.
+  /// Feature description for real-time monitoring.
   ///
   /// In en, this message translates to:
-  /// **'Last 60 seconds of signal strength readings'**
-  String get rssiHistoryDescription;
+  /// **'Real-time temperature monitoring'**
+  String get featureRealtimeMonitoring;
 
-  /// Label for RSSI axis in graph.
+  /// Feature description for virtual sensors.
   ///
   /// In en, this message translates to:
-  /// **'RSSI (dBm)'**
-  String get rssiDbm;
+  /// **'Virtual temperature sensors (core, surface, ambient)'**
+  String get featureVirtualSensors;
 
-  /// Label for time axis in graph.
+  /// Label for features list.
   ///
   /// In en, this message translates to:
-  /// **'Time (seconds)'**
-  String get timeSeconds;
+  /// **'Features'**
+  String get features;
 
-  /// Label for excellent RSSI signal quality.
+  /// Title for the graphs tab.
   ///
   /// In en, this message translates to:
-  /// **'Excellent Signal'**
-  String get rssiExcellent;
+  /// **'Graphs'**
+  String get graphs;
 
-  /// Label for good RSSI signal quality.
+  /// Button label to hide the graphs in the temperature display.
   ///
   /// In en, this message translates to:
-  /// **'Good Signal'**
-  String get rssiGood;
+  /// **'Hide Graphs'**
+  String get hideGraphs;
 
-  /// Label for fair RSSI signal quality.
+  /// Message shown when historical data is not available because no cooking session has started.
   ///
   /// In en, this message translates to:
-  /// **'Fair Signal'**
-  String get rssiFair;
+  /// **'Historical data will be available once cooking session starts'**
+  String get historicalDataUnavailable;
 
-  /// Label for poor RSSI signal quality.
+  /// Label for historical data display mode in graphs.
   ///
   /// In en, this message translates to:
-  /// **'Poor Signal'**
-  String get rssiPoor;
+  /// **'History'**
+  String get historyData;
 
-  /// Message shown while scanning for nearby Combustion devices.
+  /// Error message when temperature input is not a valid number.
   ///
   /// In en, this message translates to:
-  /// **'Scanning for devices...'**
-  String get scanningForDevices;
+  /// **'Please enter a valid number'**
+  String get invalidTemperature;
 
-  /// Tooltip for the refresh route button.
+  /// Label for live data display mode in graphs.
   ///
   /// In en, this message translates to:
-  /// **'Refresh route'**
-  String get refreshRoute;
+  /// **'Live'**
+  String get liveData;
 
-  /// Section header for the device list.
+  /// Label shown while data is loading.
   ///
   /// In en, this message translates to:
-  /// **'Devices'**
-  String get devices;
+  /// **'Loading...'**
+  String get loading;
 
-  /// Label for the probes subsection in the device list.
+  /// Message displayed while loading historical temperature data.
   ///
   /// In en, this message translates to:
-  /// **'Probes'**
-  String get probes;
+  /// **'Loading historical data...'**
+  String get loadingHistoricalData;
+
+  /// Message displayed while loading temperature logs from the probe.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading temperature logs...'**
+  String get loadingTemperatureLogs;
+
+  /// Warning message displayed when a probe's battery is low.
+  ///
+  /// In en, this message translates to:
+  /// **'Battery low'**
+  String get lowBatteryWarning;
+
+  /// Label for probe MAC address.
+  ///
+  /// In en, this message translates to:
+  /// **'MAC Address'**
+  String get macAddress;
+
+  /// Instructions for making probe discoverable.
+  ///
+  /// In en, this message translates to:
+  /// **'Make sure your probe is powered on and nearby.'**
+  String get makeProbeVisible;
+
+  /// Label for maximum temperature.
+  ///
+  /// In en, this message translates to:
+  /// **'Max'**
+  String get maxTemperature;
 
   /// Label for the MeatNet nodes subsection in the device list.
   ///
   /// In en, this message translates to:
   /// **'MeatNet Nodes'**
   String get meatNetNodes;
-
-  /// Tooltip for the select probe button.
-  ///
-  /// In en, this message translates to:
-  /// **'Select probe'**
-  String get selectProbeTooltip;
-
-  /// Tooltip for the disconnect button.
-  ///
-  /// In en, this message translates to:
-  /// **'Disconnect'**
-  String get disconnect;
-
-  /// Tooltip for the connect button.
-  ///
-  /// In en, this message translates to:
-  /// **'Connect'**
-  String get connect;
 
   /// Section header for the mesh network topology view.
   ///
@@ -783,143 +471,11 @@ abstract class AppLocalizations {
   /// **'Shows which probes each node can reach.'**
   String get meshTopologyDescription;
 
-  /// Message shown when a node has no probes in its network.
+  /// Label for minimum temperature.
   ///
   /// In en, this message translates to:
-  /// **'No probes detected'**
-  String get noProbesDetected;
-
-  /// Section header for the route control panel.
-  ///
-  /// In en, this message translates to:
-  /// **'Route Control'**
-  String get routeControl;
-
-  /// Shows which probe is currently selected for route control.
-  ///
-  /// In en, this message translates to:
-  /// **'Selected probe: {name}'**
-  String selectedProbeLabel(String name);
-
-  /// Displays the current route information.
-  ///
-  /// In en, this message translates to:
-  /// **'Current route: {route}'**
-  String currentRouteLabel(String route);
-
-  /// Label for automatic routing mode.
-  ///
-  /// In en, this message translates to:
-  /// **'Auto'**
-  String get routingModeAuto;
-
-  /// Label for explicit routing mode.
-  ///
-  /// In en, this message translates to:
-  /// **'Explicit'**
-  String get routingModeExplicit;
-
-  /// Label for the route device selector.
-  ///
-  /// In en, this message translates to:
-  /// **'Route through:'**
-  String get routeThrough;
-
-  /// Label for direct BLE connection route option.
-  ///
-  /// In en, this message translates to:
-  /// **'Direct (probe BLE)'**
-  String get directProbeBle;
-
-  /// Displays an RSSI value with unit.
-  ///
-  /// In en, this message translates to:
-  /// **'RSSI: {value} dBm'**
-  String rssiValueDbm(int value);
-
-  /// Shows how many probes a node can reach.
-  ///
-  /// In en, this message translates to:
-  /// **'{count, plural, =1{1 probe} other{{count} probes}}'**
-  String nodeProbeCount(int count);
-
-  /// Label for disconnected connection state.
-  ///
-  /// In en, this message translates to:
-  /// **'Disconnected'**
-  String get connectionStateDisconnected;
-
-  /// Label for connecting connection state.
-  ///
-  /// In en, this message translates to:
-  /// **'Connecting...'**
-  String get connectionStateConnecting;
-
-  /// Label for connected connection state.
-  ///
-  /// In en, this message translates to:
-  /// **'Connected'**
-  String get connectionStateConnected;
-
-  /// Label for failed connection state.
-  ///
-  /// In en, this message translates to:
-  /// **'Failed'**
-  String get connectionStateFailed;
-
-  /// Tooltip for switching to stacked temperature display.
-  ///
-  /// In en, this message translates to:
-  /// **'Switch to stacked view'**
-  String get switchToStackedView;
-
-  /// Tooltip for switching to column temperature display.
-  ///
-  /// In en, this message translates to:
-  /// **'Switch to column view'**
-  String get switchToColumnView;
-
-  /// Label for live data display mode in graphs.
-  ///
-  /// In en, this message translates to:
-  /// **'Live'**
-  String get liveData;
-
-  /// Label for historical data display mode in graphs.
-  ///
-  /// In en, this message translates to:
-  /// **'History'**
-  String get historyData;
-
-  /// Section header for temperature details in predictions.
-  ///
-  /// In en, this message translates to:
-  /// **'Temperature Information'**
-  String get temperatureInformation;
-
-  /// Label for current core temperature in predictions.
-  ///
-  /// In en, this message translates to:
-  /// **'Current Core'**
-  String get currentCore;
-
-  /// Label for estimated core temperature in predictions.
-  ///
-  /// In en, this message translates to:
-  /// **'Estimated Core'**
-  String get estimatedCore;
-
-  /// Label for target temperature in predictions.
-  ///
-  /// In en, this message translates to:
-  /// **'Target'**
-  String get target;
-
-  /// Section header for prediction detail information.
-  ///
-  /// In en, this message translates to:
-  /// **'Prediction Details'**
-  String get predictionDetails;
+  /// **'Min'**
+  String get minTemperature;
 
   /// Label for prediction mode.
   ///
@@ -927,23 +483,17 @@ abstract class AppLocalizations {
   /// **'Mode'**
   String get mode;
 
-  /// Label for prediction type.
+  /// Label for name field.
   ///
   /// In en, this message translates to:
-  /// **'Type'**
-  String get type;
+  /// **'Name'**
+  String get name;
 
-  /// Label for prediction reliability indicator.
+  /// Title for the network topology tab.
   ///
   /// In en, this message translates to:
-  /// **'Reliable'**
-  String get reliable;
-
-  /// Affirmative label.
-  ///
-  /// In en, this message translates to:
-  /// **'Yes'**
-  String get yes;
+  /// **'Network'**
+  String get network;
 
   /// Negative label.
   ///
@@ -951,59 +501,77 @@ abstract class AppLocalizations {
   /// **'No'**
   String get no;
 
-  /// Message shown while waiting for prediction data to arrive.
+  /// Message displayed when no temperature data is available for graphing.
   ///
   /// In en, this message translates to:
-  /// **'Waiting for prediction data...'**
-  String get waitingForPredictionData;
+  /// **'No data available'**
+  String get noDataAvailable;
 
-  /// Label for probe not inserted prediction state.
+  /// Message shown when no probes are available for predictions.
   ///
   /// In en, this message translates to:
-  /// **'Probe Not Inserted'**
-  String get predictionStateProbeNotInserted;
+  /// **'No Probes Available'**
+  String get noProbesAvailable;
 
-  /// Label for probe inserted prediction state.
+  /// Message shown when a node has no probes in its network.
   ///
   /// In en, this message translates to:
-  /// **'Probe Inserted'**
-  String get predictionStateProbeInserted;
+  /// **'No probes detected'**
+  String get noProbesDetected;
 
-  /// Label for cooking prediction state.
+  /// Shows how many probes a node can reach.
   ///
   /// In en, this message translates to:
-  /// **'Cooking'**
-  String get predictionStateCooking;
+  /// **'{count, plural, =1{1 probe} other{{count} probes}}'**
+  String nodeProbeCount(int count);
 
-  /// Label for predicting prediction state.
+  /// Conjunction used to separate different options.
   ///
   /// In en, this message translates to:
-  /// **'Predicting'**
-  String get predictionStatePredicting;
+  /// **'OR'**
+  String get or;
 
-  /// Label for done prediction state.
+  /// Title for physical temperature sensors section.
   ///
   /// In en, this message translates to:
-  /// **'Done'**
-  String get predictionStateDone;
+  /// **'Physical Sensors'**
+  String get physicalSensors;
 
-  /// Label for unknown prediction state.
+  /// Label for the physical temperatures display mode.
   ///
   /// In en, this message translates to:
-  /// **'Unknown'**
-  String get predictionStateUnknown;
+  /// **'Physical Temperatures'**
+  String get physicalTemperatures;
+
+  /// Label for platform field.
+  ///
+  /// In en, this message translates to:
+  /// **'Platform'**
+  String get platform;
+
+  /// Title for plugin information section.
+  ///
+  /// In en, this message translates to:
+  /// **'Plugin Information'**
+  String get pluginInformation;
+
+  /// Section header for prediction detail information.
+  ///
+  /// In en, this message translates to:
+  /// **'Prediction Details'**
+  String get predictionDetails;
+
+  /// Header for the prediction information section.
+  ///
+  /// In en, this message translates to:
+  /// **'Prediction Information'**
+  String get predictionInfo;
 
   /// Label for no prediction mode.
   ///
   /// In en, this message translates to:
   /// **'None'**
   String get predictionModeNone;
-
-  /// Label for time to removal prediction mode.
-  ///
-  /// In en, this message translates to:
-  /// **'Time to Removal'**
-  String get predictionModeTimeToRemoval;
 
   /// Label for removal and resting prediction mode.
   ///
@@ -1017,6 +585,54 @@ abstract class AppLocalizations {
   /// **'Reserved'**
   String get predictionModeReserved;
 
+  /// Label for time to removal prediction mode.
+  ///
+  /// In en, this message translates to:
+  /// **'Time to Removal'**
+  String get predictionModeTimeToRemoval;
+
+  /// Placeholder text shown while prediction system is not yet integrated.
+  ///
+  /// In en, this message translates to:
+  /// **'Calculating... (Prediction system integration pending)'**
+  String get predictionPlaceholder;
+
+  /// Label for cooking prediction state.
+  ///
+  /// In en, this message translates to:
+  /// **'Cooking'**
+  String get predictionStateCooking;
+
+  /// Label for done prediction state.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get predictionStateDone;
+
+  /// Label for predicting prediction state.
+  ///
+  /// In en, this message translates to:
+  /// **'Predicting'**
+  String get predictionStatePredicting;
+
+  /// Label for probe inserted prediction state.
+  ///
+  /// In en, this message translates to:
+  /// **'Probe Inserted'**
+  String get predictionStateProbeInserted;
+
+  /// Label for probe not inserted prediction state.
+  ///
+  /// In en, this message translates to:
+  /// **'Probe Not Inserted'**
+  String get predictionStateProbeNotInserted;
+
+  /// Label for unknown prediction state.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get predictionStateUnknown;
+
   /// Label for no prediction type.
   ///
   /// In en, this message translates to:
@@ -1029,23 +645,419 @@ abstract class AppLocalizations {
   /// **'Removal'**
   String get predictionTypeRemoval;
 
-  /// Label for resting prediction type.
-  ///
-  /// In en, this message translates to:
-  /// **'Resting'**
-  String get predictionTypeResting;
-
   /// Label for reserved prediction type.
   ///
   /// In en, this message translates to:
   /// **'Reserved'**
   String get predictionTypeReserved;
 
-  /// Error message when setting target temperature fails.
+  /// Label for resting prediction type.
   ///
   /// In en, this message translates to:
-  /// **'Failed to set target temperature: {error}'**
-  String failedToSetTargetTemperature(String error);
+  /// **'Resting'**
+  String get predictionTypeResting;
+
+  /// Title for the predictions screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Predictions'**
+  String get predictions;
+
+  /// A generic label for a probe.
+  ///
+  /// In en, this message translates to:
+  /// **'Probe'**
+  String get probe;
+
+  /// Title for probe details section.
+  ///
+  /// In en, this message translates to:
+  /// **'Probe Details'**
+  String get probeDetails;
+
+  /// Label for probe ID.
+  ///
+  /// In en, this message translates to:
+  /// **'Probe ID'**
+  String get probeId;
+
+  /// Label for the probes subsection in the device list.
+  ///
+  /// In en, this message translates to:
+  /// **'Probes'**
+  String get probes;
+
+  /// Placeholder text shown while progress tracking is not yet integrated.
+  ///
+  /// In en, this message translates to:
+  /// **'Monitoring temperature... (Progress tracking pending)'**
+  String get progressPlaceholder;
+
+  /// Header for the food preset selection section.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Presets'**
+  String get quickPresets;
+
+  /// Tooltip for the refresh route button.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh route'**
+  String get refreshRoute;
+
+  /// Label for prediction reliability indicator.
+  ///
+  /// In en, this message translates to:
+  /// **'Reliable'**
+  String get reliable;
+
+  /// Tooltip for the reset view button in the temperature chart.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset View (or double-tap chart)'**
+  String get resetViewTooltip;
+
+  /// Button label to retry a failed operation.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retryButton;
+
+  /// Section header for the route control panel.
+  ///
+  /// In en, this message translates to:
+  /// **'Route Control'**
+  String get routeControl;
+
+  /// Label for the route device selector.
+  ///
+  /// In en, this message translates to:
+  /// **'Route through:'**
+  String get routeThrough;
+
+  /// Label for automatic routing mode.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto'**
+  String get routingModeAuto;
+
+  /// Label for explicit routing mode.
+  ///
+  /// In en, this message translates to:
+  /// **'Explicit'**
+  String get routingModeExplicit;
+
+  /// Label for the Received Signal Strength Indicator (RSSI) of a probe.
+  ///
+  /// In en, this message translates to:
+  /// **'RSSI'**
+  String get rssi;
+
+  /// Label for RSSI axis in graph.
+  ///
+  /// In en, this message translates to:
+  /// **'RSSI (dBm)'**
+  String get rssiDbm;
+
+  /// Label for excellent RSSI signal quality.
+  ///
+  /// In en, this message translates to:
+  /// **'Excellent Signal'**
+  String get rssiExcellent;
+
+  /// Label for fair RSSI signal quality.
+  ///
+  /// In en, this message translates to:
+  /// **'Fair Signal'**
+  String get rssiFair;
+
+  /// Label for good RSSI signal quality.
+  ///
+  /// In en, this message translates to:
+  /// **'Good Signal'**
+  String get rssiGood;
+
+  /// Title for the RSSI history graph.
+  ///
+  /// In en, this message translates to:
+  /// **'RSSI History'**
+  String get rssiHistory;
+
+  /// Description for the RSSI history graph.
+  ///
+  /// In en, this message translates to:
+  /// **'Last 60 seconds of signal strength readings'**
+  String get rssiHistoryDescription;
+
+  /// Label for poor RSSI signal quality.
+  ///
+  /// In en, this message translates to:
+  /// **'Poor Signal'**
+  String get rssiPoor;
+
+  /// Title for the RSSI tracking screen.
+  ///
+  /// In en, this message translates to:
+  /// **'RSSI Tracking'**
+  String get rssiTracking;
+
+  /// Displays an RSSI value with unit.
+  ///
+  /// In en, this message translates to:
+  /// **'RSSI: {value} dBm'**
+  String rssiValueDbm(int value);
+
+  /// Message shown while scanning for nearby Combustion devices.
+  ///
+  /// In en, this message translates to:
+  /// **'Scanning for devices...'**
+  String get scanningForDevices;
+
+  /// Message displayed when the app is searching for nearby probes.
+  ///
+  /// In en, this message translates to:
+  /// **'Searching for probes...'**
+  String get searchingForProbes;
+
+  /// Instructions for using the target temperature control.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a food type for quick setup, or enter a custom temperature below.'**
+  String get selectFoodTypeOrEnterCustom;
+
+  /// Label for the probe selection dropdown.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Probe'**
+  String get selectProbe;
+
+  /// Tooltip for the select probe button.
+  ///
+  /// In en, this message translates to:
+  /// **'Select probe'**
+  String get selectProbeTooltip;
+
+  /// Shows which probe is currently selected for route control.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected probe: {name}'**
+  String selectedProbeLabel(String name);
+
+  /// Label for probe serial number.
+  ///
+  /// In en, this message translates to:
+  /// **'Serial Number'**
+  String get serialNumber;
+
+  /// Button label to confirm setting a temperature.
+  ///
+  /// In en, this message translates to:
+  /// **'Set'**
+  String get set;
+
+  /// Header for the target temperature control section.
+  ///
+  /// In en, this message translates to:
+  /// **'Set Target Temperature'**
+  String get setTargetTemperature;
+
+  /// Title for the settings screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settings;
+
+  /// Button label to show all available temperature data in the historical chart.
+  ///
+  /// In en, this message translates to:
+  /// **'All Data'**
+  String get showAllData;
+
+  /// Button label to show the graphs in the temperature display.
+  ///
+  /// In en, this message translates to:
+  /// **'Show Graphs'**
+  String get showGraphs;
+
+  /// Button label to show only recent temperature data in the historical chart.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent'**
+  String get showRecentData;
+
+  /// Label for signal strength.
+  ///
+  /// In en, this message translates to:
+  /// **'Signal Strength'**
+  String get signalStrength;
+
+  /// Label for the surface temperature of a probe.
+  ///
+  /// In en, this message translates to:
+  /// **'Surface'**
+  String get surfaceTemperature;
+
+  /// Tooltip for switching to column temperature display.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch to column view'**
+  String get switchToColumnView;
+
+  /// Tooltip for switching to stacked temperature display.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch to stacked view'**
+  String get switchToStackedView;
+
+  /// Label for target temperature in predictions.
+  ///
+  /// In en, this message translates to:
+  /// **'Target'**
+  String get target;
+
+  /// Label for the currently set target temperature.
+  ///
+  /// In en, this message translates to:
+  /// **'Target Temperature'**
+  String get targetTemperature;
+
+  /// Confirmation message when a food preset target temperature is set.
+  ///
+  /// In en, this message translates to:
+  /// **'Target set: {food} at {temperature}{unit}'**
+  String targetTemperatureSet(String food, int temperature, String unit);
+
+  /// Label for temperature input field.
+  ///
+  /// In en, this message translates to:
+  /// **'Temperature'**
+  String get temperature;
+
+  /// Title for the temperature graph display.
+  ///
+  /// In en, this message translates to:
+  /// **'Temperature Graph'**
+  String get temperatureGraph;
+
+  /// Section header for temperature details in predictions.
+  ///
+  /// In en, this message translates to:
+  /// **'Temperature Information'**
+  String get temperatureInformation;
+
+  /// Error message when temperature is outside valid cooking range.
+  ///
+  /// In en, this message translates to:
+  /// **'Temperature must be between {min} and {max} {unit}'**
+  String temperatureOutOfRange(int min, int max, String unit);
+
+  /// Error message when temperature field is empty.
+  ///
+  /// In en, this message translates to:
+  /// **'Temperature is required'**
+  String get temperatureRequired;
+
+  /// Label for a temperature reading, where {number} is the probe number (e.g. T1-T8).
+  ///
+  /// In en, this message translates to:
+  /// **'T{number}'**
+  String temperatureTn(int number);
+
+  /// Label for temperature unit setting.
+  ///
+  /// In en, this message translates to:
+  /// **'Temperature Unit'**
+  String get temperatureUnit;
+
+  /// Title for the temperatures tab.
+  ///
+  /// In en, this message translates to:
+  /// **'Temperatures'**
+  String get temperatures;
+
+  /// Label for the list of thermometers, where {number} is the count of available thermometers.
+  ///
+  /// In en, this message translates to:
+  /// **'Thermometers ({number})'**
+  String thermometers(int number);
+
+  /// Label for time axis in graph.
+  ///
+  /// In en, this message translates to:
+  /// **'Time (seconds)'**
+  String get timeSeconds;
+
+  /// Label for the timespan control that lets users choose between recent and all data.
+  ///
+  /// In en, this message translates to:
+  /// **'Show:'**
+  String get timespanControlLabel;
+
+  /// Label for prediction type.
+  ///
+  /// In en, this message translates to:
+  /// **'Type'**
+  String get type;
+
+  /// Label for unknown or unavailable values.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get unknown;
+
+  /// Label for version number.
+  ///
+  /// In en, this message translates to:
+  /// **'Version'**
+  String get version;
+
+  /// Title for virtual temperature sensors section.
+  ///
+  /// In en, this message translates to:
+  /// **'Virtual Sensors'**
+  String get virtualSensors;
+
+  /// Label for the virtual temperatures display mode.
+  ///
+  /// In en, this message translates to:
+  /// **'Virtual Temperatures'**
+  String get virtualTemperatures;
+
+  /// Message shown while waiting for prediction data to arrive.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for prediction data...'**
+  String get waitingForPredictionData;
+
+  /// Affirmative label.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes'**
+  String get yes;
+
+  /// Tooltip for the zoom in button in the temperature chart.
+  ///
+  /// In en, this message translates to:
+  /// **'Zoom In'**
+  String get zoomInTooltip;
+
+  /// Tooltip for the zoom out button in the temperature chart.
+  ///
+  /// In en, this message translates to:
+  /// **'Zoom Out'**
+  String get zoomOutTooltip;
+
+  /// Banner message shown while the app is attempting to reconnect to a probe.
+  ///
+  /// In en, this message translates to:
+  /// **'Reconnecting to probe...'**
+  String get probeReconnecting;
+
+  /// Banner message shown when the probe connection has been lost.
+  ///
+  /// In en, this message translates to:
+  /// **'Probe disconnected'**
+  String get probeDisconnected;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

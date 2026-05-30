@@ -508,9 +508,19 @@
     "description": "Title for probe details section.",
     "placeholders": {}
   },
+  "probeDisconnected": "Probe disconnected",
+  "@probeDisconnected": {
+    "description": "Banner message shown when the probe connection has been lost.",
+    "placeholders": {}
+  },
   "probeId": "Probe ID",
   "@probeId": {
     "description": "Label for probe ID.",
+    "placeholders": {}
+  },
+  "probeReconnecting": "Reconnecting to probe...",
+  "@probeReconnecting": {
+    "description": "Banner message shown while the app is attempting to reconnect to a probe.",
     "placeholders": {}
   },
   "probes": "Probes",

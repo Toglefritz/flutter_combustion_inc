@@ -9,74 +9,98 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get ambientTemperature => 'Ambient';
-
-  @override
-  String get batteryStatusOk => 'Battery OK';
-
-  @override
-  String get celsiusAbbreviation => 'C';
-
-  @override
-  String get coreTemperature => 'Core';
-
-  @override
-  String get debugInfo => 'Debug Info';
-
-  @override
-  String get fahrenheitAbbreviation => 'F';
-
-  @override
-  String get hideGraphs => 'Hide Graphs';
-
-  @override
-  String get lowBatteryWarning => 'Battery low';
-
-  @override
-  String get physicalTemperatures => 'Physical Temperatures';
-
-  @override
-  String get probe => 'Probe';
-
-  @override
-  String get rssi => 'RSSI';
-
-  @override
-  String get searchingForProbes => 'Searching for probes...';
-
-  @override
-  String get showGraphs => 'Show Graphs';
-
-  @override
-  String get surfaceTemperature => 'Surface';
-
-  @override
-  String temperatureTn(int number) {
-    return 'T$number';
-  }
-
-  @override
-  String thermometers(int number) {
-    return 'Thermometers ($number)';
-  }
-
-  @override
-  String get virtualTemperatures => 'Virtual Temperatures';
+  String get about => 'About';
 
   @override
   String get allTemperatures => 'All Temperatures';
 
   @override
-  String get temperatureGraph => 'Temperature Graph';
+  String get ambientTemperature => 'Ambient';
 
   @override
-  String get noDataAvailable => 'No data available';
+  String get avgTemperature => 'Avg';
 
   @override
-  String get loadingHistoricalData => 'Loading historical data...';
+  String get batteryStatus => 'Battery Status';
 
   @override
-  String get loadingTemperatureLogs => 'Loading temperature logs...';
+  String get batteryStatusOk => 'Battery OK';
+
+  @override
+  String get celsius => 'Celsius (°C)';
+
+  @override
+  String get celsiusAbbreviation => 'C';
+
+  @override
+  String get changeTarget => 'Change Target';
+
+  @override
+  String get clear => 'Clear';
+
+  @override
+  String get connect => 'Connect';
+
+  @override
+  String get connectProbeFirst => 'Please connect a probe from the home screen first.';
+
+  @override
+  String get connectionStateConnected => 'Connected';
+
+  @override
+  String get connectionStateConnecting => 'Connecting...';
+
+  @override
+  String get connectionStateDisconnected => 'Disconnected';
+
+  @override
+  String get connectionStateFailed => 'Failed';
+
+  @override
+  String get coreTemperature => 'Core';
+
+  @override
+  String get currentCore => 'Current Core';
+
+  @override
+  String get currentProgress => 'Current progress:';
+
+  @override
+  String get currentReading => 'Current Reading';
+
+  @override
+  String currentRouteLabel(String route) {
+    return 'Current route: $route';
+  }
+
+  @override
+  String get currentRssi => 'Current RSSI';
+
+  @override
+  String customTargetTemperatureSet(int temperature, String unit) {
+    return 'Custom target set: $temperature$unit';
+  }
+
+  @override
+  String get debugInfo => 'Debug Info';
+
+  @override
+  String get devices => 'Devices';
+
+  @override
+  String get directProbeBle => 'Direct (probe BLE)';
+
+  @override
+  String get disconnect => 'Disconnect';
+
+  @override
+  String get enterCustomTemperature => 'Enter Custom Temperature';
+
+  @override
+  String get errorLoadingLogs => 'Unable to load temperature logs. Please try again.';
+
+  @override
+  String get errorLogNotFound => 'No matching temperature log found for the current session.';
 
   @override
   String get errorNoActiveSession => 'No active cooking session found. Start a cooking session to view temperature logs.';
@@ -88,211 +112,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errorProbeNotFound => 'Probe not found. Please check the connection and try again.';
 
   @override
-  String get errorLogNotFound => 'No matching temperature log found for the current session.';
-
-  @override
-  String get errorLoadingLogs => 'Unable to load temperature logs. Please try again.';
-
-  @override
-  String get retryButton => 'Retry';
-
-  @override
-  String get historicalDataUnavailable => 'Historical data will be available once cooking session starts';
-
-  @override
-  String get showRecentData => 'Recent';
-
-  @override
-  String get showAllData => 'All Data';
-
-  @override
-  String get timespanControlLabel => 'Show:';
-
-  @override
-  String get zoomOutTooltip => 'Zoom Out';
-
-  @override
-  String get zoomInTooltip => 'Zoom In';
-
-  @override
-  String get resetViewTooltip => 'Reset View (or double-tap chart)';
-
-  @override
-  String get setTargetTemperature => 'Set Target Temperature';
-
-  @override
-  String get selectFoodTypeOrEnterCustom => 'Select a food type for quick setup, or enter a custom temperature below.';
-
-  @override
-  String get or => 'OR';
-
-  @override
-  String get enterCustomTemperature => 'Enter Custom Temperature';
-
-  @override
-  String get temperature => 'Temperature';
-
-  @override
-  String get set => 'Set';
-
-  @override
-  String get temperatureRequired => 'Temperature is required';
-
-  @override
-  String get invalidTemperature => 'Please enter a valid number';
-
-  @override
-  String temperatureOutOfRange(int min, int max, String unit) {
-    return 'Temperature must be between $min and $max $unit';
-  }
-
-  @override
-  String targetTemperatureSet(String food, int temperature, String unit) {
-    return 'Target set: $food at $temperature$unit';
-  }
-
-  @override
-  String customTargetTemperatureSet(int temperature, String unit) {
-    return 'Custom target set: $temperature$unit';
-  }
-
-  @override
-  String get clear => 'Clear';
-
-  @override
-  String get quickPresets => 'Quick Presets';
-
-  @override
-  String get targetTemperature => 'Target Temperature';
-
-  @override
-  String get changeTarget => 'Change Target';
-
-  @override
-  String get predictionInfo => 'Prediction Information';
+  String get estimatedCore => 'Estimated Core';
 
   @override
   String get estimatedTimeRemaining => 'Estimated time remaining:';
 
   @override
-  String get predictionPlaceholder => 'Calculating... (Prediction system integration pending)';
-
-  @override
-  String get currentProgress => 'Current progress:';
-
-  @override
-  String get progressPlaceholder => 'Monitoring temperature... (Progress tracking pending)';
-
-  @override
-  String get predictions => 'Predictions';
-
-  @override
-  String get selectProbe => 'Select Probe';
-
-  @override
-  String get noProbesAvailable => 'No Probes Available';
-
-  @override
-  String get connectProbeFirst => 'Please connect a probe from the home screen first.';
-
-  @override
-  String get temperatures => 'Temperatures';
-
-  @override
-  String get network => 'Network';
-
-  @override
-  String get graphs => 'Graphs';
-
-  @override
-  String get about => 'About';
-
-  @override
-  String get settings => 'Settings';
-
-  @override
-  String get temperatureUnit => 'Temperature Unit';
-
-  @override
-  String get celsius => 'Celsius (°C)';
-
-  @override
   String get fahrenheit => 'Fahrenheit (°F)';
 
   @override
-  String get makeProbeVisible => 'Make sure your probe is powered on and nearby.';
+  String get fahrenheitAbbreviation => 'F';
 
   @override
-  String get virtualSensors => 'Virtual Sensors';
-
-  @override
-  String get physicalSensors => 'Physical Sensors';
-
-  @override
-  String get currentReading => 'Current Reading';
-
-  @override
-  String get minTemperature => 'Min';
-
-  @override
-  String get maxTemperature => 'Max';
-
-  @override
-  String get avgTemperature => 'Avg';
-
-  @override
-  String get probeDetails => 'Probe Details';
-
-  @override
-  String get serialNumber => 'Serial Number';
-
-  @override
-  String get macAddress => 'MAC Address';
-
-  @override
-  String get probeId => 'Probe ID';
-
-  @override
-  String get batteryStatus => 'Battery Status';
-
-  @override
-  String get signalStrength => 'Signal Strength';
-
-  @override
-  String get pluginInformation => 'Plugin Information';
-
-  @override
-  String get version => 'Version';
-
-  @override
-  String get features => 'Features';
-
-  @override
-  String get name => 'Name';
-
-  @override
-  String get platform => 'Platform';
-
-  @override
-  String get unknown => 'Unknown';
-
-  @override
-  String get loading => 'Loading...';
-
-  @override
-  String get featureRealtimeMonitoring => 'Real-time temperature monitoring';
-
-  @override
-  String get featureVirtualSensors => 'Virtual temperature sensors (core, surface, ambient)';
-
-  @override
-  String get featurePhysicalSensors => 'Physical sensor readings (T1-T8)';
-
-  @override
-  String get featureHistoricalGraphs => 'Historical temperature graphs';
-
-  @override
-  String get featurePredictions => 'Cooking time predictions';
+  String failedToSetTargetTemperature(String error) {
+    return 'Failed to set target temperature: $error';
+  }
 
   @override
   String get featureBatteryMonitoring => 'Battery status monitoring';
@@ -304,58 +138,64 @@ class AppLocalizationsEn extends AppLocalizations {
   String get featureCrossPlatform => 'Cross-platform support (iOS, Android, macOS)';
 
   @override
-  String get rssiTracking => 'RSSI Tracking';
+  String get featureHistoricalGraphs => 'Historical temperature graphs';
 
   @override
-  String get currentRssi => 'Current RSSI';
+  String get featurePhysicalSensors => 'Physical sensor readings (T1-T8)';
 
   @override
-  String get rssiHistory => 'RSSI History';
+  String get featurePredictions => 'Cooking time predictions';
 
   @override
-  String get rssiHistoryDescription => 'Last 60 seconds of signal strength readings';
+  String get featureRealtimeMonitoring => 'Real-time temperature monitoring';
 
   @override
-  String get rssiDbm => 'RSSI (dBm)';
+  String get featureVirtualSensors => 'Virtual temperature sensors (core, surface, ambient)';
 
   @override
-  String get timeSeconds => 'Time (seconds)';
+  String get features => 'Features';
 
   @override
-  String get rssiExcellent => 'Excellent Signal';
+  String get graphs => 'Graphs';
 
   @override
-  String get rssiGood => 'Good Signal';
+  String get hideGraphs => 'Hide Graphs';
 
   @override
-  String get rssiFair => 'Fair Signal';
+  String get historicalDataUnavailable => 'Historical data will be available once cooking session starts';
 
   @override
-  String get rssiPoor => 'Poor Signal';
+  String get historyData => 'History';
 
   @override
-  String get scanningForDevices => 'Scanning for devices...';
+  String get invalidTemperature => 'Please enter a valid number';
 
   @override
-  String get refreshRoute => 'Refresh route';
+  String get liveData => 'Live';
 
   @override
-  String get devices => 'Devices';
+  String get loading => 'Loading...';
 
   @override
-  String get probes => 'Probes';
+  String get loadingHistoricalData => 'Loading historical data...';
+
+  @override
+  String get loadingTemperatureLogs => 'Loading temperature logs...';
+
+  @override
+  String get lowBatteryWarning => 'Battery low';
+
+  @override
+  String get macAddress => 'MAC Address';
+
+  @override
+  String get makeProbeVisible => 'Make sure your probe is powered on and nearby.';
+
+  @override
+  String get maxTemperature => 'Max';
 
   @override
   String get meatNetNodes => 'MeatNet Nodes';
-
-  @override
-  String get selectProbeTooltip => 'Select probe';
-
-  @override
-  String get disconnect => 'Disconnect';
-
-  @override
-  String get connect => 'Connect';
 
   @override
   String get meshTopology => 'Mesh Topology';
@@ -364,37 +204,28 @@ class AppLocalizationsEn extends AppLocalizations {
   String get meshTopologyDescription => 'Shows which probes each node can reach.';
 
   @override
+  String get minTemperature => 'Min';
+
+  @override
+  String get mode => 'Mode';
+
+  @override
+  String get name => 'Name';
+
+  @override
+  String get network => 'Network';
+
+  @override
+  String get no => 'No';
+
+  @override
+  String get noDataAvailable => 'No data available';
+
+  @override
+  String get noProbesAvailable => 'No Probes Available';
+
+  @override
   String get noProbesDetected => 'No probes detected';
-
-  @override
-  String get routeControl => 'Route Control';
-
-  @override
-  String selectedProbeLabel(String name) {
-    return 'Selected probe: $name';
-  }
-
-  @override
-  String currentRouteLabel(String route) {
-    return 'Current route: $route';
-  }
-
-  @override
-  String get routingModeAuto => 'Auto';
-
-  @override
-  String get routingModeExplicit => 'Explicit';
-
-  @override
-  String get routeThrough => 'Route through:';
-
-  @override
-  String get directProbeBle => 'Direct (probe BLE)';
-
-  @override
-  String rssiValueDbm(int value) {
-    return 'RSSI: $value dBm';
-  }
 
   @override
   String nodeProbeCount(int count) {
@@ -408,85 +239,28 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get connectionStateDisconnected => 'Disconnected';
+  String get or => 'OR';
 
   @override
-  String get connectionStateConnecting => 'Connecting...';
+  String get physicalSensors => 'Physical Sensors';
 
   @override
-  String get connectionStateConnected => 'Connected';
+  String get physicalTemperatures => 'Physical Temperatures';
 
   @override
-  String get connectionStateFailed => 'Failed';
+  String get platform => 'Platform';
 
   @override
-  String get switchToStackedView => 'Switch to stacked view';
-
-  @override
-  String get switchToColumnView => 'Switch to column view';
-
-  @override
-  String get liveData => 'Live';
-
-  @override
-  String get historyData => 'History';
-
-  @override
-  String get temperatureInformation => 'Temperature Information';
-
-  @override
-  String get currentCore => 'Current Core';
-
-  @override
-  String get estimatedCore => 'Estimated Core';
-
-  @override
-  String get target => 'Target';
+  String get pluginInformation => 'Plugin Information';
 
   @override
   String get predictionDetails => 'Prediction Details';
 
   @override
-  String get mode => 'Mode';
-
-  @override
-  String get type => 'Type';
-
-  @override
-  String get reliable => 'Reliable';
-
-  @override
-  String get yes => 'Yes';
-
-  @override
-  String get no => 'No';
-
-  @override
-  String get waitingForPredictionData => 'Waiting for prediction data...';
-
-  @override
-  String get predictionStateProbeNotInserted => 'Probe Not Inserted';
-
-  @override
-  String get predictionStateProbeInserted => 'Probe Inserted';
-
-  @override
-  String get predictionStateCooking => 'Cooking';
-
-  @override
-  String get predictionStatePredicting => 'Predicting';
-
-  @override
-  String get predictionStateDone => 'Done';
-
-  @override
-  String get predictionStateUnknown => 'Unknown';
+  String get predictionInfo => 'Prediction Information';
 
   @override
   String get predictionModeNone => 'None';
-
-  @override
-  String get predictionModeTimeToRemoval => 'Time to Removal';
 
   @override
   String get predictionModeRemovalAndResting => 'Removal & Resting';
@@ -495,19 +269,251 @@ class AppLocalizationsEn extends AppLocalizations {
   String get predictionModeReserved => 'Reserved';
 
   @override
+  String get predictionModeTimeToRemoval => 'Time to Removal';
+
+  @override
+  String get predictionPlaceholder => 'Calculating... (Prediction system integration pending)';
+
+  @override
+  String get predictionStateCooking => 'Cooking';
+
+  @override
+  String get predictionStateDone => 'Done';
+
+  @override
+  String get predictionStatePredicting => 'Predicting';
+
+  @override
+  String get predictionStateProbeInserted => 'Probe Inserted';
+
+  @override
+  String get predictionStateProbeNotInserted => 'Probe Not Inserted';
+
+  @override
+  String get predictionStateUnknown => 'Unknown';
+
+  @override
   String get predictionTypeNone => 'None';
 
   @override
   String get predictionTypeRemoval => 'Removal';
 
   @override
-  String get predictionTypeResting => 'Resting';
-
-  @override
   String get predictionTypeReserved => 'Reserved';
 
   @override
-  String failedToSetTargetTemperature(String error) {
-    return 'Failed to set target temperature: $error';
+  String get predictionTypeResting => 'Resting';
+
+  @override
+  String get predictions => 'Predictions';
+
+  @override
+  String get probe => 'Probe';
+
+  @override
+  String get probeDetails => 'Probe Details';
+
+  @override
+  String get probeId => 'Probe ID';
+
+  @override
+  String get probes => 'Probes';
+
+  @override
+  String get progressPlaceholder => 'Monitoring temperature... (Progress tracking pending)';
+
+  @override
+  String get quickPresets => 'Quick Presets';
+
+  @override
+  String get refreshRoute => 'Refresh route';
+
+  @override
+  String get reliable => 'Reliable';
+
+  @override
+  String get resetViewTooltip => 'Reset View (or double-tap chart)';
+
+  @override
+  String get retryButton => 'Retry';
+
+  @override
+  String get routeControl => 'Route Control';
+
+  @override
+  String get routeThrough => 'Route through:';
+
+  @override
+  String get routingModeAuto => 'Auto';
+
+  @override
+  String get routingModeExplicit => 'Explicit';
+
+  @override
+  String get rssi => 'RSSI';
+
+  @override
+  String get rssiDbm => 'RSSI (dBm)';
+
+  @override
+  String get rssiExcellent => 'Excellent Signal';
+
+  @override
+  String get rssiFair => 'Fair Signal';
+
+  @override
+  String get rssiGood => 'Good Signal';
+
+  @override
+  String get rssiHistory => 'RSSI History';
+
+  @override
+  String get rssiHistoryDescription => 'Last 60 seconds of signal strength readings';
+
+  @override
+  String get rssiPoor => 'Poor Signal';
+
+  @override
+  String get rssiTracking => 'RSSI Tracking';
+
+  @override
+  String rssiValueDbm(int value) {
+    return 'RSSI: $value dBm';
   }
+
+  @override
+  String get scanningForDevices => 'Scanning for devices...';
+
+  @override
+  String get searchingForProbes => 'Searching for probes...';
+
+  @override
+  String get selectFoodTypeOrEnterCustom => 'Select a food type for quick setup, or enter a custom temperature below.';
+
+  @override
+  String get selectProbe => 'Select Probe';
+
+  @override
+  String get selectProbeTooltip => 'Select probe';
+
+  @override
+  String selectedProbeLabel(String name) {
+    return 'Selected probe: $name';
+  }
+
+  @override
+  String get serialNumber => 'Serial Number';
+
+  @override
+  String get set => 'Set';
+
+  @override
+  String get setTargetTemperature => 'Set Target Temperature';
+
+  @override
+  String get settings => 'Settings';
+
+  @override
+  String get showAllData => 'All Data';
+
+  @override
+  String get showGraphs => 'Show Graphs';
+
+  @override
+  String get showRecentData => 'Recent';
+
+  @override
+  String get signalStrength => 'Signal Strength';
+
+  @override
+  String get surfaceTemperature => 'Surface';
+
+  @override
+  String get switchToColumnView => 'Switch to column view';
+
+  @override
+  String get switchToStackedView => 'Switch to stacked view';
+
+  @override
+  String get target => 'Target';
+
+  @override
+  String get targetTemperature => 'Target Temperature';
+
+  @override
+  String targetTemperatureSet(String food, int temperature, String unit) {
+    return 'Target set: $food at $temperature$unit';
+  }
+
+  @override
+  String get temperature => 'Temperature';
+
+  @override
+  String get temperatureGraph => 'Temperature Graph';
+
+  @override
+  String get temperatureInformation => 'Temperature Information';
+
+  @override
+  String temperatureOutOfRange(int min, int max, String unit) {
+    return 'Temperature must be between $min and $max $unit';
+  }
+
+  @override
+  String get temperatureRequired => 'Temperature is required';
+
+  @override
+  String temperatureTn(int number) {
+    return 'T$number';
+  }
+
+  @override
+  String get temperatureUnit => 'Temperature Unit';
+
+  @override
+  String get temperatures => 'Temperatures';
+
+  @override
+  String thermometers(int number) {
+    return 'Thermometers ($number)';
+  }
+
+  @override
+  String get timeSeconds => 'Time (seconds)';
+
+  @override
+  String get timespanControlLabel => 'Show:';
+
+  @override
+  String get type => 'Type';
+
+  @override
+  String get unknown => 'Unknown';
+
+  @override
+  String get version => 'Version';
+
+  @override
+  String get virtualSensors => 'Virtual Sensors';
+
+  @override
+  String get virtualTemperatures => 'Virtual Temperatures';
+
+  @override
+  String get waitingForPredictionData => 'Waiting for prediction data...';
+
+  @override
+  String get yes => 'Yes';
+
+  @override
+  String get zoomInTooltip => 'Zoom In';
+
+  @override
+  String get zoomOutTooltip => 'Zoom Out';
+
+  @override
+  String get probeReconnecting => 'Reconnecting to probe...';
+
+  @override
+  String get probeDisconnected => 'Probe disconnected';
 }
