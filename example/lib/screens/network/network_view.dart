@@ -3,7 +3,7 @@ import 'package:flutter_combustion_inc/models/devices/meat_net_node.dart';
 import 'package:flutter_combustion_inc/models/devices/probe.dart';
 
 import '../../l10n/app_localizations.dart';
-import '../../values/inset.dart';
+import '../components/empty_state_widget.dart';
 import 'components/device_list_section.dart';
 import 'components/route_control_section.dart';
 import 'components/topology_section.dart';
@@ -48,18 +48,7 @@ class NetworkView extends StatelessWidget {
       ),
       body:
           state.widget.devices.isEmpty
-              ? Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(Icons.bluetooth_searching, size: 64),
-                    Padding(
-                      padding: const EdgeInsets.only(top: Inset.medium),
-                      child: Text(l10n.scanningForDevices),
-                    ),
-                  ],
-                ),
-              )
+              ? const EmptyStateWidget()
               : SingleChildScrollView(
                 child: Center(
                   child: ConstrainedBox(

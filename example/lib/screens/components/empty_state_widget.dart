@@ -3,16 +3,19 @@ import 'package:flutter/material.dart';
 import '../../l10n/app_localizations.dart';
 import '../../values/inset.dart';
 
-/// Widget displayed when no probes are available.
+/// Widget displayed when no devices have been discovered yet.
 ///
-/// Shows a centered message with an icon indicating that the app is searching for nearby Bluetooth probes. This widget
-/// is reusable across different screens that need to display an empty state.
+/// Shows a centered Bluetooth scanning icon with a message indicating that the
+/// app is actively searching for nearby Combustion devices. Used across all tabs
+/// to provide a consistent empty state appearance.
 class EmptyStateWidget extends StatelessWidget {
   /// Creates an instance of [EmptyStateWidget].
   const EmptyStateWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(Inset.large),
@@ -22,12 +25,12 @@ class EmptyStateWidget extends StatelessWidget {
             Icon(
               Icons.bluetooth_searching,
               size: 80,
-              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.5),
+              color: Theme.of(context).colorScheme.primary,
             ),
             Padding(
               padding: const EdgeInsets.only(top: Inset.large),
               child: Text(
-                AppLocalizations.of(context)!.searchingForProbes,
+                l10n.scanningForDevices,
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -37,7 +40,7 @@ class EmptyStateWidget extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(top: Inset.small),
               child: Text(
-                AppLocalizations.of(context)!.makeProbeVisible,
+                l10n.makeProbeVisible,
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
