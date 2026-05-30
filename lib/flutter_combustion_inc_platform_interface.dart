@@ -137,8 +137,8 @@ abstract class FlutterCombustionIncPlatform extends PlatformInterface {
 
   /// Provides a stream of connection state changes for the specified probe.
   ///
-  /// Emits [DeviceConnectionState] values whenever the probe's BLE connection
-  /// state transitions (disconnected, connecting, connected, failed).
+  /// Emits [DeviceConnectionState] values whenever the probe's BLE connection state transitions (disconnected,
+  /// connecting, connected, failed).
   Stream<DeviceConnectionState> connectionStateStream(String identifier);
 
   /// Queries the native SDK for the best route to reach the specified probe.

@@ -59,6 +59,10 @@ class DeviceManager {
     return devices.values.whereType<MeatNetNode>().toList();
   }
 
+  /// A stream of [Probe]s discovered while scanning.
+  ///
+  /// Each emission represents a single probe that was discovered or updated.
+  /// Probes are also added to the [devices] registry automatically.
   Stream<Probe>? _scanResults;
 
   /// Stream of individual probe discovery events.
@@ -114,18 +118,14 @@ class DeviceManager {
     return null;
   }
 
-  // ---------------------------------------------------------------------------
-  // Route inspection (engineering level)
-  // ---------------------------------------------------------------------------
-
   /// Queries the native SDK for the best route to reach the specified probe.
   ///
   /// Returns a [RouteInfo] describing whether the probe is reachable directly,
   /// through a MeatNet node, or not at all. Includes hop count and RSSI to the
   /// route device.
   ///
-  /// This is useful for engineering/QA work where understanding the mesh
-  /// topology and data path is important.
+  /// Useful for engineering/QA work where understanding the mesh topology and
+  /// data path is important.
   Future<RouteInfo> getRouteToProbe(Probe probe) async {
     final Map<String, dynamic> result = await FlutterCombustionIncPlatform
         .instance
@@ -169,8 +169,6 @@ class DeviceManager {
 
   /// Returns the best (highest RSSI) connected node that has a route to the
   /// given probe, or `null` if no connected node can reach it.
-  ///
-  /// This mirrors the iOS SDK's `getBestNodeForProbe` logic.
   MeatNetNode? getBestNodeForProbe(Probe probe) {
     final int? serialNum = int.tryParse(probe.serialNumber);
     if (serialNum == null) return null;
@@ -190,10 +188,6 @@ class DeviceManager {
     return bestNode;
   }
 
-  // ---------------------------------------------------------------------------
-  // Command routing
-  // ---------------------------------------------------------------------------
-
   /// Sets a target temperature for the specified probe using auto-routing.
   ///
   /// The native SDK determines the best path (direct or via a node).
@@ -209,11 +203,9 @@ class DeviceManager {
 
   /// Sets a target temperature, forcing the command through a specific device.
   ///
-  /// Use this when you want to test or verify a specific network path. Pass
-  /// a [MeatNetNode] to route through that node, or the [Probe] itself to
-  /// force a direct connection attempt.
-  ///
-  /// If [viaDevice] is `null`, falls back to auto-routing.
+  /// Pass a [MeatNetNode] to route through that node, or the [Probe] itself to
+  /// force a direct connection attempt. If [viaDevice] is `null`, falls back to
+  /// auto-routing.
   Future<void> setTargetTemperatureViaDevice(
     Probe probe,
     double temperatureCelsius, {
@@ -230,10 +222,6 @@ class DeviceManager {
   Stream<PredictionInfo> predictionStream(String identifier) {
     return FlutterCombustionIncPlatform.instance.predictionStream(identifier);
   }
-
-  // ---------------------------------------------------------------------------
-  // Registry management
-  // ---------------------------------------------------------------------------
 
   /// Adds or updates a device in the local registry and notifies listeners.
   void _addDevice(Device device) {

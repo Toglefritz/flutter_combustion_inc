@@ -1,7 +1,7 @@
 /// Represents the type of device for DFU (Device Firmware Update) purposes.
 ///
-/// MeatNet nodes can be different physical products (display timers, chargers, etc.)
-/// and the DFU firmware package differs by type.
+/// MeatNet nodes can be different physical products (display timers, chargers, etc.) and the DFU firmware package
+/// differs by type.
 enum DfuDeviceType {
   /// Device type is unknown or has not been determined yet.
   unknown,

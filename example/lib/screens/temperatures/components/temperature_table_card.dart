@@ -11,8 +11,8 @@ import '../models/temperatures_table_mode.dart';
 
 /// A card widget that displays temperature readings in a table format.
 ///
-/// This widget shows either virtual temperatures (core, surface, ambient) or physical sensor temperatures (T1-T8)
-/// based on the selected mode. Users can toggle between modes using segmented buttons at the top of the card.
+/// This widget shows either virtual temperatures (core, surface, ambient) or physical sensor temperatures (T1-T8) based
+/// on the selected mode. Users can toggle between modes using segmented buttons at the top of the card.
 class TemperatureTableCard extends StatefulWidget {
   /// The probe whose temperature data should be displayed.
   final Probe probe;

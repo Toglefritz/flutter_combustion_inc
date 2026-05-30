@@ -4,9 +4,8 @@ import 'probe.dart';
 
 /// Represents a node on the MeatNet BLE repeater network.
 ///
-/// Various Combustion products (Timer, Charger, etc.) act as MeatNet nodes,
-/// relaying probe data over the mesh network. Unlike a [Probe] which is keyed
-/// by serial number, a node is identified by its BLE peripheral UUID.
+/// Various Combustion products (Timer, Charger, etc.) act as MeatNet nodes, relaying probe data over the mesh network.
+/// Unlike a [Probe] which is keyed by serial number, a node is identified by its BLE peripheral UUID.
 class MeatNetNode extends Device {
   /// Serial number string, read from the Device Info service after connection.
   ///
@@ -23,8 +22,7 @@ class MeatNetNode extends Device {
 
   /// Creates a new [MeatNetNode].
   ///
-  /// The [identifier] is the BLE peripheral UUID, used as both
-  /// [uniqueIdentifier] and [bleIdentifier].
+  /// The [identifier] is the BLE peripheral UUID, used as both [uniqueIdentifier] and [bleIdentifier].
   MeatNetNode({
     required String identifier,
     super.rssi,
@@ -75,9 +73,8 @@ class MeatNetNode extends Device {
 
   /// Updates [dfuType] based on the model info string read after connection.
   ///
-  /// The firmware reports internal product identifiers in this string. "Timer"
-  /// is the internal name for the WiFi Display product, and "Charger" maps to
-  /// the charging dock.
+  /// The firmware reports internal product identifiers in this string. "Timer" is the internal name for the WiFi
+  /// Display product, and "Charger" maps to the charging dock.
   void updateWithModelInfo(String modelInfo) {
     if (modelInfo.contains('Timer')) {
       dfuType = DfuDeviceType.display;
