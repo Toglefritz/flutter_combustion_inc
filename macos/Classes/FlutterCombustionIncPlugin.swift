@@ -213,6 +213,12 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
         switch call.method {
         case "initBluetooth":
             handleInitBluetooth(result: result)
+
+        case "enableMeatNet":
+            handleEnableMeatNet(result: result)
+
+        case "setScanFilter":
+            handleSetScanFilter(call: call, result: result)
             
         case "getProbes":
             handleGetProbes(result: result)
@@ -293,6 +299,36 @@ extension FlutterCombustionIncPlugin {
     /// - Parameter result: Flutter result callback (returns nil on success)
     private func handleInitBluetooth(result: @escaping FlutterResult) {
         DeviceManager.shared.initBluetooth()
+        result(nil)
+    }
+
+    /// Enables MeatNet repeater network support in the native SDK.
+    ///
+    /// Must be called before MeatNet node advertisements will be processed.
+    /// Without this call, the SDK silently discards all node advertising data.
+    private func handleEnableMeatNet(result: @escaping FlutterResult) {
+        DeviceManager.shared.enableMeatNet()
+        result(nil)
+    }
+
+    /// Sets the device scan filter controlling which types are emitted.
+    ///
+    /// - Parameters:
+    ///   - call: Method call containing 'filter' integer (0=probes, 1=nodes, 2=all)
+    ///   - result: Flutter result callback (returns nil on success)
+    private func handleSetScanFilter(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        guard let args = call.arguments as? [String: Any],
+              let filterRaw = args["filter"] as? Int,
+              let filter = DeviceScanFilter(rawValue: filterRaw) else {
+            result(FlutterError(
+                code: "INVALID_ARGUMENTS",
+                message: "Missing or invalid 'filter' argument. Expected 0, 1, or 2.",
+                details: nil
+            ))
+            return
+        }
+
+        discoveryManager.setScanFilter(filter)
         result(nil)
     }
     

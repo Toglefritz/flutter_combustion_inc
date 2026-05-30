@@ -8,6 +8,7 @@ export 'models/ble_data/virtual_temperatures.dart';
 export 'models/device_manager.dart';
 export 'models/devices/connection_state.dart';
 export 'models/devices/device.dart';
+export 'models/devices/device_scan_filter.dart';
 export 'models/devices/dfu_device_type.dart';
 export 'models/devices/dfu_state.dart';
 export 'models/devices/dfu_upload_progress.dart';

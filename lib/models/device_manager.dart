@@ -6,6 +6,7 @@ import '../flutter_combustion_inc_platform_interface.dart';
 import 'ble_data/hop_count.dart';
 import 'devices/connection_state.dart';
 import 'devices/device.dart';
+import 'devices/device_scan_filter.dart';
 import 'devices/meat_net_node.dart';
 import 'devices/probe.dart';
 import 'devices/route_info.dart';
@@ -59,23 +60,35 @@ class DeviceManager {
     return devices.values.whereType<MeatNetNode>().toList();
   }
 
-  /// A stream of [Probe]s discovered while scanning.
+  /// A stream of devices discovered while scanning.
   ///
-  /// Each emission represents a single probe that was discovered or updated.
-  /// Probes are also added to the [devices] registry automatically.
-  Stream<Probe>? _scanResults;
+  /// Each emission represents a single device that was discovered or updated.
+  /// The device type depends on the active [DeviceScanFilter]. Devices are
+  /// added to the [devices] registry automatically.
+  Stream<Device>? _scanResults;
 
-  /// Stream of individual probe discovery events.
+  /// Stream of individual device discovery events.
   ///
   /// Subscribing to this stream also populates the [devices] registry.
-  Stream<Probe> get scanResults {
+  /// The stream emits [Probe] or [MeatNetNode] instances depending on the
+  /// active scan filter.
+  Stream<Device> get scanResults {
     _scanResults ??= _scanChannel.receiveBroadcastStream().map(
       (dynamic event) {
-        final Probe probe = Probe.fromMap(
-          Map<String, dynamic>.from(event as Map),
+        final Map<String, dynamic> map = Map<String, dynamic>.from(
+          event as Map,
         );
-        _addDevice(probe);
-        return probe;
+        final String deviceType = map['deviceType'] as String? ?? 'probe';
+
+        final Device device;
+        if (deviceType == 'node') {
+          device = MeatNetNode.fromMap(map);
+        } else {
+          device = Probe.fromMap(map);
+        }
+
+        _addDevice(device);
+        return device;
       },
     );
     return _scanResults!;
@@ -84,6 +97,23 @@ class DeviceManager {
   /// Initializes Bluetooth and begins scanning for devices.
   Future<void> initBluetooth() async {
     await FlutterCombustionIncPlatform.instance.initBluetooth();
+  }
+
+  /// Enables MeatNet repeater network support.
+  ///
+  /// Must be called before MeatNet nodes (boosters, displays) will appear in
+  /// scan results. Without this call, the native SDK discards all node
+  /// advertisements silently.
+  Future<void> enableMeatNet() async {
+    await FlutterCombustionIncPlatform.instance.enableMeatNet();
+  }
+
+  /// Sets which device types are emitted through [scanResults].
+  ///
+  /// Defaults to [DeviceScanFilter.probesOnly] for backward compatibility.
+  /// Set to [DeviceScanFilter.all] to receive both probes and MeatNet nodes.
+  Future<void> setScanFilter(DeviceScanFilter filter) async {
+    await FlutterCombustionIncPlatform.instance.setScanFilter(filter.toInt());
   }
 
   /// Retrieves a snapshot of all currently known probes from the native SDK

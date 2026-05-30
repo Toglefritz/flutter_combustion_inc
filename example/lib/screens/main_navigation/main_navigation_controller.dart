@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_combustion_inc/models/device_manager.dart';
 import 'package:flutter_combustion_inc/models/devices/connection_state.dart';
 import 'package:flutter_combustion_inc/models/devices/device.dart';
+import 'package:flutter_combustion_inc/models/devices/device_scan_filter.dart';
 import 'package:flutter_combustion_inc/models/devices/meat_net_node.dart';
 import 'package:flutter_combustion_inc/models/devices/probe.dart';
 
@@ -63,7 +64,15 @@ class MainNavigationController extends State<MainNavigationRoute> {
     super.initState();
 
     DeviceManager.instance.scanResults.listen(_onDeviceDiscovered);
-    unawaited(DeviceManager.instance.initBluetooth());
+    unawaited(_initializeScanning());
+  }
+
+  /// Initializes Bluetooth, enables MeatNet, and sets the scan filter to
+  /// discover all device types (probes and nodes).
+  Future<void> _initializeScanning() async {
+    await DeviceManager.instance.initBluetooth();
+    await DeviceManager.instance.enableMeatNet();
+    await DeviceManager.instance.setScanFilter(DeviceScanFilter.all);
   }
 
   @override

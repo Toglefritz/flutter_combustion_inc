@@ -103,6 +103,16 @@ class MethodChannelFlutterCombustionInc extends FlutterCombustionIncPlatform {
   }
 
   @override
+  Future<void> enableMeatNet() async {
+    await methodChannel.invokeMethod('enableMeatNet');
+  }
+
+  @override
+  Future<void> setScanFilter(int filter) async {
+    await methodChannel.invokeMethod('setScanFilter', {'filter': filter});
+  }
+
+  @override
   Stream<List<Map<String, dynamic>>> probeListStream() {
     _probeListStream ??= probeListEventChannel.receiveBroadcastStream().map((
       event,

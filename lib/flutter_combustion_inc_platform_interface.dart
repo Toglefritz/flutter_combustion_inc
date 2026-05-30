@@ -43,6 +43,19 @@ abstract class FlutterCombustionIncPlatform extends PlatformInterface {
   /// Initializes Bluetooth and begins scanning for probes.
   Future<void> initBluetooth();
 
+  /// Enables MeatNet repeater network support in the native SDK.
+  ///
+  /// Must be called before MeatNet nodes will be detected during scanning.
+  /// Without this call, the SDK silently discards all node advertisements.
+  Future<void> enableMeatNet();
+
+  /// Sets the device scan filter to control which device types are emitted
+  /// through the scan event channel.
+  ///
+  /// The native SDK always scans for all Combustion advertisements, but this
+  /// filter determines which are forwarded to the Dart layer.
+  Future<void> setScanFilter(int filter);
+
   /// Provides a stream of the list of discovered probes. This stream emits a list of maps, where each map contains
   /// information about a discovered probe, such as its identifier, name, and other relevant details.
   Stream<List<Map<String, dynamic>>> probeListStream();
