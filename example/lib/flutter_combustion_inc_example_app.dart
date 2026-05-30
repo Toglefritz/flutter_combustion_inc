@@ -33,6 +33,7 @@ class FlutterCombustionIncExampleApp extends StatelessWidget {
         ),
         cardTheme: CardThemeData(
           elevation: 2,
+          color: ColorScheme.fromSeed(seedColor: Colors.amber).surfaceContainerLow,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16.0),
           ),
@@ -57,6 +58,7 @@ class FlutterCombustionIncExampleApp extends StatelessWidget {
         ),
         cardTheme: CardThemeData(
           elevation: 4,
+          color: const Color(0xFF2B292D),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16.0),
           ),

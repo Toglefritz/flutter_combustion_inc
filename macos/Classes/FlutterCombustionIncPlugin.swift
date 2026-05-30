@@ -234,6 +234,12 @@ public class FlutterCombustionIncPlugin: NSObject, FlutterPlugin {
 
         case "startConnectionStateStream":
             handleStartConnectionStateStream(call: call, result: result)
+
+        case "getRouteToProbe":
+            handleGetRouteToProbe(call: call, result: result)
+
+        case "setTargetTemperatureViaDevice":
+            handleSetTargetTemperatureViaDevice(call: call, result: result)
             
         case "startVirtualTemperatureStream":
             handleStartVirtualTemperatureStream(call: call, result: result)
@@ -444,6 +450,135 @@ extension FlutterCombustionIncPlugin {
 
         pendingStreamProbes["connectionState"] = identifier
         result(nil)
+    }
+
+    /// Returns the best route to reach the specified probe.
+    ///
+    /// Returns a dictionary with:
+    /// - `routeType`: "direct", "relayed", or "unreachable"
+    /// - `nodeIdentifier`: BLE UUID of relay node (if relayed)
+    /// - `hopCount`: integer hop count (if relayed)
+    /// - `rssi`: signal strength to the route device
+    private func handleGetRouteToProbe(
+        call: FlutterMethodCall,
+        result: @escaping FlutterResult
+    ) {
+        guard let args = call.arguments as? [String: Any],
+              let identifier = args["identifier"] as? String else {
+            result(FlutterError(
+                code: "INVALID_ARGUMENTS",
+                message: "Missing or invalid probe identifier",
+                details: nil
+            ))
+            return
+        }
+
+        // Find the probe by serial number (uniqueIdentifier for probes)
+        guard let probe = DeviceManager.shared.getProbes()
+            .first(where: { $0.uniqueIdentifier == identifier }) else {
+            result(["routeType": "unreachable"])
+            return
+        }
+
+        if let routeDevice = DeviceManager.shared.getBestRouteToProbe(
+            serialNumber: probe.serialNumber
+        ) {
+            if routeDevice is Probe {
+                result([
+                    "routeType": "direct",
+                    "rssi": routeDevice.rssi
+                ] as [String: Any])
+            } else if let node = routeDevice as? MeatNetNode {
+                result([
+                    "routeType": "relayed",
+                    "nodeIdentifier": node.uniqueIdentifier,
+                    "rssi": node.rssi
+                ] as [String: Any])
+            } else {
+                result(["routeType": "unreachable"])
+            }
+        } else {
+            result(["routeType": "unreachable"])
+        }
+    }
+
+    /// Sets target temperature, optionally routing through a specific device.
+    ///
+    /// When `viaDeviceIdentifier` is provided, the command is sent through that
+    /// device instead of using auto-routing.
+    private func handleSetTargetTemperatureViaDevice(
+        call: FlutterMethodCall,
+        result: @escaping FlutterResult
+    ) {
+        guard let args = call.arguments as? [String: Any],
+              let identifier = args["identifier"] as? String,
+              let temperatureCelsius = args["temperatureCelsius"] as? Double else {
+            result(FlutterError(
+                code: "INVALID_ARGUMENTS",
+                message: "Missing required arguments",
+                details: nil
+            ))
+            return
+        }
+
+        guard let probe = DeviceManager.shared.getProbes()
+            .first(where: { $0.uniqueIdentifier == identifier }) else {
+            result(FlutterError(
+                code: "PROBE_NOT_FOUND",
+                message: "Probe with identifier '\(identifier)' not found",
+                details: nil
+            ))
+            return
+        }
+
+        let viaDeviceIdentifier = args["viaDeviceIdentifier"] as? String
+
+        if let viaId = viaDeviceIdentifier {
+            // Explicit routing: find the specified device and send through it
+            let devices = DeviceManager.shared.getDevices()
+            guard let viaDevice = devices.first(where: {
+                $0.uniqueIdentifier == viaId || $0.bleIdentifier == viaId
+            }) else {
+                result(FlutterError(
+                    code: "DEVICE_NOT_FOUND",
+                    message: "Route device '\(viaId)' not found",
+                    details: nil
+                ))
+                return
+            }
+
+            // Use the SDK's setRemovalPrediction but target the specific device
+            DeviceManager.shared.setRemovalPrediction(
+                viaDevice,
+                removalTemperatureC: temperatureCelsius
+            ) { success in
+                if success {
+                    result(nil)
+                } else {
+                    result(FlutterError(
+                        code: "COMMAND_FAILED",
+                        message: "Failed to set target temperature via specified device",
+                        details: nil
+                    ))
+                }
+            }
+        } else {
+            // Auto-routing: let the SDK pick the best path
+            DeviceManager.shared.setRemovalPrediction(
+                probe,
+                removalTemperatureC: temperatureCelsius
+            ) { success in
+                if success {
+                    result(nil)
+                } else {
+                    result(FlutterError(
+                        code: "COMMAND_FAILED",
+                        message: "Failed to set target temperature",
+                        details: nil
+                    ))
+                }
+            }
+        }
     }
     
     /// Starts streaming virtual temperature updates for a probe.

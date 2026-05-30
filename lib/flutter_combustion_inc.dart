@@ -1,5 +1,6 @@
 export 'flutter_combustion_inc_platform_interface.dart';
 export 'models/ble_data/battery_status.dart';
+export 'models/ble_data/hop_count.dart';
 export 'models/ble_data/probe_log_data_point.dart';
 export 'models/ble_data/probe_temperature_log.dart';
 export 'models/ble_data/probe_temperatures.dart';
@@ -12,6 +13,7 @@ export 'models/devices/dfu_state.dart';
 export 'models/devices/dfu_upload_progress.dart';
 export 'models/devices/meat_net_node.dart';
 export 'models/devices/probe.dart';
+export 'models/devices/route_info.dart';
 export 'models/prediction/prediction_info.dart';
 export 'models/prediction/prediction_mode.dart';
 export 'models/prediction/prediction_state.dart';

@@ -199,6 +199,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get temperatures => 'Temperatures';
 
   @override
+  String get network => 'Network';
+
+  @override
   String get graphs => 'Graphs';
 
   @override
@@ -329,4 +332,182 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get rssiPoor => 'Poor Signal';
+
+  @override
+  String get scanningForDevices => 'Scanning for devices...';
+
+  @override
+  String get refreshRoute => 'Refresh route';
+
+  @override
+  String get devices => 'Devices';
+
+  @override
+  String get probes => 'Probes';
+
+  @override
+  String get meatNetNodes => 'MeatNet Nodes';
+
+  @override
+  String get selectProbeTooltip => 'Select probe';
+
+  @override
+  String get disconnect => 'Disconnect';
+
+  @override
+  String get connect => 'Connect';
+
+  @override
+  String get meshTopology => 'Mesh Topology';
+
+  @override
+  String get meshTopologyDescription => 'Shows which probes each node can reach.';
+
+  @override
+  String get noProbesDetected => 'No probes detected';
+
+  @override
+  String get routeControl => 'Route Control';
+
+  @override
+  String selectedProbeLabel(String name) {
+    return 'Selected probe: $name';
+  }
+
+  @override
+  String currentRouteLabel(String route) {
+    return 'Current route: $route';
+  }
+
+  @override
+  String get routingModeAuto => 'Auto';
+
+  @override
+  String get routingModeExplicit => 'Explicit';
+
+  @override
+  String get routeThrough => 'Route through:';
+
+  @override
+  String get directProbeBle => 'Direct (probe BLE)';
+
+  @override
+  String rssiValueDbm(int value) {
+    return 'RSSI: $value dBm';
+  }
+
+  @override
+  String nodeProbeCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count probes',
+      one: '1 probe',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get connectionStateDisconnected => 'Disconnected';
+
+  @override
+  String get connectionStateConnecting => 'Connecting...';
+
+  @override
+  String get connectionStateConnected => 'Connected';
+
+  @override
+  String get connectionStateFailed => 'Failed';
+
+  @override
+  String get switchToStackedView => 'Switch to stacked view';
+
+  @override
+  String get switchToColumnView => 'Switch to column view';
+
+  @override
+  String get liveData => 'Live';
+
+  @override
+  String get historyData => 'History';
+
+  @override
+  String get temperatureInformation => 'Temperature Information';
+
+  @override
+  String get currentCore => 'Current Core';
+
+  @override
+  String get estimatedCore => 'Estimated Core';
+
+  @override
+  String get target => 'Target';
+
+  @override
+  String get predictionDetails => 'Prediction Details';
+
+  @override
+  String get mode => 'Mode';
+
+  @override
+  String get type => 'Type';
+
+  @override
+  String get reliable => 'Reliable';
+
+  @override
+  String get yes => 'Yes';
+
+  @override
+  String get no => 'No';
+
+  @override
+  String get waitingForPredictionData => 'Waiting for prediction data...';
+
+  @override
+  String get predictionStateProbeNotInserted => 'Probe Not Inserted';
+
+  @override
+  String get predictionStateProbeInserted => 'Probe Inserted';
+
+  @override
+  String get predictionStateCooking => 'Cooking';
+
+  @override
+  String get predictionStatePredicting => 'Predicting';
+
+  @override
+  String get predictionStateDone => 'Done';
+
+  @override
+  String get predictionStateUnknown => 'Unknown';
+
+  @override
+  String get predictionModeNone => 'None';
+
+  @override
+  String get predictionModeTimeToRemoval => 'Time to Removal';
+
+  @override
+  String get predictionModeRemovalAndResting => 'Removal & Resting';
+
+  @override
+  String get predictionModeReserved => 'Reserved';
+
+  @override
+  String get predictionTypeNone => 'None';
+
+  @override
+  String get predictionTypeRemoval => 'Removal';
+
+  @override
+  String get predictionTypeResting => 'Resting';
+
+  @override
+  String get predictionTypeReserved => 'Reserved';
+
+  @override
+  String failedToSetTargetTemperature(String error) {
+    return 'Failed to set target temperature: $error';
+  }
 }

@@ -34,7 +34,9 @@ class TemperatureGraphHeader extends StatelessWidget {
           TextButton.icon(
             onPressed: onToggleDataMode,
             icon: Icon(showHistoricalData ? Icons.timeline : Icons.history),
-            label: Text(showHistoricalData ? 'Live' : 'History'),
+            label: Text(
+              showHistoricalData ? AppLocalizations.of(context)!.liveData : AppLocalizations.of(context)!.historyData,
+            ),
           )
         else
           Tooltip(
@@ -42,7 +44,7 @@ class TemperatureGraphHeader extends StatelessWidget {
             child: TextButton.icon(
               onPressed: null, // Disabled when no session info
               icon: const Icon(Icons.history),
-              label: const Text('History'),
+              label: Text(AppLocalizations.of(context)!.historyData),
             ),
           ),
       ],

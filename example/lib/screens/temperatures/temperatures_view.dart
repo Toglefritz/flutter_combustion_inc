@@ -1,9 +1,3 @@
-/// Temperatures view library.
-///
-/// This library provides the main view for the temperatures tab, displaying temperature readings using radar charts and
-/// statistics.
-library;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_combustion_inc/models/devices/probe.dart';
 
@@ -19,13 +13,22 @@ import 'models/temperatures_display_mode.dart';
 
 /// View for the temperatures tab.
 ///
-/// Displays temperature readings using visual radar charts for both virtual temperatures (core, surface, ambient) and
-/// physical sensor readings (T1-T8). Supports two display modes: column (separate charts) and stacked (combined chart).
+/// Displays temperature readings using visual radar charts for both virtual
+/// temperatures (core, surface, ambient) and physical sensor readings (T1-T8).
+/// Supports two display modes: column (separate charts) and stacked (combined).
+///
+/// This view operates on [Probe] objects. When MeatNet is active, the native
+/// SDK transparently routes data through the best available path (direct BLE or
+/// via a repeater node). The Dart layer does not need to distinguish between
+/// these cases — the [Probe] streams emit data regardless of the source.
 class TemperaturesView extends StatefulWidget {
-  /// List of available probes.
+  /// All probes available for temperature display.
+  ///
+  /// This includes probes discovered directly and probes reachable through
+  /// MeatNet nodes. The controller is responsible for assembling this list.
   final List<Probe> probes;
 
-  /// Currently selected probe.
+  /// Currently selected probe for detailed viewing.
   final Probe? selectedProbe;
 
   /// Callback when probe selection changes.
@@ -68,14 +71,16 @@ class _TemperaturesViewState extends State<TemperaturesView> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        centerTitle: false,
+        centerTitle: true,
         actions: [
           IconButton(
             icon: Icon(
               _displayMode == TemperaturesDisplayMode.column ? Icons.layers_outlined : Icons.view_column_outlined,
             ),
             tooltip:
-                _displayMode == TemperaturesDisplayMode.column ? 'Switch to stacked view' : 'Switch to column view',
+                _displayMode == TemperaturesDisplayMode.column
+                    ? AppLocalizations.of(context)!.switchToStackedView
+                    : AppLocalizations.of(context)!.switchToColumnView,
             onPressed: _toggleDisplayMode,
           ),
         ],

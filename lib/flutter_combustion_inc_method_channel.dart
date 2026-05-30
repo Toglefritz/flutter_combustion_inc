@@ -418,4 +418,34 @@ class MethodChannelFlutterCombustionInc extends FlutterCombustionIncPlatform {
           .map((event) => DeviceConnectionState.fromInt(event as int));
     });
   }
+
+  @override
+  Future<Map<String, dynamic>> getRouteToProbe(String probeIdentifier) async {
+    final dynamic result = await methodChannel.invokeMethod(
+      'getRouteToProbe',
+      {'identifier': probeIdentifier},
+    );
+
+    if (result == null) {
+      return <String, dynamic>{'routeType': 'unreachable'};
+    }
+
+    return Map<String, dynamic>.from(result as Map);
+  }
+
+  @override
+  Future<void> setTargetTemperatureViaDevice(
+    String probeIdentifier,
+    double temperatureCelsius, {
+    String? viaDeviceIdentifier,
+  }) async {
+    final Map<String, dynamic> args = <String, dynamic>{
+      'identifier': probeIdentifier,
+      'temperatureCelsius': temperatureCelsius,
+    };
+    if (viaDeviceIdentifier != null) {
+      args['viaDeviceIdentifier'] = viaDeviceIdentifier;
+    }
+    await methodChannel.invokeMethod('setTargetTemperatureViaDevice', args);
+  }
 }

@@ -5,8 +5,8 @@ import 'rssi_controller.dart';
 
 /// Route for the RSSI tracking screen.
 ///
-/// This screen is used for testing and evaluating Bluetooth RSSI values in different scenarios (open-air, inside oven,
-/// inside grill, etc.).
+/// Used for testing and evaluating Bluetooth RSSI values in different
+/// scenarios (open-air, inside oven, inside grill, etc.).
 class RssiRoute extends StatefulWidget {
   /// Creates an instance of [RssiRoute].
   const RssiRoute({super.key});
@@ -17,6 +17,6 @@ class RssiRoute extends StatefulWidget {
 
 /// Public state class for [RssiRoute] to allow external access.
 abstract class RssiRouteState extends State<RssiRoute> {
-  /// Updates the list of available probes.
+  /// Updates the list of available probes for RSSI monitoring.
   void updateProbes(List<Probe> probes);
 }

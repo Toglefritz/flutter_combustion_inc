@@ -2,77 +2,91 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_combustion_inc/models/device_manager.dart';
+import 'package:flutter_combustion_inc/models/devices/device.dart';
+import 'package:flutter_combustion_inc/models/devices/meat_net_node.dart';
 import 'package:flutter_combustion_inc/models/devices/probe.dart';
 
+import '../../models/routing_config.dart';
 import '../rssi/rssi_route.dart';
 import 'main_navigation_route.dart';
 import 'main_navigation_view.dart';
 
-/// Controller for the [MainNavigationRoute] that manages navigation state and probe discovery.
+/// Controller for the [MainNavigationRoute].
 ///
-/// This controller handles:
-/// * Bottom navigation tab selection
-/// * Probe discovery and connection management
-/// * Sharing probe data across all tabs
+/// Manages the device registry, probe selection, routing configuration, and
+/// navigation state. All tabs receive their data from this controller.
 class MainNavigationController extends State<MainNavigationRoute> {
   /// Currently selected tab index.
   int currentTabIndex = 0;
 
-  /// List of discovered and connected probes.
-  List<Probe> probes = [];
+  /// All discovered devices (probes and MeatNet nodes).
+  List<Device> devices = [];
 
-  /// Currently selected probe for detailed viewing.
+  /// The currently selected probe for temperature/graph/prediction display.
   Probe? selectedProbe;
+
+  /// Current routing configuration for command delivery.
+  RoutingConfig routingConfig = const RoutingConfig.auto();
 
   /// Global key for accessing the RSSI route state.
   final GlobalKey<RssiRouteState> rssiKey = GlobalKey<RssiRouteState>();
+
+  /// Filtered list of probes from the device registry.
+  List<Probe> get probes => devices.whereType<Probe>().toList();
+
+  /// Filtered list of MeatNet nodes from the device registry.
+  List<MeatNetNode> get meatNetNodes => devices.whereType<MeatNetNode>().toList();
 
   @override
   void initState() {
     super.initState();
 
-    // Set up probe discovery listener
-    DeviceManager.instance.scanResults.listen(_onProbeDiscovered);
-
-    // Initialize Bluetooth and start scanning
+    DeviceManager.instance.scanResults.listen(_onDeviceDiscovered);
     unawaited(DeviceManager.instance.initBluetooth());
   }
 
-  /// Handles discovery of a new probe.
+  /// Handles discovery of a new device.
   ///
-  /// Adds the probe to the list and initiates connection.
-  Future<void> _onProbeDiscovered(Probe probe) async {
-    debugPrint('Discovered probe: ${probe.name} (${probe.identifier})');
-
-    // Avoid duplicates
-    if (!probes.any((p) => p.identifier == probe.identifier)) {
+  /// Adds the device to the list and auto-connects probes. Nodes are connected
+  /// separately when MeatNet is enabled via the Network tab.
+  Future<void> _onDeviceDiscovered(Device device) async {
+    if (!devices.any((d) => d.uniqueIdentifier == device.uniqueIdentifier)) {
       setState(() {
-        probes.add(probe);
-        // Auto-select first probe
-        selectedProbe ??= probe;
+        devices.add(device);
+        if (selectedProbe == null && device is Probe) {
+          selectedProbe = device;
+        }
       });
 
-      // Update RSSI route with new probes
       rssiKey.currentState?.updateProbes(probes);
 
-      // Connect to the probe
-      await probe.connect();
+      if (device is Probe) {
+        await device.connect();
+      }
     }
   }
 
   /// Handles tab selection changes.
-  ///
-  /// Triggers a rebuild to ensure all views reflect current settings (e.g., temperature unit).
   void onTabChanged(int index) {
     setState(() {
       currentTabIndex = index;
     });
   }
 
-  /// Handles probe selection changes.
+  /// Handles probe selection changes from any tab.
   void onProbeSelected(Probe? probe) {
     setState(() {
       selectedProbe = probe;
+    });
+  }
+
+  /// Updates the routing configuration.
+  ///
+  /// Called from the Network tab when the user switches between auto and
+  /// explicit routing modes.
+  void onRoutingConfigChanged(RoutingConfig config) {
+    setState(() {
+      routingConfig = config;
     });
   }
 

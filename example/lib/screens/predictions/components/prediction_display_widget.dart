@@ -87,53 +87,54 @@ class PredictionDisplayWidget extends StatelessWidget {
   }
 
   /// Gets a human-readable label for the prediction state.
-  String _getStateLabel(PredictionState state) {
+  String _getStateLabel(AppLocalizations l10n, PredictionState state) {
     switch (state) {
       case PredictionState.probeNotInserted:
-        return 'Probe Not Inserted';
+        return l10n.predictionStateProbeNotInserted;
       case PredictionState.probeInserted:
-        return 'Probe Inserted';
+        return l10n.predictionStateProbeInserted;
       case PredictionState.cooking:
-        return 'Cooking';
+        return l10n.predictionStateCooking;
       case PredictionState.predicting:
-        return 'Predicting';
+        return l10n.predictionStatePredicting;
       case PredictionState.removalPredictionDone:
-        return 'Done';
+        return l10n.predictionStateDone;
       default:
-        return 'Unknown';
+        return l10n.predictionStateUnknown;
     }
   }
 
   /// Gets a human-readable label for the prediction mode.
-  String _getModeLabel(PredictionMode mode) {
+  String _getModeLabel(AppLocalizations l10n, PredictionMode mode) {
     switch (mode) {
       case PredictionMode.none:
-        return 'None';
+        return l10n.predictionModeNone;
       case PredictionMode.timeToRemoval:
-        return 'Time to Removal';
+        return l10n.predictionModeTimeToRemoval;
       case PredictionMode.removalAndResting:
-        return 'Removal & Resting';
+        return l10n.predictionModeRemovalAndResting;
       case PredictionMode.reserved:
-        return 'Reserved';
+        return l10n.predictionModeReserved;
     }
   }
 
   /// Gets a human-readable label for the prediction type.
-  String _getTypeLabel(PredictionType type) {
+  String _getTypeLabel(AppLocalizations l10n, PredictionType type) {
     switch (type) {
       case PredictionType.none:
-        return 'None';
+        return l10n.predictionTypeNone;
       case PredictionType.removal:
-        return 'Removal';
+        return l10n.predictionTypeRemoval;
       case PredictionType.resting:
-        return 'Resting';
+        return l10n.predictionTypeResting;
       case PredictionType.reserved:
-        return 'Reserved';
+        return l10n.predictionTypeReserved;
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
     final double displayTemp = _convertFromCelsius(targetTemperatureCelsius);
     final String unit = TemperatureUnitSetting.currentUnit == TemperatureUnit.celsius ? '°C' : '°F';
 
@@ -201,7 +202,7 @@ class PredictionDisplayWidget extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(left: Inset.xSmall),
                         child: Text(
-                          _getStateLabel(predictionInfo!.predictionState),
+                          _getStateLabel(l10n, predictionInfo!.predictionState),
                           style: Theme.of(context).textTheme.labelLarge?.copyWith(
                             color: _getStateColor(context, predictionInfo!.predictionState),
                             fontWeight: FontWeight.bold,
@@ -263,24 +264,24 @@ class PredictionDisplayWidget extends StatelessWidget {
               _buildInfoSection(
                 context,
                 icon: Icons.thermostat,
-                title: 'Temperature Information',
+                title: l10n.temperatureInformation,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     if (predictionInfo!.currentCoreTempCelsius != null)
                       _buildTemperatureRow(
                         context,
-                        label: 'Current Core',
+                        label: l10n.currentCore,
                         temperature: predictionInfo!.currentCoreTempCelsius!,
                       ),
                     _buildTemperatureRow(
                       context,
-                      label: 'Estimated Core',
+                      label: l10n.estimatedCore,
                       temperature: predictionInfo!.estimatedCoreTemperature,
                     ),
                     _buildTemperatureRow(
                       context,
-                      label: 'Target',
+                      label: l10n.target,
                       temperature: predictionInfo!.targetTemperatureCelsius,
                       isTarget: true,
                     ),
@@ -292,24 +293,24 @@ class PredictionDisplayWidget extends StatelessWidget {
               _buildInfoSection(
                 context,
                 icon: Icons.info_outline,
-                title: 'Prediction Details',
+                title: l10n.predictionDetails,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _buildDetailRow(
                       context,
-                      label: 'Mode',
-                      value: _getModeLabel(predictionInfo!.predictionMode),
+                      label: l10n.mode,
+                      value: _getModeLabel(l10n, predictionInfo!.predictionMode),
                     ),
                     _buildDetailRow(
                       context,
-                      label: 'Type',
-                      value: _getTypeLabel(predictionInfo!.predictionType),
+                      label: l10n.type,
+                      value: _getTypeLabel(l10n, predictionInfo!.predictionType),
                     ),
                     _buildDetailRow(
                       context,
-                      label: 'Reliable',
-                      value: predictionInfo!.isReliable ? 'Yes' : 'No',
+                      label: l10n.reliable,
+                      value: predictionInfo!.isReliable ? l10n.yes : l10n.no,
                       valueColor: predictionInfo!.isReliable ? Colors.green : Theme.of(context).colorScheme.error,
                     ),
                   ],
@@ -329,7 +330,7 @@ class PredictionDisplayWidget extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(top: Inset.small),
                         child: Text(
-                          'Waiting for prediction data...',
+                          l10n.waitingForPredictionData,
                           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             color: Theme.of(context).colorScheme.onSurfaceVariant,
                           ),

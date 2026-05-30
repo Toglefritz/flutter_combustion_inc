@@ -453,6 +453,12 @@ abstract class AppLocalizations {
   /// **'Temperatures'**
   String get temperatures;
 
+  /// Title for the network topology tab.
+  ///
+  /// In en, this message translates to:
+  /// **'Network'**
+  String get network;
+
   /// Title for the graphs tab.
   ///
   /// In en, this message translates to:
@@ -716,6 +722,330 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Poor Signal'**
   String get rssiPoor;
+
+  /// Message shown while scanning for nearby Combustion devices.
+  ///
+  /// In en, this message translates to:
+  /// **'Scanning for devices...'**
+  String get scanningForDevices;
+
+  /// Tooltip for the refresh route button.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh route'**
+  String get refreshRoute;
+
+  /// Section header for the device list.
+  ///
+  /// In en, this message translates to:
+  /// **'Devices'**
+  String get devices;
+
+  /// Label for the probes subsection in the device list.
+  ///
+  /// In en, this message translates to:
+  /// **'Probes'**
+  String get probes;
+
+  /// Label for the MeatNet nodes subsection in the device list.
+  ///
+  /// In en, this message translates to:
+  /// **'MeatNet Nodes'**
+  String get meatNetNodes;
+
+  /// Tooltip for the select probe button.
+  ///
+  /// In en, this message translates to:
+  /// **'Select probe'**
+  String get selectProbeTooltip;
+
+  /// Tooltip for the disconnect button.
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnect'**
+  String get disconnect;
+
+  /// Tooltip for the connect button.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect'**
+  String get connect;
+
+  /// Section header for the mesh network topology view.
+  ///
+  /// In en, this message translates to:
+  /// **'Mesh Topology'**
+  String get meshTopology;
+
+  /// Description for the mesh topology section.
+  ///
+  /// In en, this message translates to:
+  /// **'Shows which probes each node can reach.'**
+  String get meshTopologyDescription;
+
+  /// Message shown when a node has no probes in its network.
+  ///
+  /// In en, this message translates to:
+  /// **'No probes detected'**
+  String get noProbesDetected;
+
+  /// Section header for the route control panel.
+  ///
+  /// In en, this message translates to:
+  /// **'Route Control'**
+  String get routeControl;
+
+  /// Shows which probe is currently selected for route control.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected probe: {name}'**
+  String selectedProbeLabel(String name);
+
+  /// Displays the current route information.
+  ///
+  /// In en, this message translates to:
+  /// **'Current route: {route}'**
+  String currentRouteLabel(String route);
+
+  /// Label for automatic routing mode.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto'**
+  String get routingModeAuto;
+
+  /// Label for explicit routing mode.
+  ///
+  /// In en, this message translates to:
+  /// **'Explicit'**
+  String get routingModeExplicit;
+
+  /// Label for the route device selector.
+  ///
+  /// In en, this message translates to:
+  /// **'Route through:'**
+  String get routeThrough;
+
+  /// Label for direct BLE connection route option.
+  ///
+  /// In en, this message translates to:
+  /// **'Direct (probe BLE)'**
+  String get directProbeBle;
+
+  /// Displays an RSSI value with unit.
+  ///
+  /// In en, this message translates to:
+  /// **'RSSI: {value} dBm'**
+  String rssiValueDbm(int value);
+
+  /// Shows how many probes a node can reach.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 probe} other{{count} probes}}'**
+  String nodeProbeCount(int count);
+
+  /// Label for disconnected connection state.
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnected'**
+  String get connectionStateDisconnected;
+
+  /// Label for connecting connection state.
+  ///
+  /// In en, this message translates to:
+  /// **'Connecting...'**
+  String get connectionStateConnecting;
+
+  /// Label for connected connection state.
+  ///
+  /// In en, this message translates to:
+  /// **'Connected'**
+  String get connectionStateConnected;
+
+  /// Label for failed connection state.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed'**
+  String get connectionStateFailed;
+
+  /// Tooltip for switching to stacked temperature display.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch to stacked view'**
+  String get switchToStackedView;
+
+  /// Tooltip for switching to column temperature display.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch to column view'**
+  String get switchToColumnView;
+
+  /// Label for live data display mode in graphs.
+  ///
+  /// In en, this message translates to:
+  /// **'Live'**
+  String get liveData;
+
+  /// Label for historical data display mode in graphs.
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get historyData;
+
+  /// Section header for temperature details in predictions.
+  ///
+  /// In en, this message translates to:
+  /// **'Temperature Information'**
+  String get temperatureInformation;
+
+  /// Label for current core temperature in predictions.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Core'**
+  String get currentCore;
+
+  /// Label for estimated core temperature in predictions.
+  ///
+  /// In en, this message translates to:
+  /// **'Estimated Core'**
+  String get estimatedCore;
+
+  /// Label for target temperature in predictions.
+  ///
+  /// In en, this message translates to:
+  /// **'Target'**
+  String get target;
+
+  /// Section header for prediction detail information.
+  ///
+  /// In en, this message translates to:
+  /// **'Prediction Details'**
+  String get predictionDetails;
+
+  /// Label for prediction mode.
+  ///
+  /// In en, this message translates to:
+  /// **'Mode'**
+  String get mode;
+
+  /// Label for prediction type.
+  ///
+  /// In en, this message translates to:
+  /// **'Type'**
+  String get type;
+
+  /// Label for prediction reliability indicator.
+  ///
+  /// In en, this message translates to:
+  /// **'Reliable'**
+  String get reliable;
+
+  /// Affirmative label.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes'**
+  String get yes;
+
+  /// Negative label.
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get no;
+
+  /// Message shown while waiting for prediction data to arrive.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for prediction data...'**
+  String get waitingForPredictionData;
+
+  /// Label for probe not inserted prediction state.
+  ///
+  /// In en, this message translates to:
+  /// **'Probe Not Inserted'**
+  String get predictionStateProbeNotInserted;
+
+  /// Label for probe inserted prediction state.
+  ///
+  /// In en, this message translates to:
+  /// **'Probe Inserted'**
+  String get predictionStateProbeInserted;
+
+  /// Label for cooking prediction state.
+  ///
+  /// In en, this message translates to:
+  /// **'Cooking'**
+  String get predictionStateCooking;
+
+  /// Label for predicting prediction state.
+  ///
+  /// In en, this message translates to:
+  /// **'Predicting'**
+  String get predictionStatePredicting;
+
+  /// Label for done prediction state.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get predictionStateDone;
+
+  /// Label for unknown prediction state.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get predictionStateUnknown;
+
+  /// Label for no prediction mode.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get predictionModeNone;
+
+  /// Label for time to removal prediction mode.
+  ///
+  /// In en, this message translates to:
+  /// **'Time to Removal'**
+  String get predictionModeTimeToRemoval;
+
+  /// Label for removal and resting prediction mode.
+  ///
+  /// In en, this message translates to:
+  /// **'Removal & Resting'**
+  String get predictionModeRemovalAndResting;
+
+  /// Label for reserved prediction mode.
+  ///
+  /// In en, this message translates to:
+  /// **'Reserved'**
+  String get predictionModeReserved;
+
+  /// Label for no prediction type.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get predictionTypeNone;
+
+  /// Label for removal prediction type.
+  ///
+  /// In en, this message translates to:
+  /// **'Removal'**
+  String get predictionTypeRemoval;
+
+  /// Label for resting prediction type.
+  ///
+  /// In en, this message translates to:
+  /// **'Resting'**
+  String get predictionTypeResting;
+
+  /// Label for reserved prediction type.
+  ///
+  /// In en, this message translates to:
+  /// **'Reserved'**
+  String get predictionTypeReserved;
+
+  /// Error message when setting target temperature fails.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to set target temperature: {error}'**
+  String failedToSetTargetTemperature(String error);
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

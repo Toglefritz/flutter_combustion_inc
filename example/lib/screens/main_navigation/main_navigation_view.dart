@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../l10n/app_localizations.dart';
 import '../about/about_view.dart';
 import '../graphs/graphs_view.dart';
+import '../network/network_route.dart';
 import '../predictions/predictions_view.dart';
 import '../rssi/rssi_route.dart';
 import '../temperatures/temperatures_view.dart';
@@ -11,7 +12,8 @@ import 'main_navigation_route.dart';
 
 /// View for the [MainNavigationRoute].
 ///
-/// Displays a bottom navigation bar with five tabs:
+/// Displays a bottom navigation bar with six tabs:
+/// * Network - Device topology, connections, and routing control
 /// * Temperatures - Visual temperature display with radar charts
 /// * Graphs - Historical temperature data visualization
 /// * Predictions - Cooking time predictions and target temperature
@@ -27,6 +29,13 @@ class MainNavigationView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<Widget> tabs = [
+      NetworkRoute(
+        devices: state.devices,
+        selectedProbe: state.selectedProbe,
+        routingConfig: state.routingConfig,
+        onProbeSelected: state.onProbeSelected,
+        onRoutingConfigChanged: state.onRoutingConfigChanged,
+      ),
       TemperaturesView(
         probes: state.probes,
         selectedProbe: state.selectedProbe,
@@ -54,11 +63,15 @@ class MainNavigationView extends StatelessWidget {
         index: state.currentTabIndex,
         children: tabs,
       ),
-
       bottomNavigationBar: NavigationBar(
         selectedIndex: state.currentTabIndex,
         onDestinationSelected: state.onTabChanged,
         destinations: [
+          NavigationDestination(
+            icon: const Icon(Icons.hub_outlined),
+            selectedIcon: const Icon(Icons.hub),
+            label: AppLocalizations.of(context)!.network,
+          ),
           NavigationDestination(
             icon: const Icon(Icons.thermostat_outlined),
             selectedIcon: const Icon(Icons.thermostat),

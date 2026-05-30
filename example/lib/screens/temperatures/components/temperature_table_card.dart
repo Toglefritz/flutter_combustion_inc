@@ -139,17 +139,17 @@ class _VirtualTemperaturesTable extends StatelessWidget {
           children: [
             _buildTableRow(
               context,
-              'Core',
+              AppLocalizations.of(context)!.coreTemperature,
               core,
             ),
             _buildTableRow(
               context,
-              'Surface',
+              AppLocalizations.of(context)!.surfaceTemperature,
               surface,
             ),
             _buildTableRow(
               context,
-              'Ambient',
+              AppLocalizations.of(context)!.ambientTemperature,
               ambient,
             ),
           ],

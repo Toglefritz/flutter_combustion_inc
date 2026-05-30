@@ -85,7 +85,7 @@ class _PredictionsViewState extends State<PredictionsView> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to set target temperature: $e'),
+            content: Text(AppLocalizations.of(context)!.failedToSetTargetTemperature(e.toString())),
             backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );

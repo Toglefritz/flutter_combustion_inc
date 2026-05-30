@@ -140,4 +140,25 @@ abstract class FlutterCombustionIncPlatform extends PlatformInterface {
   /// Emits [DeviceConnectionState] values whenever the probe's BLE connection
   /// state transitions (disconnected, connecting, connected, failed).
   Stream<DeviceConnectionState> connectionStateStream(String identifier);
+
+  /// Queries the native SDK for the best route to reach the specified probe.
+  ///
+  /// Returns a map describing the route:
+  /// - `routeType`: "direct", "relayed", or "unreachable"
+  /// - `nodeIdentifier`: BLE UUID of the relay node (if relayed)
+  /// - `hopCount`: integer hop count (if relayed)
+  /// - `rssi`: signal strength to the route device
+  Future<Map<String, dynamic>> getRouteToProbe(String probeIdentifier);
+
+  /// Sends a set-prediction command to the probe, optionally forcing the
+  /// command through a specific device rather than using auto-routing.
+  ///
+  /// When [viaDeviceIdentifier] is `null`, the native SDK uses its internal
+  /// `getBestRouteToProbe` logic. When specified, the command is sent through
+  /// that specific device (useful for engineering/QA testing of specific paths).
+  Future<void> setTargetTemperatureViaDevice(
+    String probeIdentifier,
+    double temperatureCelsius, {
+    String? viaDeviceIdentifier,
+  });
 }
